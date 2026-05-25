@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "serve": "vite preview --host",
-    "dev": "vite dev"
+    "build": "bun --bun vite build",
+    "start": "bun run server.ts",
+    "serve": "bun --bun vite preview --host",
+    "dev": "bun --bun vite dev"
   },
   "dependencies": {
     "@loadwhiz/env": "workspace:*",
