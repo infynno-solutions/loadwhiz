@@ -1,0 +1,3 @@
+{
+  "extends": "@loadwhiz/config/tsconfig.base.json"
+}
