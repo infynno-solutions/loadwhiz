@@ -1,0 +1,73 @@
+import type { HttpValidationError } from "@/api/generated/types.gen";
+
+import { ApiRequestError, isApiRequestError } from "@/lib/api-request-error";
+
+function isHttpValidationError(error: unknown): error is HttpValidationError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "detail" in error &&
+    Array.isArray((error as HttpValidationError).detail)
+  );
+}
+
+function messageForStatus(status: number, url?: string): string | undefined {
+  if (status === 409) {
+    if (url?.includes("/auth/register")) {
+      return "This email is already registered. Try signing in.";
+    }
+    return "That action conflicts with existing data.";
+  }
+  if (status === 401) {
+    return "Invalid email or password.";
+  }
+  if (status === 403) {
+    return "Your account is disabled.";
+  }
+  if (status === 400) {
+    return "Invalid request. Please check your input and try again.";
+  }
+  return undefined;
+}
+
+export function getApiErrorMessage(
+  error: unknown,
+  fallback = "Something went wrong. Please try again.",
+): string {
+  if (isApiRequestError(error)) {
+    return error.message;
+  }
+
+  if (isHttpValidationError(error)) {
+    const messages = error.detail
+      ?.map((item) => item.msg)
+      .filter((msg): msg is string => Boolean(msg));
+    if (messages?.length) {
+      return messages.join(" ");
+    }
+  }
+
+  if (error instanceof TypeError && error.message === "Failed to fetch") {
+    return "Cannot reach the API. Ensure the backend is running and API requests are proxied (dev) or CORS is configured.";
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  return fallback;
+}
+
+export function toApiRequestError(
+  error: unknown,
+  response: Response,
+  requestUrl: string,
+): ApiRequestError {
+  const statusMessage = messageForStatus(response.status, requestUrl);
+  const message =
+    statusMessage ??
+    (typeof error === "string" && error
+      ? error
+      : `Request failed (${String(response.status)})`);
+  return new ApiRequestError(message, response.status, error);
+}

@@ -6,12 +6,14 @@
     "build": "bun --bun vite build",
     "start": "bun run server.ts",
     "serve": "bun --bun vite preview --host",
-    "dev": "bun --bun vite dev"
+    "dev": "bun --bun vite dev",
+    "openapi-ts": "openapi-ts"
   },
   "dependencies": {
     "@loadwhiz/env": "workspace:*",
     "@loadwhiz/ui": "workspace:*",
     "@tailwindcss/vite": "^4.2.2",
+    "@tanstack/react-form": "^1.32.0",
     "@tanstack/react-query": "^5.99.0",
     "@tanstack/react-router": "^1.168.22",
     "@tanstack/react-start": "^1.167.41",
@@ -25,6 +27,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@hey-api/client-fetch": "^0.13.1",
+    "@hey-api/openapi-ts": "0.86.11",
     "@loadwhiz/config": "workspace:*",
     "@tanstack/react-router-devtools": "^1.166.13",
     "@testing-library/dom": "^10.4.1",

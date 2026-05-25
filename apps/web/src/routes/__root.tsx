@@ -1,4 +1,6 @@
 import { Toaster } from "@loadwhiz/ui/components/sonner";
+import type { QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -9,7 +11,9 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import appCss from "../index.css?url";
 
-export type RouterAppContext = {};
+export type RouterAppContext = {
+  queryClient: QueryClient;
+};
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   head: () => ({
@@ -37,15 +41,19 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
+  const { queryClient } = Route.useRouteContext();
+
   return (
     <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>
       <body>
-        <Outlet />
-        <Toaster richColors />
-        <TanStackRouterDevtools position="bottom-left" />
+        <QueryClientProvider client={queryClient}>
+          <Outlet />
+          <Toaster richColors />
+          <TanStackRouterDevtools position="bottom-left" />
+        </QueryClientProvider>
         <Scripts />
       </body>
     </html>
