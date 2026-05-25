@@ -13,7 +13,9 @@ export function useAppBreadcrumbs(): AppBreadcrumbItem[] {
   const matches = useMatches();
 
   const routeCrumbs = matches.flatMap((match) => {
-    const label = match.staticData?.breadcrumb;
+    const dynamic = (match.context as { breadcrumb?: string } | undefined)
+      ?.breadcrumb;
+    const label = dynamic ?? match.staticData?.breadcrumb;
     if (!label) return [];
     return [{ label: String(label), href: match.pathname }];
   });

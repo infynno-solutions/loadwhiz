@@ -1,0 +1,156 @@
+"use client";
+
+import { Button } from "@loadwhiz/ui/components/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@loadwhiz/ui/components/empty";
+import { Separator } from "@loadwhiz/ui/components/separator";
+import { Skeleton } from "@loadwhiz/ui/components/skeleton";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { DeleteLoadTestDialog } from "@/components/load-tests/delete-load-test-dialog";
+import { LoadTestConfigForm } from "@/components/load-tests/load-test-config-form";
+import { LoadTestDetailHeader } from "@/components/load-tests/load-test-detail-header";
+import { LoadTestResultsTable } from "@/components/load-tests/load-test-results-table";
+import { useHostsList } from "@/lib/host-queries";
+import { canEditLoadTest } from "@/lib/load-test-actions";
+import {
+  buildHostNameMap,
+  mergeResultsWithLatest,
+  useLoadTest,
+  useLoadTestResults,
+  useVerifiedHosts,
+} from "@/lib/load-test-queries";
+import { useCurrentUser } from "@/lib/user-queries";
+
+export const Route = createFileRoute("/app/tests/$testId/")({
+  component: TestDetailPage,
+});
+
+function TestDetailPage() {
+  const { testId } = Route.useParams();
+  const navigate = useNavigate();
+  const { data: user } = useCurrentUser();
+  const orgId = user?.active_organization_id;
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const {
+    data: test,
+    isPending,
+    isError,
+    refetch,
+  } = useLoadTest(orgId, testId);
+  const { data: verifiedHosts = [] } = useVerifiedHosts(orgId);
+  const { data: allHosts = [] } = useHostsList(orgId);
+  const hostNameById = buildHostNameMap(allHosts);
+  const { data: results = [], isPending: resultsPending } = useLoadTestResults(
+    orgId,
+    testId,
+    test?.status,
+  );
+
+  const displayResults = useMemo(
+    () => mergeResultsWithLatest(results, test?.latest_result),
+    [results, test?.latest_result],
+  );
+
+  if (!orgId) {
+    return (
+      <Empty className="border">
+        <EmptyHeader>
+          <EmptyTitle>No active organization</EmptyTitle>
+          <EmptyDescription>
+            Select an organization to view this load test.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <div className="flex flex-col gap-4">
+        <Skeleton className="h-10 w-72" />
+        <Skeleton className="h-64 w-full" />
+      </div>
+    );
+  }
+
+  if (isError || !test) {
+    return (
+      <Empty className="border">
+        <EmptyHeader>
+          <EmptyTitle>Could not load test</EmptyTitle>
+          <EmptyDescription>
+            This load test may have been deleted or you may not have access.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button variant="outline" onClick={() => void refetch()}>
+            Try again
+          </Button>
+        </EmptyContent>
+      </Empty>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <LoadTestDetailHeader
+        orgId={orgId}
+        test={test}
+        hostLabel={hostNameById.get(test.host_id)}
+        onDelete={() => setDeleteOpen(true)}
+      />
+
+      <section className="flex flex-col gap-4">
+        {!canEditLoadTest(test) ? (
+          <p className="text-muted-foreground text-sm">
+            Expand configuration to review all settings for this test.
+          </p>
+        ) : (
+          <p className="text-muted-foreground text-sm">
+            Expand configuration to edit this draft. Save when you are done.
+          </p>
+        )}
+        <LoadTestConfigForm
+          orgId={orgId}
+          test={test}
+          verifiedHosts={verifiedHosts}
+          hostLabel={hostNameById.get(test.host_id)}
+          readOnly={!canEditLoadTest(test)}
+        />
+      </section>
+
+      <Separator />
+
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="font-semibold text-lg">Run history</h2>
+          <p className="text-muted-foreground text-sm">
+            Past runs and links to detailed results.
+          </p>
+        </div>
+        <LoadTestResultsTable
+          testId={testId}
+          results={displayResults}
+          isLoading={resultsPending}
+        />
+      </section>
+
+      <DeleteLoadTestDialog
+        orgId={orgId}
+        test={test}
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        onDeleted={() => {
+          void navigate({ to: "/app/tests" });
+        }}
+      />
+    </div>
+  );
+}

@@ -40,7 +40,7 @@ export const hostsColumns: ColumnDef<HostResponse>[] = [
       return (
         <button
           type="button"
-          className="text-left font-medium hover:underline"
+          className="cursor-pointer text-left font-medium hover:underline"
           onClick={() => meta?.onView(row.original)}
         >
           {row.original.hostname}

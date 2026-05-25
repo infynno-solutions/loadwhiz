@@ -19,9 +19,13 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
-import { Route as AppTestsRouteImport } from './routes/app/tests'
 import { Route as AppHostsRouteImport } from './routes/app/hosts'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
+import { Route as AppTestsIndexRouteImport } from './routes/app/tests/index'
+import { Route as AppTestsNewRouteImport } from './routes/app/tests/new'
+import { Route as AppTestsTestIdRouteImport } from './routes/app/tests/$testId'
+import { Route as AppTestsTestIdIndexRouteImport } from './routes/app/tests/$testId/index'
+import { Route as AppTestsTestIdResultsResultIdRouteImport } from './routes/app/tests/$testId/results/$resultId'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
@@ -73,11 +77,6 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppTestsRoute = AppTestsRouteImport.update({
-  id: '/tests',
-  path: '/tests',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const AppHostsRoute = AppHostsRouteImport.update({
   id: '/hosts',
   path: '/hosts',
@@ -88,6 +87,32 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
+  id: '/tests/',
+  path: '/tests/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppTestsNewRoute = AppTestsNewRouteImport.update({
+  id: '/tests/new',
+  path: '/tests/new',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppTestsTestIdRoute = AppTestsTestIdRouteImport.update({
+  id: '/tests/$testId',
+  path: '/tests/$testId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppTestsTestIdIndexRoute = AppTestsTestIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppTestsTestIdRoute,
+} as any)
+const AppTestsTestIdResultsResultIdRoute =
+  AppTestsTestIdResultsResultIdRouteImport.update({
+    id: '/results/$resultId',
+    path: '/results/$resultId',
+    getParentRoute: () => AppTestsTestIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -101,8 +126,12 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/hosts': typeof AppHostsRoute
-  '/app/tests': typeof AppTestsRoute
   '/app/': typeof AppIndexRoute
+  '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
+  '/app/tests/new': typeof AppTestsNewRoute
+  '/app/tests/': typeof AppTestsIndexRoute
+  '/app/tests/$testId/': typeof AppTestsTestIdIndexRoute
+  '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -115,8 +144,11 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/hosts': typeof AppHostsRoute
-  '/app/tests': typeof AppTestsRoute
   '/app': typeof AppIndexRoute
+  '/app/tests/new': typeof AppTestsNewRoute
+  '/app/tests': typeof AppTestsIndexRoute
+  '/app/tests/$testId': typeof AppTestsTestIdIndexRoute
+  '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,8 +163,12 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/hosts': typeof AppHostsRoute
-  '/app/tests': typeof AppTestsRoute
   '/app/': typeof AppIndexRoute
+  '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
+  '/app/tests/new': typeof AppTestsNewRoute
+  '/app/tests/': typeof AppTestsIndexRoute
+  '/app/tests/$testId/': typeof AppTestsTestIdIndexRoute
+  '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -148,8 +184,12 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/app/dashboard'
     | '/app/hosts'
-    | '/app/tests'
     | '/app/'
+    | '/app/tests/$testId'
+    | '/app/tests/new'
+    | '/app/tests/'
+    | '/app/tests/$testId/'
+    | '/app/tests/$testId/results/$resultId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -162,8 +202,11 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/app/dashboard'
     | '/app/hosts'
-    | '/app/tests'
     | '/app'
+    | '/app/tests/new'
+    | '/app/tests'
+    | '/app/tests/$testId'
+    | '/app/tests/$testId/results/$resultId'
   id:
     | '__root__'
     | '/'
@@ -177,8 +220,12 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/app/dashboard'
     | '/app/hosts'
-    | '/app/tests'
     | '/app/'
+    | '/app/tests/$testId'
+    | '/app/tests/new'
+    | '/app/tests/'
+    | '/app/tests/$testId/'
+    | '/app/tests/$testId/results/$resultId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -265,13 +312,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/app/tests': {
-      id: '/app/tests'
-      path: '/tests'
-      fullPath: '/app/tests'
-      preLoaderRoute: typeof AppTestsRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/app/hosts': {
       id: '/app/hosts'
       path: '/hosts'
@@ -286,21 +326,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/tests/': {
+      id: '/app/tests/'
+      path: '/tests'
+      fullPath: '/app/tests/'
+      preLoaderRoute: typeof AppTestsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/tests/new': {
+      id: '/app/tests/new'
+      path: '/tests/new'
+      fullPath: '/app/tests/new'
+      preLoaderRoute: typeof AppTestsNewRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/tests/$testId': {
+      id: '/app/tests/$testId'
+      path: '/tests/$testId'
+      fullPath: '/app/tests/$testId'
+      preLoaderRoute: typeof AppTestsTestIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/tests/$testId/': {
+      id: '/app/tests/$testId/'
+      path: '/'
+      fullPath: '/app/tests/$testId/'
+      preLoaderRoute: typeof AppTestsTestIdIndexRouteImport
+      parentRoute: typeof AppTestsTestIdRoute
+    }
+    '/app/tests/$testId/results/$resultId': {
+      id: '/app/tests/$testId/results/$resultId'
+      path: '/results/$resultId'
+      fullPath: '/app/tests/$testId/results/$resultId'
+      preLoaderRoute: typeof AppTestsTestIdResultsResultIdRouteImport
+      parentRoute: typeof AppTestsTestIdRoute
+    }
   }
 }
+
+interface AppTestsTestIdRouteChildren {
+  AppTestsTestIdIndexRoute: typeof AppTestsTestIdIndexRoute
+  AppTestsTestIdResultsResultIdRoute: typeof AppTestsTestIdResultsResultIdRoute
+}
+
+const AppTestsTestIdRouteChildren: AppTestsTestIdRouteChildren = {
+  AppTestsTestIdIndexRoute: AppTestsTestIdIndexRoute,
+  AppTestsTestIdResultsResultIdRoute: AppTestsTestIdResultsResultIdRoute,
+}
+
+const AppTestsTestIdRouteWithChildren = AppTestsTestIdRoute._addFileChildren(
+  AppTestsTestIdRouteChildren,
+)
 
 interface AppRouteRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppHostsRoute: typeof AppHostsRoute
-  AppTestsRoute: typeof AppTestsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppTestsTestIdRoute: typeof AppTestsTestIdRouteWithChildren
+  AppTestsNewRoute: typeof AppTestsNewRoute
+  AppTestsIndexRoute: typeof AppTestsIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppHostsRoute: AppHostsRoute,
-  AppTestsRoute: AppTestsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppTestsTestIdRoute: AppTestsTestIdRouteWithChildren,
+  AppTestsNewRoute: AppTestsNewRoute,
+  AppTestsIndexRoute: AppTestsIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
