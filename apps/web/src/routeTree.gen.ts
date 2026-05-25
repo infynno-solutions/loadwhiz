@@ -19,6 +19,8 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppTestsRouteImport } from './routes/app/tests'
+import { Route as AppHostsRouteImport } from './routes/app/hosts'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -71,6 +73,16 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppTestsRoute = AppTestsRouteImport.update({
+  id: '/tests',
+  path: '/tests',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppHostsRoute = AppHostsRouteImport.update({
+  id: '/hosts',
+  path: '/hosts',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -88,6 +100,8 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/hosts': typeof AppHostsRoute
+  '/app/tests': typeof AppTestsRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -100,6 +114,8 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/hosts': typeof AppHostsRoute
+  '/app/tests': typeof AppTestsRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
@@ -114,6 +130,8 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/hosts': typeof AppHostsRoute
+  '/app/tests': typeof AppTestsRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -129,6 +147,8 @@ export interface FileRouteTypes {
     | '/terms'
     | '/verify-email'
     | '/app/dashboard'
+    | '/app/hosts'
+    | '/app/tests'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -141,6 +161,8 @@ export interface FileRouteTypes {
     | '/terms'
     | '/verify-email'
     | '/app/dashboard'
+    | '/app/hosts'
+    | '/app/tests'
     | '/app'
   id:
     | '__root__'
@@ -154,6 +176,8 @@ export interface FileRouteTypes {
     | '/terms'
     | '/verify-email'
     | '/app/dashboard'
+    | '/app/hosts'
+    | '/app/tests'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
@@ -241,6 +265,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/tests': {
+      id: '/app/tests'
+      path: '/tests'
+      fullPath: '/app/tests'
+      preLoaderRoute: typeof AppTestsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/hosts': {
+      id: '/app/hosts'
+      path: '/hosts'
+      fullPath: '/app/hosts'
+      preLoaderRoute: typeof AppHostsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/dashboard': {
       id: '/app/dashboard'
       path: '/dashboard'
@@ -253,11 +291,15 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppHostsRoute: typeof AppHostsRoute
+  AppTestsRoute: typeof AppTestsRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppHostsRoute: AppHostsRoute,
+  AppTestsRoute: AppTestsRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
