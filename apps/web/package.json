@@ -23,14 +23,14 @@
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "recharts": "3.8.0",
+    "recharts": "3.8.1",
     "sonner": "^2.0.7",
     "tailwindcss": "^4.2.2",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@hey-api/client-fetch": "^0.13.1",
-    "@hey-api/openapi-ts": "0.86.11",
+    "@hey-api/openapi-ts": "0.97.3",
     "@loadwhiz/config": "workspace:*",
     "@tanstack/react-router-devtools": "^1.166.13",
     "@testing-library/dom": "^10.4.1",
