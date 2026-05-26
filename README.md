@@ -13,19 +13,45 @@ This project was created with [Better-T-Stack](https://github.com/AmanVarshney01
 
 ## Getting Started
 
-First, install the dependencies:
+Install dependencies:
 
 ```bash
 bun install
 ```
 
-Then, run the development server:
+### Web only
 
 ```bash
-bun run dev
+bun run dev:web
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
+Open [http://localhost:3000](http://localhost:3000) for the web app.
+
+### Full stack (web + API)
+
+1. Set up the API (first time):
+
+```bash
+cd apps/api
+cp .env.example .env
+POETRY_KEYRING_ENABLED=false poetry install
+bun run docker:up
+bun run db:migrate
+```
+
+2. From the monorepo root:
+
+```bash
+bun run dev:stack
+```
+
+3. In a second terminal, run Celery for host verification and load tests:
+
+```bash
+bun run --filter=api celery:dev
+```
+
+See [apps/api/README.md](apps/api/README.md) for API-only commands, k6, and OpenAPI export.
 
 ## UI Customization
 
@@ -62,15 +88,20 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 ```
 loadwhiz/
 ├── apps/
+│   ├── api/         # FastAPI backend (Poetry, Celery, Alembic)
 │   ├── web/         # Frontend application (React + TanStack Start)
+│   └── fumadocs/    # Documentation site
 ├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
+│   └── ui/          # Shared shadcn/ui components and styles
+├── api.json         # OpenAPI spec (sync from running API)
 ```
 
 ## Available Scripts
 
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
+- `bun run dev`: Start all applications in development mode (web, api, fumadocs)
+- `bun run dev:stack`: Start web + API only
 - `bun run dev:web`: Start only the web application
+- `bun run dev:api`: Start only the FastAPI backend
+- `bun run build`: Build all applications
 - `bun run check-types`: Check TypeScript types across all apps
 - `bun run check`: Run Biome formatting and linting

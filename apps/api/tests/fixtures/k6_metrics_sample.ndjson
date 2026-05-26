@@ -1,0 +1,12 @@
+{"type":"Point","metric":"vus","data":{"time":"2026-05-25T17:22:00.000Z","value":1,"tags":{}}}
+{"type":"Point","metric":"vus","data":{"time":"2026-05-25T17:22:01.000Z","value":3,"tags":{}}}
+{"type":"Point","metric":"http_req_duration","data":{"time":"2026-05-25T17:22:00.100Z","value":1400,"tags":{"url":"https://example.com/health","method":"GET","name":"https://example.com/health"}}}
+{"type":"Point","metric":"http_req_duration","data":{"time":"2026-05-25T17:22:01.200Z","value":580,"tags":{"url":"https://example.com/health","method":"GET","name":"https://example.com/health"}}}
+{"type":"Point","metric":"http_req_duration","data":{"time":"2026-05-25T17:22:01.300Z","value":540,"tags":{"url":"https://example.com/health","method":"GET","name":"https://example.com/health"}}}
+{"type":"Point","metric":"status_counts","data":{"time":"2026-05-25T17:22:00.150Z","value":1,"tags":{"url":"https://example.com/health","method":"GET","status":"200","expected_response":"true","redirected":"false"}}}
+{"type":"Point","metric":"status_counts","data":{"time":"2026-05-25T17:22:01.250Z","value":1,"tags":{"url":"https://example.com/health","method":"GET","status":"200","expected_response":"true","redirected":"false"}}}
+{"type":"Point","metric":"status_counts","data":{"time":"2026-05-25T17:22:01.350Z","value":1,"tags":{"url":"https://example.com/health","method":"GET","status":"500","expected_response":"false","redirected":"false"}}}
+{"type":"Point","metric":"data_sent","data":{"time":"2026-05-25T17:22:00.100Z","value":200,"tags":{}}}
+{"type":"Point","metric":"data_sent","data":{"time":"2026-05-25T17:22:01.300Z","value":1000,"tags":{}}}
+{"type":"Point","metric":"data_received","data":{"time":"2026-05-25T17:22:00.100Z","value":300,"tags":{}}}
+{"type":"Point","metric":"data_received","data":{"time":"2026-05-25T17:22:01.300Z","value":1500,"tags":{}}}

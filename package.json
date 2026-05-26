@@ -23,6 +23,8 @@
     "build": "turbo build",
     "check-types": "turbo check-types",
     "dev:web": "turbo -F web dev",
+    "dev:api": "turbo -F api dev",
+    "dev:stack": "turbo -F web -F api dev",
     "check": "biome check --write ."
   },
   "dependencies": {

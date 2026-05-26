@@ -1,0 +1,41 @@
+# Git and IDE
+.git
+.gitignore
+.idea
+.vscode
+
+# Local env and secrets
+.env
+.env.*
+
+# Python artifacts
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.venv
+venv
+.pytest_cache
+.mypy_cache
+.ruff_cache
+htmlcov
+.coverage
+*.egg-info
+dist
+build
+
+# Logs and local data
+*.log
+logs
+*.db
+*.sqlite3
+uploads
+
+# Docker (not needed inside image)
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Docs and misc
+README.md
+openapi.json

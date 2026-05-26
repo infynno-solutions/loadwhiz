@@ -49,3 +49,12 @@ coverage
 .cache
 tmp
 temp
+
+# Python (apps/api)
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+celerybeat-schedule*
+apps/api/.env
