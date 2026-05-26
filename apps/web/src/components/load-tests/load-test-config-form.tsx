@@ -104,7 +104,7 @@ export function LoadTestConfigForm({
       callback_email: test.callback_email ?? "",
       urls: test.urls.map(httpRequestToUrlRow),
     });
-  }, [test.test_id, test.updated_at]);
+  }, [form, test]);
 
   if (readOnly) {
     return <LoadTestConfigAccordion test={test} hostLabel={hostLabel} />;

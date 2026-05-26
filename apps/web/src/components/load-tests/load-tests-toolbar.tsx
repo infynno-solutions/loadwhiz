@@ -16,6 +16,7 @@ import type { HostResponse } from "@/api/generated/types.gen";
 type LoadTestsToolbarProps = {
   hostFilter: string | null;
   onHostFilterChange: (hostId: string | null) => void;
+  verifiedHosts: HostResponse[];
   disabled?: boolean;
 };
 

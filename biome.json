@@ -18,6 +18,9 @@
       "!**/.vscode",
       "!**/.cursor",
       "!**/routeTree.gen.ts",
+      "!**/api/generated",
+      "!**/.venv",
+      "!**/node_modules",
       "!**/src-tauri",
       "!**/.nuxt",
       "!bts.jsonc",
@@ -82,5 +85,29 @@
     "parser": {
       "tailwindDirectives": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/api/generated/**"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["packages/ui/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noLabelWithoutControl": "off",
+            "useFocusableInteractive": "off",
+            "useKeyWithClickEvents": "off",
+            "useSemanticElements": "off"
+          }
+        }
+      }
+    }
+  ]
 }

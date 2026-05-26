@@ -3,7 +3,6 @@
 import { Button } from "@loadwhiz/ui/components/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,

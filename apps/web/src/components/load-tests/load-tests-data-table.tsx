@@ -17,7 +17,7 @@ import {
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -59,30 +59,33 @@ export function LoadTestsDataTable({
   const runTest = useMutation(loadTestsRunMutation());
   const stopTest = useMutation(loadTestsStopMutation());
 
-  const runAction = async (
-    test: LoadTestResponse,
-    type: NonNullable<LoadTestsTableMeta["actionType"]>,
-    fn: () => Promise<unknown>,
-    successMessage: string,
-    errorMessage: string,
-    onSuccess?: (data: unknown) => void,
-  ) => {
-    setActionTestId(test.test_id);
-    setActionType(type);
-    try {
-      const data = await fn();
-      onSuccess?.(data);
-      if (type === "run" || type === "stop") {
-        await invalidateLoadTestQueries(queryClient, orgId, test.test_id);
+  const runAction = useCallback(
+    async (
+      test: LoadTestResponse,
+      type: NonNullable<LoadTestsTableMeta["actionType"]>,
+      fn: () => Promise<unknown>,
+      successMessage: string,
+      errorMessage: string,
+      onSuccess?: (data: unknown) => void,
+    ) => {
+      setActionTestId(test.test_id);
+      setActionType(type);
+      try {
+        const data = await fn();
+        onSuccess?.(data);
+        if (type === "run" || type === "stop") {
+          await invalidateLoadTestQueries(queryClient, orgId, test.test_id);
+        }
+        toast.success(successMessage);
+      } catch (error) {
+        toast.error(getApiErrorMessage(error, errorMessage));
+      } finally {
+        setActionTestId(null);
+        setActionType(null);
       }
-      toast.success(successMessage);
-    } catch (error) {
-      toast.error(getApiErrorMessage(error, errorMessage));
-    } finally {
-      setActionTestId(null);
-      setActionType(null);
-    }
-  };
+    },
+    [orgId, queryClient],
+  );
 
   const meta = useMemo<LoadTestsTableMeta>(
     () => ({
@@ -128,6 +131,8 @@ export function LoadTestsDataTable({
       orgId,
       runTest,
       stopTest,
+      runAction,
+      queryClient,
     ],
   );
 

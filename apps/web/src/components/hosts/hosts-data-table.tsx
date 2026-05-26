@@ -17,7 +17,7 @@ import {
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -56,28 +56,31 @@ export function HostsDataTable({
   const verifyHost = useMutation(hostsVerifyMutation());
   const retryHost = useMutation(hostsRetryMutation());
 
-  const runAction = async (
-    host: HostResponse,
-    type: NonNullable<HostsTableMeta["actionType"]>,
-    fn: () => Promise<unknown>,
-    successMessage: string,
-    errorMessage: string,
-  ) => {
-    setActionHostId(host.id);
-    setActionType(type);
-    try {
-      await fn();
-      await queryClient.invalidateQueries({
-        queryKey: hostsListQueryKeyForOrg(orgId),
-      });
-      toast.success(successMessage);
-    } catch (error) {
-      toast.error(getApiErrorMessage(error, errorMessage));
-    } finally {
-      setActionHostId(null);
-      setActionType(null);
-    }
-  };
+  const runAction = useCallback(
+    async (
+      host: HostResponse,
+      type: NonNullable<HostsTableMeta["actionType"]>,
+      fn: () => Promise<unknown>,
+      successMessage: string,
+      errorMessage: string,
+    ) => {
+      setActionHostId(host.id);
+      setActionType(type);
+      try {
+        await fn();
+        await queryClient.invalidateQueries({
+          queryKey: hostsListQueryKeyForOrg(orgId),
+        });
+        toast.success(successMessage);
+      } catch (error) {
+        toast.error(getApiErrorMessage(error, errorMessage));
+      } finally {
+        setActionHostId(null);
+        setActionType(null);
+      }
+    },
+    [orgId, queryClient],
+  );
 
   const meta = useMemo<HostsTableMeta>(
     () => ({
@@ -116,7 +119,7 @@ export function HostsDataTable({
       actionType,
       verifyHost,
       retryHost,
-      queryClient,
+      runAction,
     ],
   );
 

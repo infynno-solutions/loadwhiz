@@ -29,11 +29,14 @@ function parseCookieValue(
 
 function setCookie(name: string, value: string) {
   if (!canUseStorage()) return;
+  // Sync tokens for SSR; Cookie Store API is not used for broad browser support.
+  // biome-ignore lint/suspicious/noDocumentCookie: intentional session cookie for SSR hydration
   document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax`;
 }
 
 function deleteCookie(name: string) {
   if (!canUseStorage()) return;
+  // biome-ignore lint/suspicious/noDocumentCookie: intentional session cookie for SSR hydration
   document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax`;
 }
 
