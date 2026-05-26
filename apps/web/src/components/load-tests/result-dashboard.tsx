@@ -25,7 +25,6 @@ import { ByUrlTable } from "@/components/load-tests/by-url-table";
 import { DistributionChart } from "@/components/load-tests/distribution-chart";
 import { LoadTestResultStatusBadge } from "@/components/load-tests/load-test-result-status-badge";
 import { ResultOverviewCards } from "@/components/load-tests/result-overview-cards";
-import { ResultRunProgress } from "@/components/load-tests/result-run-progress";
 import { TimeseriesChart } from "@/components/load-tests/timeseries-chart";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import { canAbortResultRun, formatLoadTestDate } from "@/lib/load-test-actions";
@@ -41,6 +40,7 @@ type ResultDashboardProps = {
   resultId: string;
   result?: LoadTestResultSummary;
   data: LoadTestResultDashboardResponse | undefined;
+  isLive?: boolean;
   partial?: boolean;
   streamConnected?: boolean;
   isLoading?: boolean;
@@ -54,7 +54,8 @@ export function ResultDashboard({
   resultId,
   result,
   data,
-  partial,
+  isLive = false,
+  partial = false,
   streamConnected,
   isLoading,
   isError,
@@ -73,7 +74,7 @@ export function ResultDashboard({
           <Skeleton className="h-24" />
           <Skeleton className="h-24" />
         </div>
-        <Skeleton className="h-64 w-full" />
+        <Skeleton className="h-[220px] w-full" />
       </div>
     );
   }
@@ -98,29 +99,6 @@ export function ResultDashboard({
   }
 
   const { meta, overview, aggregates } = data;
-  const summaryResult: LoadTestResultSummary | undefined =
-    result ??
-    ({
-      result_id: meta.result_id,
-      test_id: meta.test_id,
-      status: meta.status,
-      started_at: meta.started_at,
-      finished_at: meta.finished_at,
-      passed: meta.passed,
-      metrics: overview
-        ? {
-            total_requests: overview.total_requests,
-            error_rate_percent: overview.error_rate_percent,
-            rps: overview.rps,
-            avg_ms: overview.avg_response_ms,
-            p95_ms: null,
-            duration_seconds: meta.duration_seconds,
-          }
-        : null,
-      exit_code: null,
-      error_message: null,
-      created_at: meta.started_at ?? new Date().toISOString(),
-    } satisfies LoadTestResultSummary);
 
   const handleAbort = async () => {
     try {
@@ -148,7 +126,10 @@ export function ResultDashboard({
     }
   };
 
-  const showLiveBanner = partial && (data.timeseries?.length ?? 0) === 0;
+  const liveLabel = streamConnected ? "Live" : "Updating…";
+  const timeRangeLabel = meta.finished_at
+    ? `${formatLoadTestDate(meta.started_at)} — ${formatLoadTestDate(meta.finished_at)}`
+    : `${formatLoadTestDate(meta.started_at)} — in progress`;
 
   return (
     <div className="flex flex-col gap-6">
@@ -166,30 +147,32 @@ export function ResultDashboard({
         <div className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="font-semibold text-xl">Run result</h1>
-            <LoadTestResultStatusBadge status={meta.status} />
-            {partial ? (
-              <Badge variant="outline" className="text-xs">
-                {streamConnected ? "Live" : "Updating…"}
+            <LoadTestResultStatusBadge status={result?.status ?? meta.status} />
+            {isLive ? (
+              <Badge variant="outline" className="gap-1 text-xs">
+                {!streamConnected ? <Spinner className="size-3" /> : null}
+                {liveLabel}
               </Badge>
             ) : null}
-            {meta.passed != null ? (
-              <span className="text-muted-foreground text-sm">
+            {!isLive && meta.passed != null ? (
+              <Badge
+                variant={meta.passed ? "secondary" : "destructive"}
+                className="text-xs"
+              >
                 {meta.passed ? "Passed" : "Failed"}
-              </span>
+              </Badge>
             ) : null}
           </div>
           <p className="font-medium text-sm">{meta.test_name}</p>
           <p className="text-muted-foreground text-sm">
-            {meta.load_description} · {formatLoadTestDate(meta.started_at)}
-            {meta.finished_at
-              ? ` — ${formatLoadTestDate(meta.finished_at)}`
-              : " — in progress"}
+            {meta.load_description} · {timeRangeLabel}
           </p>
           {result?.error_message ? (
             <p className="text-destructive text-sm">{result.error_message}</p>
           ) : null}
         </div>
-        {canAbortResultRun(meta.status, meta.can_abort) ? (
+        {isLive &&
+        canAbortResultRun(result?.status ?? meta.status, meta.can_abort) ? (
           <Button
             variant="outline"
             size="sm"
@@ -202,89 +185,98 @@ export function ResultDashboard({
         ) : null}
       </div>
 
-      {showLiveBanner ? (
-        <ResultRunProgress result={summaryResult} partial={partial} />
-      ) : null}
-
-      <ResultOverviewCards overview={overview} />
+      <div className="flex flex-col gap-2">
+        <ResultOverviewCards overview={overview} />
+        {isLive ? (
+          <p className="text-muted-foreground text-xs">
+            {partial
+              ? "Metrics refresh automatically while k6 is running."
+              : "Finalizing results…"}
+          </p>
+        ) : null}
+      </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="pb-2">
           <CardTitle className="text-base">Requests over time</CardTitle>
           <CardDescription>
             Requests and average response time by second
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <TimeseriesChart points={data.timeseries ?? []} />
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="pb-2">
           <CardTitle className="text-base">
             Response time distribution
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <DistributionChart buckets={data.distribution ?? []} />
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Aggregates</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <dl className="grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
-            <div>
-              <dt className="text-muted-foreground">Median</dt>
-              <dd>
-                {aggregates.response_times.med_ms != null
-                  ? `${aggregates.response_times.med_ms} ms`
-                  : "—"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">P90</dt>
-              <dd>
-                {aggregates.response_times.p90_ms != null
-                  ? `${aggregates.response_times.p90_ms} ms`
-                  : "—"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">P95</dt>
-              <dd>
-                {aggregates.response_times.p95_ms != null
-                  ? `${aggregates.response_times.p95_ms} ms`
-                  : "—"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Success</dt>
-              <dd>{aggregates.response_counts.success ?? "—"}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Timeouts</dt>
-              <dd>{aggregates.response_counts.timeout ?? "—"}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">5xx errors</dt>
-              <dd>{aggregates.response_counts.error_5xx ?? "—"}</dd>
-            </div>
-          </dl>
-        </CardContent>
-      </Card>
+      {!isLive ? (
+        <>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Aggregates</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <dl className="grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+                <div>
+                  <dt className="text-muted-foreground">Median</dt>
+                  <dd>
+                    {aggregates.response_times.med_ms != null
+                      ? `${aggregates.response_times.med_ms} ms`
+                      : "—"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">P90</dt>
+                  <dd>
+                    {aggregates.response_times.p90_ms != null
+                      ? `${aggregates.response_times.p90_ms} ms`
+                      : "—"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">P95</dt>
+                  <dd>
+                    {aggregates.response_times.p95_ms != null
+                      ? `${aggregates.response_times.p95_ms} ms`
+                      : "—"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Success</dt>
+                  <dd>{aggregates.response_counts.success ?? "—"}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Timeouts</dt>
+                  <dd>{aggregates.response_counts.timeout ?? "—"}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">5xx errors</dt>
+                  <dd>{aggregates.response_counts.error_5xx ?? "—"}</dd>
+                </div>
+              </dl>
+            </CardContent>
+          </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">By URL</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ByUrlTable rows={data.by_url ?? []} />
-        </CardContent>
-      </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">By URL</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ByUrlTable rows={data.by_url ?? []} />
+            </CardContent>
+          </Card>
+        </>
+      ) : null}
     </div>
   );
 }

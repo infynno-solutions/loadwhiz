@@ -8,6 +8,7 @@ import {
 } from "@loadwhiz/ui/components/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import type { DashboardDistributionBucket } from "@/api/generated/types.gen";
+import { RESULT_CHART_HEIGHT_CLASS } from "@/components/load-tests/chart-layout";
 
 const chartConfig = {
   count: { label: "Requests", color: "var(--chart-3)" },
@@ -30,7 +31,7 @@ export function DistributionChart({ buckets }: DistributionChartProps) {
   }));
 
   return (
-    <ChartContainer config={chartConfig} className="aspect-[2/1] w-full">
+    <ChartContainer config={chartConfig} className={RESULT_CHART_HEIGHT_CLASS}>
       <BarChart data={data} margin={{ left: 8, right: 8 }}>
         <CartesianGrid vertical={false} />
         <XAxis

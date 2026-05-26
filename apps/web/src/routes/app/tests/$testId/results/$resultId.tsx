@@ -1,14 +1,11 @@
 "use client";
 
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { ResultDashboard } from "@/components/load-tests/result-dashboard";
 import { useLoadTestResultStream } from "@/hooks/use-load-test-result-stream";
 import { isActiveResultStatus } from "@/lib/load-test-actions";
-import {
-  type DashboardWithPartial,
-  useLoadTestResult,
-  useResultDashboard,
-} from "@/lib/load-test-queries";
+import { useLoadTestResult, useResultDashboard } from "@/lib/load-test-queries";
 import { useCurrentUser } from "@/lib/user-queries";
 
 export const Route = createFileRoute("/app/tests/$testId/results/$resultId")({
@@ -23,13 +20,14 @@ function ResultDashboardPage() {
   const { data: user } = useCurrentUser();
   const orgId = user?.active_organization_id;
 
-  const { data: result, isPending: resultPending } = useLoadTestResult(
-    orgId,
-    testId,
-    resultId,
-  );
+  const {
+    data: result,
+    isPending: resultPending,
+    refetch: refetchResult,
+  } = useLoadTestResult(orgId, testId, resultId);
 
-  const isLive = result ? isActiveResultStatus(result.status) : true;
+  const status = result?.status ?? undefined;
+  const isLive = status ? isActiveResultStatus(status) : true;
 
   const stream = useLoadTestResultStream(
     orgId,
@@ -42,15 +40,24 @@ function ResultDashboardPage() {
     data: polledDashboard,
     isPending: dashboardPending,
     isError: dashboardError,
-    refetch,
+    refetch: refetchDashboard,
   } = useResultDashboard(orgId, testId, resultId, {
-    pollWhenLive: !stream.connected,
+    pollWhenLive: isLive,
   });
 
-  const dashboard: DashboardWithPartial | undefined =
-    stream.dashboard ?? polledDashboard;
-  const displayResult = stream.result ?? result;
-  const partial = dashboard?.meta.partial === true;
+  const dashboard = useMemo(() => {
+    if (!isLive) {
+      return polledDashboard ?? stream.dashboard;
+    }
+    return stream.dashboard ?? polledDashboard;
+  }, [isLive, polledDashboard, stream.dashboard]);
+
+  const displayResult = result ?? stream.result;
+  const resolvedStatus = displayResult?.status ?? dashboard?.meta.status;
+  const resolvedIsLive = resolvedStatus
+    ? isActiveResultStatus(resolvedStatus)
+    : isLive;
+  const partial = resolvedIsLive && dashboard?.meta.partial !== false;
 
   const isLoading =
     (resultPending && !displayResult) ||
@@ -63,11 +70,15 @@ function ResultDashboardPage() {
       resultId={resultId}
       result={displayResult}
       data={dashboard}
+      isLive={resolvedIsLive}
       partial={partial}
       streamConnected={stream.connected}
       isLoading={isLoading}
       isError={dashboardError && !dashboard}
-      onRetry={() => void refetch()}
+      onRetry={() => {
+        void refetchResult();
+        void refetchDashboard();
+      }}
     />
   );
 }

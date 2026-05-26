@@ -4,14 +4,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
 import type {
+  DashboardOverview,
   LoadTestResultDashboardResponse,
+  LoadTestResultStatusEnum,
   LoadTestResultSummary,
 } from "@/api/generated/types.gen";
 import { getAccessToken } from "@/lib/auth-session";
+import { isActiveResultStatus } from "@/lib/load-test-actions";
 import {
   loadTestsGetQueryKeyFor,
   loadTestsListQueryKeyForOrg,
   loadTestsResultsDashboardQueryKeyFor,
+  loadTestsResultsGetQueryKeyFor,
   loadTestsResultsListQueryKeyFor,
 } from "@/lib/load-test-queries";
 
@@ -26,6 +30,11 @@ type SnapshotPayload = {
   result?: LoadTestResultSummary;
 };
 
+type DonePayload = {
+  status?: LoadTestResultStatusEnum;
+  passed?: boolean | null;
+};
+
 function streamUrl(orgId: string, testId: string, resultId: string) {
   const base = `/api/v1/organizations/${orgId}/tests/${testId}/results/${resultId}/stream`;
   const token = getAccessToken();
@@ -34,8 +43,49 @@ function streamUrl(orgId: string, testId: string, resultId: string) {
   return `${base}?${params.toString()}`;
 }
 
+function metricsToOverview(
+  metrics: NonNullable<LoadTestResultSummary["metrics"]>,
+): DashboardOverview {
+  return {
+    total_requests: metrics.total_requests ?? 0,
+    error_rate_percent: metrics.error_rate_percent ?? 0,
+    rps: metrics.rps ?? 0,
+    avg_response_ms: metrics.avg_ms ?? null,
+  };
+}
+
+function mergeDashboardMetrics(
+  dashboard: LoadTestResultDashboardResponse,
+  metrics: NonNullable<LoadTestResultSummary["metrics"]>,
+): LoadTestResultDashboardResponse {
+  return {
+    ...dashboard,
+    overview: {
+      ...dashboard.overview,
+      ...metricsToOverview(metrics),
+    },
+  };
+}
+
+function markDashboardTerminal(
+  dashboard: LoadTestResultDashboardResponse,
+  payload: DonePayload,
+): LoadTestResultDashboardResponse {
+  const status = payload.status ?? dashboard.meta.status;
+  return {
+    ...dashboard,
+    meta: {
+      ...dashboard.meta,
+      status,
+      partial: false,
+      passed: payload.passed ?? dashboard.meta.passed,
+      can_abort: false,
+    },
+  };
+}
+
 /**
- * Live updates via SSE. Falls back to polling when the stream is unavailable.
+ * Live updates via SSE. HTTP polling remains a fallback while the run is active.
  */
 export function useLoadTestResultStream(
   orgId: string | undefined,
@@ -60,16 +110,25 @@ export function useLoadTestResultStream(
     const source = new EventSource(url, { withCredentials: true });
     sourceRef.current = source;
 
+    const resultQueryKey = loadTestsResultsGetQueryKeyFor(
+      orgId,
+      testId,
+      resultId,
+    );
+    const dashboardQueryKey = loadTestsResultsDashboardQueryKeyFor(
+      orgId,
+      testId,
+      resultId,
+    );
+
     const applyDashboard = (dashboard: LoadTestResultDashboardResponse) => {
       setState((prev) => ({ ...prev, dashboard }));
-      queryClient.setQueryData(
-        loadTestsResultsDashboardQueryKeyFor(orgId, testId, resultId),
-        dashboard,
-      );
+      queryClient.setQueryData(dashboardQueryKey, dashboard);
     };
 
     const applyResult = (result: LoadTestResultSummary) => {
       setState((prev) => ({ ...prev, result }));
+      queryClient.setQueryData(resultQueryKey, result);
       queryClient.setQueryData(
         loadTestsResultsListQueryKeyFor(orgId, testId),
         (old: LoadTestResultSummary[] | undefined) => {
@@ -83,19 +142,47 @@ export function useLoadTestResultStream(
       );
     };
 
-    const invalidateAll = () => {
-      void queryClient.invalidateQueries({
-        queryKey: loadTestsListQueryKeyForOrg(orgId),
+    const applyMetrics = (metrics: LoadTestResultSummary["metrics"]) => {
+      if (!metrics) return;
+      setState((prev) => {
+        const nextResult: LoadTestResultSummary = prev.result
+          ? { ...prev.result, metrics }
+          : {
+              result_id: resultId,
+              test_id: testId,
+              status: "running",
+              metrics,
+              created_at: new Date().toISOString(),
+              started_at: null,
+              finished_at: null,
+              passed: null,
+              exit_code: null,
+              error_message: null,
+            };
+        const nextDashboard = prev.dashboard
+          ? mergeDashboardMetrics(prev.dashboard, metrics)
+          : prev.dashboard;
+        if (nextDashboard) {
+          queryClient.setQueryData(dashboardQueryKey, nextDashboard);
+        }
+        return { ...prev, result: nextResult, dashboard: nextDashboard };
       });
-      void queryClient.invalidateQueries({
-        queryKey: loadTestsGetQueryKeyFor(orgId, testId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: loadTestsResultsListQueryKeyFor(orgId, testId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: loadTestsResultsDashboardQueryKeyFor(orgId, testId, resultId),
-      });
+    };
+
+    const refetchTerminal = async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: resultQueryKey }),
+        queryClient.invalidateQueries({ queryKey: dashboardQueryKey }),
+        queryClient.invalidateQueries({
+          queryKey: loadTestsListQueryKeyForOrg(orgId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: loadTestsGetQueryKeyFor(orgId, testId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: loadTestsResultsListQueryKeyFor(orgId, testId),
+        }),
+      ]);
     };
 
     source.addEventListener("open", () => {
@@ -118,6 +205,22 @@ export function useLoadTestResultStream(
           event.data,
         ) as LoadTestResultDashboardResponse;
         applyDashboard(payload);
+        if (!isActiveResultStatus(payload.meta.status)) {
+          return;
+        }
+        const metrics = payload.overview
+          ? {
+              total_requests: payload.overview.total_requests,
+              error_rate_percent: payload.overview.error_rate_percent,
+              rps: payload.overview.rps,
+              avg_ms: payload.overview.avg_response_ms,
+              p95_ms: null,
+              duration_seconds: payload.meta.duration_seconds,
+            }
+          : null;
+        if (metrics && (metrics.total_requests ?? 0) > 0) {
+          applyMetrics(metrics);
+        }
       } catch {
         /* ignore */
       }
@@ -128,13 +231,7 @@ export function useLoadTestResultStream(
         const metrics = JSON.parse(
           event.data,
         ) as LoadTestResultSummary["metrics"];
-        setState((prev) => {
-          if (!prev.result && !prev.dashboard) return prev;
-          const nextResult = prev.result
-            ? { ...prev.result, metrics }
-            : prev.result;
-          return { ...prev, result: nextResult };
-        });
+        applyMetrics(metrics);
       } catch {
         /* ignore */
       }
@@ -147,43 +244,97 @@ export function useLoadTestResultStream(
           passed?: boolean | null;
         };
         const nextStatus = payload.status;
-        if (nextStatus) {
-          setState((prev) => {
-            const base = prev.result ?? {
-              result_id: resultId,
-              test_id: testId,
-              status: nextStatus,
-              created_at: new Date().toISOString(),
-            };
-            return {
-              ...prev,
-              result: {
-                ...base,
-                status: nextStatus,
-                passed: payload.passed ?? base.passed,
-              },
-            };
-          });
-        }
+        if (!nextStatus) return;
+        setState((prev) => {
+          const base = prev.result ?? {
+            result_id: resultId,
+            test_id: testId,
+            status: nextStatus,
+            created_at: new Date().toISOString(),
+            started_at: null,
+            finished_at: null,
+            passed: null,
+            metrics: null,
+            exit_code: null,
+            error_message: null,
+          };
+          const nextResult = {
+            ...base,
+            status: nextStatus,
+            passed: payload.passed ?? base.passed,
+          };
+          const nextDashboard =
+            prev.dashboard != null
+              ? {
+                  ...prev.dashboard,
+                  meta: {
+                    ...prev.dashboard.meta,
+                    status: nextStatus,
+                    passed: payload.passed ?? prev.dashboard.meta.passed,
+                  },
+                }
+              : prev.dashboard;
+          return {
+            ...prev,
+            result: nextResult,
+            dashboard: nextDashboard,
+          };
+        });
       } catch {
         /* ignore */
       }
     });
 
-    source.addEventListener("done", () => {
-      invalidateAll();
+    source.addEventListener("done", (event) => {
+      let payload: DonePayload = {};
+      try {
+        payload = JSON.parse(event.data) as DonePayload;
+      } catch {
+        /* ignore */
+      }
+
+      setState((prev) => {
+        const nextResult =
+          prev.result && payload.status
+            ? {
+                ...prev.result,
+                status: payload.status,
+                passed: payload.passed ?? prev.result.passed,
+              }
+            : prev.result;
+        const nextDashboard =
+          prev.dashboard && payload.status
+            ? markDashboardTerminal(prev.dashboard, payload)
+            : prev.dashboard;
+        if (nextDashboard) {
+          queryClient.setQueryData(dashboardQueryKey, nextDashboard);
+        }
+        if (nextResult) {
+          queryClient.setQueryData(resultQueryKey, nextResult);
+        }
+        return {
+          connected: false,
+          dashboard: undefined,
+          result: undefined,
+        };
+      });
+
       source.close();
+      void refetchTerminal();
     });
 
     source.onerror = () => {
       setState((prev) => ({ ...prev, connected: false }));
-      source.close();
     };
 
     return () => {
       source.close();
       sourceRef.current = null;
-      setState((prev) => ({ ...prev, connected: false }));
+      setState({
+        connected: false,
+        dashboard: undefined,
+        result: undefined,
+      });
     };
   }, [enabled, orgId, testId, resultId, queryClient]);
 

@@ -11,6 +11,7 @@ import {
   loadTestsResultsDashboardOptions,
   loadTestsResultsDashboardQueryKey,
   loadTestsResultsGetOptions,
+  loadTestsResultsGetQueryKey,
   loadTestsResultsListOptions,
   loadTestsResultsListQueryKey,
 } from "@/api/generated/@tanstack/react-query.gen";
@@ -57,6 +58,16 @@ export function loadTestsResultsDashboardQueryKeyFor(
   resultId: string,
 ) {
   return loadTestsResultsDashboardQueryKey({
+    path: { org_id: orgId, test_id: testId, result_id: resultId },
+  });
+}
+
+export function loadTestsResultsGetQueryKeyFor(
+  orgId: string,
+  testId: string,
+  resultId: string,
+) {
+  return loadTestsResultsGetQueryKey({
     path: { org_id: orgId, test_id: testId, result_id: resultId },
   });
 }

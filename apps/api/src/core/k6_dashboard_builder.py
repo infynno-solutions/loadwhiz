@@ -10,7 +10,12 @@ from typing import Any
 from src.core.config import settings
 from src.core.k6_live_metrics import extract_metrics_from_ndjson
 from src.core.k6_metrics import extract_metrics, _metric_values
-from src.models.load_test import LoadTest, LoadTestResult, LoadTestStatus, LoadTestType
+from src.models.load_test import (
+    LoadTest,
+    LoadTestResult,
+    LoadTestResultStatus,
+    LoadTestType,
+)
 
 
 def format_load_description(load_test: LoadTest) -> str:
@@ -23,12 +28,48 @@ def format_load_description(load_test: LoadTest) -> str:
     return f"{clients} clients over {seconds} sec"
 
 
+def _result_is_active(result: LoadTestResult) -> bool:
+    return result.status in (
+        LoadTestResultStatus.running,
+        LoadTestResultStatus.not_ready,
+    )
+
+
+def refresh_dashboard_meta(
+    dashboard: dict[str, Any],
+    load_test: LoadTest,
+    result: LoadTestResult,
+) -> dict[str, Any]:
+    """Align stored dashboard meta with current result row (avoids stale live flags)."""
+    meta = dict(dashboard.get("meta") or {})
+    active = _result_is_active(result)
+    meta.update(
+        {
+            "test_name": load_test.name or "Untitled test",
+            "test_id": str(load_test.id),
+            "result_id": str(result.id),
+            "status": result.status.value,
+            "passed": result.passed,
+            "started_at": _iso(result.started_at),
+            "finished_at": _iso(result.finished_at),
+            "load_description": format_load_description(load_test),
+            "test_type": load_test.test_type.value,
+            "duration_seconds": load_test.duration_seconds,
+            "total_clients": load_test.total_clients,
+            "error_threshold_percent": load_test.error_threshold_percent,
+            "can_abort": active,
+            "partial": active and bool(meta.get("partial", True)),
+        }
+    )
+    return {**dashboard, "meta": meta}
+
+
 def build_live_dashboard_skeleton(
     load_test: LoadTest,
     result: LoadTestResult,
 ) -> dict[str, Any]:
     """Minimal dashboard payload before k6 emits metrics."""
-    can_abort = load_test.status in (LoadTestStatus.pending, LoadTestStatus.running)
+    can_abort = _result_is_active(result)
     return {
         "version": 1,
         "meta": {
@@ -131,7 +172,7 @@ def build_dashboard_payload(
         max_buckets=distribution_max_buckets,
     )
 
-    can_abort = load_test.status in (LoadTestStatus.pending, LoadTestStatus.running)
+    can_abort = _result_is_active(result)
 
     return {
         "version": 1,
@@ -149,7 +190,7 @@ def build_dashboard_payload(
             "total_clients": load_test.total_clients,
             "error_threshold_percent": load_test.error_threshold_percent,
             "can_abort": can_abort,
-            "partial": partial or result.status.value == "running",
+            "partial": partial or _result_is_active(result),
         },
         "overview": overview,
         "aggregates": aggregates,

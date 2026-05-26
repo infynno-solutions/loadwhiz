@@ -6,7 +6,10 @@ from datetime import UTC, datetime
 from fastapi import HTTPException, status
 
 from src.core.config import settings
-from src.core.k6_dashboard_builder import build_live_dashboard_skeleton
+from src.core.k6_dashboard_builder import (
+    build_live_dashboard_skeleton,
+    refresh_dashboard_meta,
+)
 from src.core.load_test_run_validation import validate_runnable_urls
 from src.core.load_test_validation import validate_host_verified
 from src.models.host import HostStatus
@@ -145,7 +148,7 @@ class LoadTestRunService:
                 detail="Result not found",
             )
         if result.dashboard:
-            return result.dashboard
+            return refresh_dashboard_meta(result.dashboard, load_test, result)
         if result.status in (
             LoadTestResultStatus.running,
             LoadTestResultStatus.not_ready,

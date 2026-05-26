@@ -97,6 +97,7 @@ def run_load_test(self, test_id: str, result_id: str) -> dict:  # noqa: ANN001
             result.container_id = container_id
             result.dashboard = build_live_dashboard_skeleton(load_test, result)
             db.flush()
+            db.commit()
             publish_result_event(
                 str(result.id),
                 "dashboard",
@@ -299,6 +300,7 @@ def _sync_run_progress(
             partial=True,
         )
         db.flush()
+        db.commit()
         publish_result_event(str(result.id), "metrics", result.metrics)
         publish_result_event(str(result.id), "dashboard", result.dashboard)
         publish_result_event(

@@ -10,6 +10,7 @@ import {
 } from "@loadwhiz/ui/components/chart";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import type { DashboardTimeseriesPoint } from "@/api/generated/types.gen";
+import { RESULT_CHART_HEIGHT_CLASS } from "@/components/load-tests/chart-layout";
 
 const chartConfig = {
   requests: { label: "Requests", color: "var(--chart-1)" },
@@ -34,7 +35,7 @@ export function TimeseriesChart({ points }: TimeseriesChartProps) {
   }));
 
   return (
-    <ChartContainer config={chartConfig} className="aspect-[2/1] w-full">
+    <ChartContainer config={chartConfig} className={RESULT_CHART_HEIGHT_CLASS}>
       <LineChart data={data} margin={{ left: 8, right: 8 }}>
         <CartesianGrid vertical={false} />
         <XAxis
