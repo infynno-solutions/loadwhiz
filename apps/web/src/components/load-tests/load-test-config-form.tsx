@@ -11,8 +11,13 @@ import { loadTestsUpdateMutation } from "@/api/generated/@tanstack/react-query.g
 import type { HostResponse, LoadTestResponse } from "@/api/generated/types.gen";
 import { LoadTestConfigAccordion } from "@/components/load-tests/load-test-config-accordion";
 import { LoadTestFormAccordion } from "@/components/load-tests/load-test-form-accordion";
+import { LoadTestReimportOpenapi } from "@/components/load-tests/load-test-reimport-openapi";
 import { LoadTestUrlsEditor } from "@/components/load-tests/load-test-urls-editor";
 import { getApiErrorMessage } from "@/lib/api-errors";
+import {
+  datetimeLocalToIso,
+  isoToDatetimeLocal,
+} from "@/lib/load-test-datetime";
 import {
   loadTestsGetQueryKeyFor,
   loadTestsListQueryKeyForOrg,
@@ -56,6 +61,8 @@ export function LoadTestConfigForm({
       error_threshold: test.error_threshold,
       notes: test.notes ?? "",
       callback_email: test.callback_email ?? "",
+      callback: test.callback ?? "",
+      scheduled_at: isoToDatetimeLocal(test.scheduled_at),
       urls: test.urls.map(httpRequestToUrlRow),
     } satisfies UpdateLoadTestFormValues,
     validators: { onSubmit: updateLoadTestSchema },
@@ -73,6 +80,8 @@ export function LoadTestConfigForm({
             error_threshold: value.error_threshold,
             notes: value.notes || null,
             callback_email: value.callback_email || null,
+            callback: value.callback || null,
+            scheduled_at: datetimeLocalToIso(value.scheduled_at),
             urls: value.urls?.map(urlRowToHttpRequest),
           },
         });
@@ -102,6 +111,8 @@ export function LoadTestConfigForm({
       error_threshold: test.error_threshold,
       notes: test.notes ?? "",
       callback_email: test.callback_email ?? "",
+      callback: test.callback ?? "",
+      scheduled_at: isoToDatetimeLocal(test.scheduled_at),
       urls: test.urls.map(httpRequestToUrlRow),
     });
   }, [form, test]);
@@ -123,6 +134,11 @@ export function LoadTestConfigForm({
         verifiedHosts={verifiedHosts}
         hideHost
         showInitial={form.getFieldValue("test_type") === "maintain-load"}
+        openapiSection={
+          test.url_source === "openapi" ? (
+            <LoadTestReimportOpenapi orgId={orgId} testId={test.test_id} />
+          ) : undefined
+        }
         requestsSection={
           <form.Field name="urls">
             {(field: {

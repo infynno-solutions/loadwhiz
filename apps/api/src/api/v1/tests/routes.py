@@ -2,7 +2,10 @@ import json
 import uuid
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.api.v1.tests.result_stream import iter_result_stream
 
 from src.api.v1.tests.schemas import (
     CreateLoadTestRequest,
@@ -17,8 +20,8 @@ from src.api.v1.tests.schemas import (
     StopLoadTestResponse,
     UpdateLoadTestRequest,
 )
-from src.core.dependencies import get_current_user
-from src.core.org_dependencies import get_org_member, require_org_roles
+from src.core.dependencies import get_current_user, get_current_user_optional_bearer
+from src.core.org_dependencies import get_org_member, get_org_member_sse, require_org_roles
 from src.db.session import get_db
 from src.models.organization_member import MemberRole, OrganizationMember
 from src.models.user import User
@@ -416,7 +419,6 @@ async def get_test_result(
     responses={
         401: {"description": "Authentication required."},
         404: {"description": "Load test, result, or dashboard data not found."},
-        409: {"description": "Run is still in progress; dashboard not ready."},
     },
 )
 async def get_test_result_dashboard(
@@ -428,3 +430,34 @@ async def get_test_result_dashboard(
 ) -> LoadTestResultDashboardResponse:
     dashboard = await service.get_result_dashboard(org_id, test_id, result_id)
     return LoadTestResultDashboardResponse(**dashboard)
+
+
+@router.get(
+    "/{test_id}/results/{result_id}/stream",
+    operation_id="load_tests.results.stream",
+    summary="Stream load test result updates",
+    description=(
+        "Server-sent events for live run progress: snapshot, metrics, dashboard "
+        "updates, and a terminal `done` event."
+    ),
+    responses={
+        401: {"description": "Authentication required."},
+        404: {"description": "Load test or result not found."},
+    },
+)
+async def stream_test_result(
+    org_id: uuid.UUID,
+    test_id: uuid.UUID,
+    result_id: uuid.UUID,
+    service: LoadTestRunService = Depends(get_load_test_run_service),
+    _membership: OrganizationMember = Depends(get_org_member_sse),
+) -> StreamingResponse:
+    return StreamingResponse(
+        iter_result_stream(service, org_id, test_id, result_id),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )

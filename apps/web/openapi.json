@@ -2513,9 +2513,6 @@
           "404": {
             "description": "Load test, result, or dashboard data not found."
           },
-          "409": {
-            "description": "Run is still in progress; dashboard not ready."
-          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -2525,6 +2522,77 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{org_id}/tests/{test_id}/results/{result_id}/stream": {
+      "get": {
+        "tags": ["load-tests"],
+        "summary": "Stream load test result updates",
+        "description": "Server-sent events for live run progress: snapshot, metrics, dashboard updates, and a terminal `done` event.",
+        "operationId": "load_tests.results.stream",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Organization identifier."
+          },
+          {
+            "name": "test_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Load test identifier."
+          },
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Bearer token for EventSource clients that cannot send Authorization headers."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "404": {
+            "description": "Load test or result not found."
           }
         }
       }
@@ -3107,6 +3175,12 @@
             "type": "boolean",
             "title": "Can Abort",
             "default": false
+          },
+          "partial": {
+            "type": "boolean",
+            "title": "Partial",
+            "default": false,
+            "description": "True while the run is in progress and metrics may still update."
           }
         },
         "type": "object",

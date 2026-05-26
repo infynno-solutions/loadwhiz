@@ -4,6 +4,8 @@ import json
 import logging
 import os
 import shutil
+import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from uuid import UUID
@@ -93,12 +95,35 @@ class K6Runner:
         container = self._client.containers.run(**run_kwargs)
         return container.id, run_dir
 
-    def wait(self, container_id: str, run_dir: Path) -> K6RunOutcome:
-        container_id = container_id
+    def wait(
+        self,
+        container_id: str,
+        run_dir: Path,
+        *,
+        on_progress: Callable[[Path], None] | None = None,
+        poll_seconds: float | None = None,
+    ) -> K6RunOutcome:
+        poll_seconds = poll_seconds or settings.load_test_metrics_poll_seconds
         try:
             container = self._client.containers.get(container_id)
-            result = container.wait()
-            exit_code = int(result.get("StatusCode", 1))
+            state: dict = container.attrs.get("State") or {}
+            while True:
+                container.reload()
+                state = container.attrs.get("State") or {}
+                status = state.get("Status")
+                if status not in ("created", "running"):
+                    break
+                if on_progress is not None:
+                    try:
+                        on_progress(run_dir)
+                    except Exception:
+                        logger.exception(
+                            "Progress callback failed for container %s",
+                            container_id,
+                        )
+                time.sleep(poll_seconds)
+
+            exit_code = int(state.get("ExitCode", 1))
             summary = self._read_summary(run_dir)
             error_message = None
             if exit_code != 0 and summary is None:

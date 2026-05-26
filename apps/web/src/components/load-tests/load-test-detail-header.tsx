@@ -3,7 +3,8 @@
 import { Button } from "@loadwhiz/ui/components/button";
 import { Spinner } from "@loadwhiz/ui/components/spinner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PlayIcon, SquareIcon, Trash2Icon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { EyeIcon, PlayIcon, SquareIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -17,6 +18,7 @@ import {
   canDeleteLoadTest,
   canRunLoadTest,
   canStopLoadTest,
+  isActiveResultStatus,
 } from "@/lib/load-test-actions";
 import {
   applyRunStartedOptimisticUpdates,
@@ -67,6 +69,9 @@ export function LoadTestDetailHeader({
   };
 
   const busy = runTest.isPending || stopTest.isPending;
+  const latestResult = test.latest_result;
+  const showLiveRunLink =
+    latestResult != null && isActiveResultStatus(latestResult.status);
 
   return (
     <div className="flex flex-wrap items-start justify-between gap-4">
@@ -83,6 +88,24 @@ export function LoadTestDetailHeader({
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
+        {showLiveRunLink ? (
+          <Button
+            size="sm"
+            variant="secondary"
+            render={
+              <Link
+                to="/app/tests/$testId/results/$resultId"
+                params={{
+                  testId: test.test_id,
+                  resultId: latestResult.result_id,
+                }}
+              />
+            }
+          >
+            <EyeIcon />
+            View live run
+          </Button>
+        ) : null}
         <Button
           size="sm"
           disabled={!canRunLoadTest(test) || busy}

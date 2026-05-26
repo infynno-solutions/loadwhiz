@@ -82,6 +82,7 @@ export function LoadTestConfigAccordion({
             >
               <ConfigGrid
                 rows={[
+                  ["Completion webhook", test.callback ?? "—"],
                   ["Completion email", test.callback_email ?? "—"],
                   ["Notes", test.notes ?? "—"],
                 ]}

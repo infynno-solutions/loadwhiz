@@ -35,6 +35,7 @@ import { LoadTestFormAccordion } from "@/components/load-tests/load-test-form-ac
 import { LoadTestUrlsEditor } from "@/components/load-tests/load-test-urls-editor";
 import { OpenApiPreviewPanel } from "@/components/load-tests/openapi-preview-panel";
 import { getApiErrorMessage } from "@/lib/api-errors";
+import { datetimeLocalToIso } from "@/lib/load-test-datetime";
 import {
   buildOpenApiCreateBody,
   buildOpenApiPreviewBody,
@@ -67,6 +68,8 @@ const defaultLoadFields = {
   error_threshold: 5,
   notes: "",
   callback_email: "",
+  callback: "",
+  scheduled_at: "",
 };
 
 const SOURCE_OPTIONS = [
@@ -139,6 +142,8 @@ export function CreateLoadTestForm({
             name: value.name || null,
             notes: value.notes || null,
             callback_email: value.callback_email || null,
+            callback: value.callback || null,
+            scheduled_at: datetimeLocalToIso(value.scheduled_at),
             urls: value.urls.map(urlRowToHttpRequest),
           },
         });
@@ -189,6 +194,8 @@ export function CreateLoadTestForm({
             name: value.name || null,
             notes: value.notes || null,
             callback_email: value.callback_email || null,
+            callback: value.callback || null,
+            scheduled_at: datetimeLocalToIso(value.scheduled_at),
             include_operations: includeOps,
             exclude_operations: excludeOps,
           },
@@ -242,6 +249,8 @@ export function CreateLoadTestForm({
             name: value.name || null,
             notes: value.notes || null,
             callback_email: value.callback_email || null,
+            callback: value.callback || null,
+            scheduled_at: datetimeLocalToIso(value.scheduled_at),
             include_operations: includeOps,
             exclude_operations: excludeOps,
           }),

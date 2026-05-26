@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from fastapi import HTTPException, status
 
 from src.core.config import settings
+from src.core.k6_dashboard_builder import build_live_dashboard_skeleton
 from src.core.load_test_run_validation import validate_runnable_urls
 from src.core.load_test_validation import validate_host_verified
 from src.models.host import HostStatus
@@ -143,17 +144,17 @@ class LoadTestRunService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Result not found",
             )
-        if not result.dashboard:
-            if result.status == LoadTestResultStatus.running:
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail="Dashboard is not available while the run is in progress",
-                )
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Dashboard data is not available for this result",
-            )
-        return result.dashboard
+        if result.dashboard:
+            return result.dashboard
+        if result.status in (
+            LoadTestResultStatus.running,
+            LoadTestResultStatus.not_ready,
+        ):
+            return build_live_dashboard_skeleton(load_test, result)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Dashboard data is not available for this result",
+        )
 
     async def _get_runnable_test(
         self,

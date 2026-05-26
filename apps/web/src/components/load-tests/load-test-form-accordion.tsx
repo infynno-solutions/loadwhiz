@@ -389,10 +389,56 @@ export function LoadTestFormAccordion({
             </LoadTestFormSection>
 
             <LoadTestFormSection
-              title="Notifications"
-              description="Optional email and notes for your team."
+              title="Notifications & scheduling"
+              description="Optional callbacks, email, and deferred start time."
             >
               <FieldGroup>
+                <form.Field name="callback">
+                  {(field: {
+                    name: string;
+                    state: { value: string | undefined };
+                    handleChange: (v: string) => void;
+                  }) => (
+                    <Field>
+                      <FieldLabel htmlFor={field.name}>
+                        Completion webhook URL
+                      </FieldLabel>
+                      <FieldDescription>
+                        POST JSON when a run finishes (pass or fail).
+                      </FieldDescription>
+                      <Input
+                        id={field.name}
+                        type="url"
+                        value={field.state.value ?? ""}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="https://example.com/hooks/loadwhiz"
+                      />
+                    </Field>
+                  )}
+                </form.Field>
+                <form.Field name="scheduled_at">
+                  {(field: {
+                    name: string;
+                    state: { value: string | undefined };
+                    handleChange: (v: string) => void;
+                  }) => (
+                    <Field>
+                      <FieldLabel htmlFor={field.name}>
+                        Scheduled start
+                      </FieldLabel>
+                      <FieldDescription>
+                        When set, the next run waits until this time (local
+                        timezone). Leave empty to run immediately.
+                      </FieldDescription>
+                      <Input
+                        id={field.name}
+                        type="datetime-local"
+                        value={field.state.value ?? ""}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                    </Field>
+                  )}
+                </form.Field>
                 <form.Field name="callback_email">
                   {(field: {
                     name: string;

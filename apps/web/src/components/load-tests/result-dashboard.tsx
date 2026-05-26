@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@loadwhiz/ui/components/badge";
 import { Button } from "@loadwhiz/ui/components/button";
 import {
   Card,
@@ -16,11 +17,15 @@ import { ArrowLeftIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { loadTestsStopMutation } from "@/api/generated/@tanstack/react-query.gen";
-import type { LoadTestResultDashboardResponse } from "@/api/generated/types.gen";
+import type {
+  LoadTestResultDashboardResponse,
+  LoadTestResultSummary,
+} from "@/api/generated/types.gen";
 import { ByUrlTable } from "@/components/load-tests/by-url-table";
 import { DistributionChart } from "@/components/load-tests/distribution-chart";
 import { LoadTestResultStatusBadge } from "@/components/load-tests/load-test-result-status-badge";
 import { ResultOverviewCards } from "@/components/load-tests/result-overview-cards";
+import { ResultRunProgress } from "@/components/load-tests/result-run-progress";
 import { TimeseriesChart } from "@/components/load-tests/timeseries-chart";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import { canAbortResultRun, formatLoadTestDate } from "@/lib/load-test-actions";
@@ -33,7 +38,11 @@ import {
 type ResultDashboardProps = {
   orgId: string;
   testId: string;
+  resultId: string;
+  result?: LoadTestResultSummary;
   data: LoadTestResultDashboardResponse | undefined;
+  partial?: boolean;
+  streamConnected?: boolean;
   isLoading?: boolean;
   isError?: boolean;
   onRetry?: () => void;
@@ -42,7 +51,11 @@ type ResultDashboardProps = {
 export function ResultDashboard({
   orgId,
   testId,
+  resultId,
+  result,
   data,
+  partial,
+  streamConnected,
   isLoading,
   isError,
   onRetry,
@@ -65,7 +78,7 @@ export function ResultDashboard({
     );
   }
 
-  if (isError || !data) {
+  if (isError && !data) {
     return (
       <div className="flex flex-col gap-2">
         <p className="text-muted-foreground text-sm">
@@ -80,7 +93,34 @@ export function ResultDashboard({
     );
   }
 
+  if (!data) {
+    return null;
+  }
+
   const { meta, overview, aggregates } = data;
+  const summaryResult: LoadTestResultSummary | undefined =
+    result ??
+    ({
+      result_id: meta.result_id,
+      test_id: meta.test_id,
+      status: meta.status,
+      started_at: meta.started_at,
+      finished_at: meta.finished_at,
+      passed: meta.passed,
+      metrics: overview
+        ? {
+            total_requests: overview.total_requests,
+            error_rate_percent: overview.error_rate_percent,
+            rps: overview.rps,
+            avg_ms: overview.avg_response_ms,
+            p95_ms: null,
+            duration_seconds: meta.duration_seconds,
+          }
+        : null,
+      exit_code: null,
+      error_message: null,
+      created_at: meta.started_at ?? new Date().toISOString(),
+    } satisfies LoadTestResultSummary);
 
   const handleAbort = async () => {
     try {
@@ -98,7 +138,7 @@ export function ResultDashboard({
           queryKey: loadTestsResultsDashboardQueryKeyFor(
             orgId,
             testId,
-            meta.result_id,
+            resultId,
           ),
         }),
       ]);
@@ -107,6 +147,8 @@ export function ResultDashboard({
       toast.error(getApiErrorMessage(error, "Could not stop run."));
     }
   };
+
+  const showLiveBanner = partial && (data.timeseries?.length ?? 0) === 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -125,6 +167,11 @@ export function ResultDashboard({
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="font-semibold text-xl">Run result</h1>
             <LoadTestResultStatusBadge status={meta.status} />
+            {partial ? (
+              <Badge variant="outline" className="text-xs">
+                {streamConnected ? "Live" : "Updating…"}
+              </Badge>
+            ) : null}
             {meta.passed != null ? (
               <span className="text-muted-foreground text-sm">
                 {meta.passed ? "Passed" : "Failed"}
@@ -133,9 +180,14 @@ export function ResultDashboard({
           </div>
           <p className="font-medium text-sm">{meta.test_name}</p>
           <p className="text-muted-foreground text-sm">
-            {meta.load_description} · {formatLoadTestDate(meta.started_at)} —{" "}
-            {formatLoadTestDate(meta.finished_at)}
+            {meta.load_description} · {formatLoadTestDate(meta.started_at)}
+            {meta.finished_at
+              ? ` — ${formatLoadTestDate(meta.finished_at)}`
+              : " — in progress"}
           </p>
+          {result?.error_message ? (
+            <p className="text-destructive text-sm">{result.error_message}</p>
+          ) : null}
         </div>
         {canAbortResultRun(meta.status, meta.can_abort) ? (
           <Button
@@ -149,6 +201,10 @@ export function ResultDashboard({
           </Button>
         ) : null}
       </div>
+
+      {showLiveBanner ? (
+        <ResultRunProgress result={summaryResult} partial={partial} />
+      ) : null}
 
       <ResultOverviewCards overview={overview} />
 

@@ -61,6 +61,7 @@ class Settings(BaseSettings):
     dashboard_bucket_seconds: int = 1
     dashboard_distribution_bucket_ms: int = 50
     dashboard_distribution_max_buckets: int = 40
+    load_test_metrics_poll_seconds: int = 2
 
 
 @lru_cache

@@ -10,17 +10,21 @@ import {
   loadTestsListQueryKey,
   loadTestsResultsDashboardOptions,
   loadTestsResultsDashboardQueryKey,
+  loadTestsResultsGetOptions,
   loadTestsResultsListOptions,
   loadTestsResultsListQueryKey,
 } from "@/api/generated/@tanstack/react-query.gen";
 import type {
   HostResponse,
   LoadTestResponse,
+  LoadTestResultDashboardResponse,
   LoadTestResultSummary,
   LoadTestStatusEnum,
   RunLoadTestResponse,
 } from "@/api/generated/types.gen";
+import { isApiRequestError } from "@/lib/api-request-error";
 import {
+  isActiveResultStatus,
   isLoadTestRunInProgress,
   TERMINAL_RESULT_STATUSES,
 } from "@/lib/load-test-actions";
@@ -242,13 +246,13 @@ export async function invalidateLoadTestQueries(
   ]);
 }
 
-export function useResultDashboard(
+export function useLoadTestResult(
   orgId: string | undefined,
   testId: string,
   resultId: string,
 ) {
   return useQuery({
-    ...loadTestsResultsDashboardOptions({
+    ...loadTestsResultsGetOptions({
       path: {
         org_id: orgId ?? "",
         test_id: testId,
@@ -257,12 +261,48 @@ export function useResultDashboard(
     }),
     enabled: Boolean(orgId && testId && resultId),
     refetchInterval: (query) => {
-      const status = query.state.data?.meta.status;
-      if (status !== "running" && status !== "not_ready") return false;
+      const status = query.state.data?.status;
+      if (!status || !isActiveResultStatus(status)) return false;
       return 5_000;
     },
   });
 }
+
+export function useResultDashboard(
+  orgId: string | undefined,
+  testId: string,
+  resultId: string,
+  options?: { enabled?: boolean; pollWhenLive?: boolean },
+) {
+  const enabled =
+    options?.enabled !== false && Boolean(orgId && testId && resultId);
+  const pollWhenLive = options?.pollWhenLive !== false;
+
+  return useQuery({
+    ...loadTestsResultsDashboardOptions({
+      path: {
+        org_id: orgId ?? "",
+        test_id: testId,
+        result_id: resultId,
+      },
+    }),
+    enabled,
+    retry: (failureCount, error) => {
+      if (isApiRequestError(error) && error.status === 409) return false;
+      return failureCount < 1;
+    },
+    refetchInterval: (query) => {
+      if (!pollWhenLive) return false;
+      const status = query.state.data?.meta.status;
+      if (!status || !isActiveResultStatus(status)) return false;
+      return 5_000;
+    },
+  });
+}
+
+export type DashboardWithPartial = LoadTestResultDashboardResponse & {
+  meta: LoadTestResultDashboardResponse["meta"] & { partial?: boolean };
+};
 
 export function buildHostNameMap(hosts: HostResponse[] | undefined) {
   const map = new Map<string, string>();

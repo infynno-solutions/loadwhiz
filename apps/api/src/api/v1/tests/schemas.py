@@ -369,6 +369,10 @@ class DashboardMeta(BaseModel):
     total_clients: int
     error_threshold_percent: int
     can_abort: bool = False
+    partial: bool = Field(
+        default=False,
+        description="True while the run is in progress and metrics may still update.",
+    )
 
 
 class DashboardOverview(BaseModel):

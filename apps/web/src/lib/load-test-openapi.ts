@@ -14,6 +14,7 @@ export type OpenApiLoadFields = {
   name?: string | null;
   notes?: string | null;
   callback_email?: string | null;
+  callback?: string | null;
   scheduled_at?: string | null;
   include_operations?: string[] | null;
   exclude_operations?: string[] | null;
@@ -42,6 +43,7 @@ export function buildOpenApiCreateBody(
     name: fields.name ?? null,
     notes: fields.notes ?? null,
     callback_email: fields.callback_email ?? null,
+    callback: fields.callback ?? null,
     scheduled_at: fields.scheduled_at ?? null,
     include_operations: fields.include_operations
       ? JSON.stringify(fields.include_operations)

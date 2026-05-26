@@ -135,7 +135,8 @@ function TestDetailPage() {
         <TabsContent value="history" className="flex flex-col gap-4">
           {displayResults.length > 0 || resultsPending ? (
             <p className="text-muted-foreground text-sm">
-              Past runs and links to detailed results for passed runs.
+              Past runs with links to live progress or the full results
+              dashboard.
             </p>
           ) : null}
           <LoadTestResultsTable

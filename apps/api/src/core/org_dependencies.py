@@ -5,7 +5,7 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, Path, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.dependencies import get_current_user
+from src.core.dependencies import get_current_user, get_current_user_optional_bearer
 from src.db.session import get_db
 from src.models.organization_member import MemberRole, OrganizationMember
 from src.models.user import User
@@ -37,6 +37,15 @@ async def get_org_member(
         )
 
     return membership
+
+
+async def get_org_member_sse(
+    org_id: Annotated[uuid.UUID, Path()],
+    current_user: User = Depends(get_current_user_optional_bearer),
+    db: AsyncSession = Depends(get_db),
+) -> OrganizationMember:
+    """Org membership check for SSE endpoints (query-string token support)."""
+    return await get_org_member(org_id=org_id, current_user=current_user, db=db)
 
 
 def require_org_roles(*roles: MemberRole) -> Callable:

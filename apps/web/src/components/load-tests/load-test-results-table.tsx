@@ -23,8 +23,9 @@ import { EyeIcon, PlayIcon } from "lucide-react";
 import type { LoadTestResultSummary } from "@/api/generated/types.gen";
 import { LoadTestResultStatusBadge } from "@/components/load-tests/load-test-result-status-badge";
 import {
-  canViewResultDashboard,
+  canViewResultDetail,
   formatLoadTestDate,
+  resultDetailLinkLabel,
 } from "@/lib/load-test-actions";
 
 type LoadTestResultsTableProps = {
@@ -56,8 +57,8 @@ export function LoadTestResultsTable({
           </EmptyMedia>
           <EmptyTitle>No runs yet</EmptyTitle>
           <EmptyDescription>
-            Start a run from the header when this test is ready. Passed runs
-            will appear here with a link to the results dashboard.
+            Start a run from the header when this test is ready. Each run links
+            to live progress or the full results dashboard.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -75,6 +76,7 @@ export function LoadTestResultsTable({
             <TableHead>Finished</TableHead>
             <TableHead>RPS</TableHead>
             <TableHead>Error rate</TableHead>
+            <TableHead>Details</TableHead>
             <TableHead />
           </TableRow>
         </TableHeader>
@@ -105,8 +107,11 @@ export function LoadTestResultsTable({
                   ? `${result.metrics.error_rate_percent.toFixed(1)}%`
                   : "—"}
               </TableCell>
+              <TableCell className="max-w-[200px] truncate text-muted-foreground text-sm">
+                {result.error_message ?? "—"}
+              </TableCell>
               <TableCell className="text-right">
-                {canViewResultDashboard(result.status, result.passed) ? (
+                {canViewResultDetail(result.status) ? (
                   <Button
                     variant="outline"
                     size="sm"
@@ -121,7 +126,7 @@ export function LoadTestResultsTable({
                     }
                   >
                     <EyeIcon />
-                    View result
+                    {resultDetailLinkLabel(result.status)}
                   </Button>
                 ) : (
                   <span className="text-muted-foreground text-sm">—</span>

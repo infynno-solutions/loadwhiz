@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from src.core.config import settings
+from src.core.k6_live_metrics import extract_metrics_from_ndjson
 from src.core.k6_metrics import extract_metrics, _metric_values
 from src.models.load_test import LoadTest, LoadTestResult, LoadTestStatus, LoadTestType
 
@@ -22,6 +23,62 @@ def format_load_description(load_test: LoadTest) -> str:
     return f"{clients} clients over {seconds} sec"
 
 
+def build_live_dashboard_skeleton(
+    load_test: LoadTest,
+    result: LoadTestResult,
+) -> dict[str, Any]:
+    """Minimal dashboard payload before k6 emits metrics."""
+    can_abort = load_test.status in (LoadTestStatus.pending, LoadTestStatus.running)
+    return {
+        "version": 1,
+        "meta": {
+            "test_name": load_test.name or "Untitled test",
+            "test_id": str(load_test.id),
+            "result_id": str(result.id),
+            "status": result.status.value,
+            "passed": result.passed,
+            "started_at": _iso(result.started_at),
+            "finished_at": _iso(result.finished_at),
+            "load_description": format_load_description(load_test),
+            "test_type": load_test.test_type.value,
+            "duration_seconds": load_test.duration_seconds,
+            "total_clients": load_test.total_clients,
+            "error_threshold_percent": load_test.error_threshold_percent,
+            "can_abort": can_abort,
+            "partial": True,
+        },
+        "overview": {
+            "avg_response_ms": None,
+            "error_rate_percent": 0.0,
+            "total_requests": 0,
+            "rps": 0.0,
+        },
+        "aggregates": {
+            "response_times": {
+                "avg_ms": None,
+                "min_ms": None,
+                "max_ms": None,
+                "med_ms": None,
+                "p90_ms": None,
+                "p95_ms": None,
+            },
+            "response_counts": {
+                "total": 0,
+                "success": 0,
+                "timeout": 0,
+                "error_4xx": 0,
+                "error_5xx": 0,
+                "network_errors": 0,
+            },
+            "bandwidth": {"bytes_sent": 0, "bytes_received": 0},
+            "redirects": {"valid": 0, "invalid": 0},
+        },
+        "timeseries": [],
+        "by_url": [],
+        "distribution": [],
+    }
+
+
 def build_dashboard_payload(
     load_test: LoadTest,
     result: LoadTestResult,
@@ -31,6 +88,7 @@ def build_dashboard_payload(
     bucket_seconds: int | None = None,
     distribution_bucket_ms: int | None = None,
     distribution_max_buckets: int | None = None,
+    partial: bool = False,
 ) -> dict[str, Any]:
     bucket_seconds = bucket_seconds or settings.dashboard_bucket_seconds
     distribution_bucket_ms = (
@@ -40,12 +98,18 @@ def build_dashboard_payload(
         distribution_max_buckets or settings.dashboard_distribution_max_buckets
     )
 
-    metrics = extract_metrics(summary or {})
     ndjson = (
         parse_ndjson_metrics(ndjson_path)
         if ndjson_path and ndjson_path.exists()
         else NdjsonMetrics()
     )
+    if summary:
+        metrics = extract_metrics(summary)
+    else:
+        metrics = extract_metrics_from_ndjson(
+            ndjson,
+            duration_seconds=load_test.duration_seconds,
+        )
 
     overview = {
         "avg_response_ms": metrics.get("avg_ms"),
@@ -85,6 +149,7 @@ def build_dashboard_payload(
             "total_clients": load_test.total_clients,
             "error_threshold_percent": load_test.error_threshold_percent,
             "can_abort": can_abort,
+            "partial": partial or result.status.value == "running",
         },
         "overview": overview,
         "aggregates": aggregates,

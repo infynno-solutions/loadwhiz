@@ -61,6 +61,8 @@ const loadFieldsSchema = z.object({
   error_threshold: z.coerce.number().min(0).max(100).optional(),
   notes: z.string().optional(),
   callback_email: z.union([z.string().email(), z.literal("")]).optional(),
+  callback: z.union([z.string().url(), z.literal("")]).optional(),
+  scheduled_at: z.string().optional(),
 });
 
 export const createManualLoadTestSchema = loadFieldsSchema.extend({
@@ -94,6 +96,8 @@ export const updateLoadTestSchema = z.object({
   error_threshold: z.coerce.number().min(0).max(100).optional(),
   notes: z.string().optional(),
   callback_email: z.union([z.string().email(), z.literal("")]).optional(),
+  callback: z.union([z.string().url(), z.literal("")]).optional(),
+  scheduled_at: z.string().optional(),
   urls: z.array(httpRequestSchema).min(1).optional(),
 });
 

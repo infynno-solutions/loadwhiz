@@ -9,8 +9,6 @@ const ACTIVE_RESULT_STATUSES = new Set<LoadTestResultStatusEnum>([
   "running",
 ]);
 
-const RESULT_VIEW_BLOCKED_STATUSES = ACTIVE_RESULT_STATUSES;
-
 const TERMINAL_RESULT_STATUSES = new Set<LoadTestResultStatusEnum>([
   "ready",
   "failed",
@@ -45,12 +43,18 @@ export function canEditLoadTest(test: LoadTestResponse) {
   return test.status === "draft" && test.url_source === "manual";
 }
 
-export function canViewResultDashboard(
-  status: LoadTestResultStatusEnum,
-  passed?: boolean | null,
-) {
-  if (RESULT_VIEW_BLOCKED_STATUSES.has(status)) return false;
-  return passed === true;
+export function isActiveResultStatus(status: LoadTestResultStatusEnum) {
+  return ACTIVE_RESULT_STATUSES.has(status);
+}
+
+/** Whether the run detail / dashboard route should be linked. */
+export function canViewResultDetail(status: LoadTestResultStatusEnum) {
+  return status !== "not_ready";
+}
+
+export function resultDetailLinkLabel(status: LoadTestResultStatusEnum) {
+  if (isActiveResultStatus(status)) return "View live run";
+  return "View result";
 }
 
 /** Show Stop on the run result page only while this run is still active. */

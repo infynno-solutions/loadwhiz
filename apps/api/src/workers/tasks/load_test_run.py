@@ -9,8 +9,14 @@ from sqlalchemy import select
 
 from src.core.host_validation import HostValidationError
 
-from src.core.k6_dashboard_builder import build_dashboard_payload
+from src.core.k6_dashboard_builder import (
+    build_dashboard_payload,
+    build_live_dashboard_skeleton,
+    parse_ndjson_metrics,
+)
+from src.core.k6_live_metrics import extract_metrics_from_ndjson
 from src.core.k6_metrics import evaluate_passed, extract_metrics
+from src.services.result_events import publish_result_event
 from src.core.load_test_run_validation import validate_runnable_urls
 from src.core.load_test_validation import validate_host_verified, validate_urls_for_host
 from src.models.host import Host, HostStatus
@@ -58,6 +64,11 @@ def run_load_test(self, test_id: str, result_id: str) -> dict:  # noqa: ANN001
                 result,
                 error_message="Target host is not verified",
             )
+            publish_result_event(
+                str(result.id),
+                "done",
+                {"status": result.status.value, "passed": False},
+            )
             return {"failed": True, "reason": "host_not_verified"}
 
         try:
@@ -77,11 +88,25 @@ def run_load_test(self, test_id: str, result_id: str) -> dict:  # noqa: ANN001
 
         container_id: str | None = None
         run_dir = None
+
+        def on_progress(progress_dir: Path) -> None:
+            _sync_run_progress(db, load_test, result, progress_dir)
+
         try:
             container_id, run_dir = runner.start(load_test, result_uuid)
             result.container_id = container_id
+            result.dashboard = build_live_dashboard_skeleton(load_test, result)
             db.flush()
-            outcome = runner.wait(container_id, run_dir)
+            publish_result_event(
+                str(result.id),
+                "dashboard",
+                result.dashboard,
+            )
+            outcome = runner.wait(
+                container_id,
+                run_dir,
+                on_progress=on_progress,
+            )
         except Exception as exc:
             logger.exception("k6 run failed for test %s", test_id)
             if container_id and run_dir:
@@ -108,6 +133,15 @@ def run_load_test(self, test_id: str, result_id: str) -> dict:  # noqa: ANN001
             load_test.updated_at = finished_at
             db.flush()
             _notify(load_test, result)
+            publish_result_event(
+                str(result.id),
+                "done",
+                {
+                    "status": result.status.value,
+                    "passed": result.passed,
+                    "error_message": result.error_message,
+                },
+            )
             return {"failed": True, "exit_code": outcome.exit_code}
 
         metrics = extract_metrics(outcome.summary or {})
@@ -129,6 +163,7 @@ def run_load_test(self, test_id: str, result_id: str) -> dict:  # noqa: ANN001
                 result,
                 outcome.summary,
                 ndjson_path=ndjson_path,
+                partial=False,
             )
         except Exception:
             logger.exception("Failed to build dashboard for result %s", result_id)
@@ -158,6 +193,16 @@ def run_load_test(self, test_id: str, result_id: str) -> dict:  # noqa: ANN001
         load_test.updated_at = finished_at
 
         _notify(load_test, result)
+        publish_result_event(
+            str(result.id),
+            "done",
+            {
+                "status": result.status.value,
+                "passed": result.passed,
+                "metrics": result.metrics,
+            },
+        )
+        publish_result_event(str(result.id), "dashboard", result.dashboard)
         return {
             "passed": passed,
             "exit_code": outcome.exit_code,
@@ -192,6 +237,15 @@ def stop_load_test(self, test_id: str, result_id: str) -> dict:  # noqa: ANN001
         load_test.active_result_id = None
         load_test.updated_at = now
 
+        publish_result_event(
+            str(result.id),
+            "done",
+            {
+                "status": result.status.value,
+                "passed": result.passed,
+                "error_message": result.error_message,
+            },
+        )
         return {"cancelled": True}
 
 
@@ -222,6 +276,40 @@ def dispatch_scheduled_load_tests() -> dict:
     return {"dispatched": dispatched}
 
 
+def _sync_run_progress(
+    db,
+    load_test: LoadTest,
+    result: LoadTestResult,
+    run_dir: Path,
+) -> None:
+    ndjson_path = run_dir / "metrics.ndjson"
+    if not ndjson_path.exists():
+        return
+    try:
+        ndjson = parse_ndjson_metrics(ndjson_path)
+        result.metrics = extract_metrics_from_ndjson(
+            ndjson,
+            duration_seconds=load_test.duration_seconds,
+        )
+        result.dashboard = build_dashboard_payload(
+            load_test,
+            result,
+            result.summary,
+            ndjson_path=ndjson_path,
+            partial=True,
+        )
+        db.flush()
+        publish_result_event(str(result.id), "metrics", result.metrics)
+        publish_result_event(str(result.id), "dashboard", result.dashboard)
+        publish_result_event(
+            str(result.id),
+            "status",
+            {"status": result.status.value, "passed": result.passed},
+        )
+    except Exception:
+        logger.exception("Failed to sync run progress for result %s", result.id)
+
+
 def _finalize_failed(
     db,
     load_test: LoadTest,
@@ -240,6 +328,15 @@ def _finalize_failed(
     load_test.updated_at = now
     db.flush()
     _notify(load_test, result)
+    publish_result_event(
+        str(result.id),
+        "done",
+        {
+            "status": result.status.value,
+            "passed": result.passed,
+            "error_message": result.error_message,
+        },
+    )
 
 
 def _notify(load_test: LoadTest, result: LoadTestResult) -> None:
