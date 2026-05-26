@@ -13,7 +13,8 @@ import { Skeleton } from "@loadwhiz/ui/components/skeleton";
 import { Spinner } from "@loadwhiz/ui/components/spinner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, FileDownIcon } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { loadTestsStopMutation } from "@/api/generated/@tanstack/react-query.gen";
@@ -33,6 +34,7 @@ import {
   loadTestsListQueryKeyForOrg,
   loadTestsResultsDashboardQueryKeyFor,
 } from "@/lib/load-test-queries";
+import { downloadResultPdf, isResultPdfReady } from "@/lib/result-pdf";
 
 type ResultDashboardProps = {
   orgId: string;
@@ -63,6 +65,7 @@ export function ResultDashboard({
 }: ResultDashboardProps) {
   const queryClient = useQueryClient();
   const stopTest = useMutation(loadTestsStopMutation());
+  const [pdfDownloading, setPdfDownloading] = useState(false);
 
   if (isLoading) {
     return (
@@ -126,6 +129,22 @@ export function ResultDashboard({
     }
   };
 
+  const canDownloadPdf =
+    result != null && isResultPdfReady(data, isLive, partial);
+
+  const handleDownloadPdf = async () => {
+    if (!result || !canDownloadPdf) return;
+    setPdfDownloading(true);
+    try {
+      await downloadResultPdf({ dashboard: data, result });
+      toast.success("PDF downloaded.");
+    } catch {
+      toast.error("Could not generate PDF.");
+    } finally {
+      setPdfDownloading(false);
+    }
+  };
+
   const liveLabel = streamConnected ? "Live" : "Updating…";
   const timeRangeLabel = meta.finished_at
     ? `${formatLoadTestDate(meta.started_at)} — ${formatLoadTestDate(meta.finished_at)}`
@@ -171,18 +190,34 @@ export function ResultDashboard({
             <p className="text-destructive text-sm">{result.error_message}</p>
           ) : null}
         </div>
-        {isLive &&
-        canAbortResultRun(result?.status ?? meta.status, meta.can_abort) ? (
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            disabled={stopTest.isPending}
-            onClick={() => void handleAbort()}
+            disabled={!canDownloadPdf || pdfDownloading}
+            title={
+              canDownloadPdf
+                ? "Download run report as PDF"
+                : "PDF is available when the run has finished and metrics are final"
+            }
+            onClick={() => void handleDownloadPdf()}
           >
-            {stopTest.isPending ? <Spinner /> : null}
-            Stop run
+            {pdfDownloading ? <Spinner /> : <FileDownIcon />}
+            Download PDF
           </Button>
-        ) : null}
+          {isLive &&
+          canAbortResultRun(result?.status ?? meta.status, meta.can_abort) ? (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={stopTest.isPending}
+              onClick={() => void handleAbort()}
+            >
+              {stopTest.isPending ? <Spinner /> : null}
+              Stop run
+            </Button>
+          ) : null}
+        </div>
       </div>
 
       <div className="flex flex-col gap-2">

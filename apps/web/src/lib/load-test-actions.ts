@@ -52,6 +52,11 @@ export function canViewResultDetail(status: LoadTestResultStatusEnum) {
   return status !== "not_ready";
 }
 
+/** Whether a run can be selected for side-by-side comparison. */
+export function canCompareResult(status: LoadTestResultStatusEnum) {
+  return TERMINAL_RESULT_STATUSES.has(status);
+}
+
 export function resultDetailLinkLabel(status: LoadTestResultStatusEnum) {
   if (isActiveResultStatus(status)) return "View live run";
   return "View result";

@@ -279,6 +279,33 @@ export function useLoadTestResult(
   });
 }
 
+export function useCompareDashboards(
+  orgId: string | undefined,
+  testId: string,
+  resultIdA: string | undefined,
+  resultIdB: string | undefined,
+) {
+  const queryA = useResultDashboard(orgId, testId, resultIdA ?? "", {
+    enabled: Boolean(orgId && testId && resultIdA),
+    pollWhenLive: false,
+  });
+  const queryB = useResultDashboard(orgId, testId, resultIdB ?? "", {
+    enabled: Boolean(orgId && testId && resultIdB),
+    pollWhenLive: false,
+  });
+
+  return {
+    dashboardA: queryA.data,
+    dashboardB: queryB.data,
+    isPending: queryA.isPending || queryB.isPending,
+    isError: queryA.isError || queryB.isError,
+    refetch: () => {
+      void queryA.refetch();
+      void queryB.refetch();
+    },
+  };
+}
+
 export function useResultDashboard(
   orgId: string | undefined,
   testId: string,

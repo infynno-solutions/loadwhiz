@@ -34,6 +34,7 @@ import { Route as AppSettingsAppearanceRouteImport } from './routes/app/settings
 import { Route as AppSettingsAccountRouteImport } from './routes/app/settings/account'
 import { Route as AppTestsTestIdIndexRouteImport } from './routes/app/tests/$testId/index'
 import { Route as AppSettingsOrganizationIndexRouteImport } from './routes/app/settings/organization/index'
+import { Route as AppTestsTestIdCompareRouteImport } from './routes/app/tests/$testId/compare'
 import { Route as AppSettingsOrganizationMembersRouteImport } from './routes/app/settings/organization/members'
 import { Route as AppSettingsOrganizationInvitationsRouteImport } from './routes/app/settings/organization/invitations'
 import { Route as AppTestsTestIdResultsResultIdRouteImport } from './routes/app/tests/$testId/results/$resultId'
@@ -164,6 +165,11 @@ const AppSettingsOrganizationIndexRoute =
     path: '/organization/',
     getParentRoute: () => AppSettingsRouteRoute,
   } as any)
+const AppTestsTestIdCompareRoute = AppTestsTestIdCompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => AppTestsTestIdRoute,
+} as any)
 const AppSettingsOrganizationMembersRoute =
   AppSettingsOrganizationMembersRouteImport.update({
     id: '/organization/members',
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/app/tests/': typeof AppTestsIndexRoute
   '/app/settings/organization/invitations': typeof AppSettingsOrganizationInvitationsRoute
   '/app/settings/organization/members': typeof AppSettingsOrganizationMembersRoute
+  '/app/tests/$testId/compare': typeof AppTestsTestIdCompareRoute
   '/app/settings/organization/': typeof AppSettingsOrganizationIndexRoute
   '/app/tests/$testId/': typeof AppTestsTestIdIndexRoute
   '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
@@ -236,6 +243,7 @@ export interface FileRoutesByTo {
   '/app/tests': typeof AppTestsIndexRoute
   '/app/settings/organization/invitations': typeof AppSettingsOrganizationInvitationsRoute
   '/app/settings/organization/members': typeof AppSettingsOrganizationMembersRoute
+  '/app/tests/$testId/compare': typeof AppTestsTestIdCompareRoute
   '/app/settings/organization': typeof AppSettingsOrganizationIndexRoute
   '/app/tests/$testId': typeof AppTestsTestIdIndexRoute
   '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
@@ -267,6 +275,7 @@ export interface FileRoutesById {
   '/app/tests/': typeof AppTestsIndexRoute
   '/app/settings/organization/invitations': typeof AppSettingsOrganizationInvitationsRoute
   '/app/settings/organization/members': typeof AppSettingsOrganizationMembersRoute
+  '/app/tests/$testId/compare': typeof AppTestsTestIdCompareRoute
   '/app/settings/organization/': typeof AppSettingsOrganizationIndexRoute
   '/app/tests/$testId/': typeof AppTestsTestIdIndexRoute
   '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/app/tests/'
     | '/app/settings/organization/invitations'
     | '/app/settings/organization/members'
+    | '/app/tests/$testId/compare'
     | '/app/settings/organization/'
     | '/app/tests/$testId/'
     | '/app/tests/$testId/results/$resultId'
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/app/tests'
     | '/app/settings/organization/invitations'
     | '/app/settings/organization/members'
+    | '/app/tests/$testId/compare'
     | '/app/settings/organization'
     | '/app/tests/$testId'
     | '/app/tests/$testId/results/$resultId'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/app/tests/'
     | '/app/settings/organization/invitations'
     | '/app/settings/organization/members'
+    | '/app/tests/$testId/compare'
     | '/app/settings/organization/'
     | '/app/tests/$testId/'
     | '/app/tests/$testId/results/$resultId'
@@ -552,6 +564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsOrganizationIndexRouteImport
       parentRoute: typeof AppSettingsRouteRoute
     }
+    '/app/tests/$testId/compare': {
+      id: '/app/tests/$testId/compare'
+      path: '/compare'
+      fullPath: '/app/tests/$testId/compare'
+      preLoaderRoute: typeof AppTestsTestIdCompareRouteImport
+      parentRoute: typeof AppTestsTestIdRoute
+    }
     '/app/settings/organization/members': {
       id: '/app/settings/organization/members'
       path: '/organization/members'
@@ -601,11 +620,13 @@ const AppSettingsRouteRouteWithChildren =
   AppSettingsRouteRoute._addFileChildren(AppSettingsRouteRouteChildren)
 
 interface AppTestsTestIdRouteChildren {
+  AppTestsTestIdCompareRoute: typeof AppTestsTestIdCompareRoute
   AppTestsTestIdIndexRoute: typeof AppTestsTestIdIndexRoute
   AppTestsTestIdResultsResultIdRoute: typeof AppTestsTestIdResultsResultIdRoute
 }
 
 const AppTestsTestIdRouteChildren: AppTestsTestIdRouteChildren = {
+  AppTestsTestIdCompareRoute: AppTestsTestIdCompareRoute,
   AppTestsTestIdIndexRoute: AppTestsTestIdIndexRoute,
   AppTestsTestIdResultsResultIdRoute: AppTestsTestIdResultsResultIdRoute,
 }

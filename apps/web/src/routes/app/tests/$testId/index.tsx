@@ -21,9 +21,12 @@ import { useEffect, useMemo, useState } from "react";
 import { DeleteLoadTestDialog } from "@/components/load-tests/delete-load-test-dialog";
 import { LoadTestConfigForm } from "@/components/load-tests/load-test-config-form";
 import { LoadTestDetailHeader } from "@/components/load-tests/load-test-detail-header";
-import { LoadTestResultsTable } from "@/components/load-tests/load-test-results-table";
+import {
+  CompareRunsToolbar,
+  LoadTestResultsTable,
+} from "@/components/load-tests/load-test-results-table";
 import { useHostsList } from "@/lib/host-queries";
-import { canEditLoadTest } from "@/lib/load-test-actions";
+import { canCompareResult, canEditLoadTest } from "@/lib/load-test-actions";
 import {
   buildHostNameMap,
   mergeResultsWithLatest,
@@ -45,6 +48,8 @@ function TestDetailPage() {
   const { data: user } = useCurrentUser();
   const orgId = user?.active_organization_id;
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [compareMode, setCompareMode] = useState(false);
+  const [selectedCompareIds, setSelectedCompareIds] = useState<string[]>([]);
 
   const {
     data: test,
@@ -139,10 +144,45 @@ function TestDetailPage() {
               dashboard.
             </p>
           ) : null}
+          <CompareRunsToolbar
+            compareMode={compareMode}
+            selectedCount={selectedCompareIds.length}
+            onCompareModeChange={(enabled) => {
+              setCompareMode(enabled);
+              if (!enabled) setSelectedCompareIds([]);
+            }}
+            onCompare={() => {
+              if (selectedCompareIds.length !== 2) return;
+              const [a, b] = selectedCompareIds;
+              void navigate({
+                to: "/app/tests/$testId/compare",
+                params: { testId },
+                search: { a, b },
+              });
+            }}
+          />
           <LoadTestResultsTable
             testId={testId}
             results={displayResults}
             isLoading={resultsPending}
+            compareMode={compareMode}
+            selectedResultIds={selectedCompareIds}
+            onToggleCompareSelect={(resultId) => {
+              const result = displayResults.find(
+                (r) => r.result_id === resultId,
+              );
+              if (!result || !canCompareResult(result.status)) return;
+
+              setSelectedCompareIds((prev) => {
+                if (prev.includes(resultId)) {
+                  return prev.filter((id) => id !== resultId);
+                }
+                if (prev.length < 2) {
+                  return [...prev, resultId];
+                }
+                return [prev[1], resultId];
+              });
+            }}
           />
         </TabsContent>
 
