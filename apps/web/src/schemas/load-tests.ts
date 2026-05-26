@@ -8,10 +8,44 @@ export const LOAD_TEST_TYPE_OPTIONS = [
 
 export const HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
 
+const stringMapSchema = z.record(z.string(), z.string()).optional();
+
+const httpBasicAuthSchema = z
+  .object({
+    login: z.string(),
+    password: z.string(),
+  })
+  .optional();
+
+const httpBearerAuthSchema = z
+  .object({
+    token: z.string(),
+    prefix: z.string().optional(),
+    header_name: z.string().optional(),
+  })
+  .optional();
+
+const requestVariableSchema = z.object({
+  name: z.string().min(1, "Variable name is required."),
+  property: z.string().min(1, "Response header name is required."),
+  source: z.literal("header").optional(),
+});
+
 const httpRequestSchema = z.object({
   url: z.string().min(1, "URL is required."),
   request_type: z.enum(HTTP_METHODS).optional(),
+  headers: stringMapSchema,
+  request_params: stringMapSchema,
+  cookies: stringMapSchema,
+  raw_post_body: z.string().optional(),
+  payload_file_url: z.string().optional(),
+  credentials: httpBasicAuthSchema,
+  bearer: httpBearerAuthSchema,
+  variables: z.array(requestVariableSchema).optional(),
+  auth_hint: z.string().optional(),
 });
+
+export type UrlRow = z.infer<typeof httpRequestSchema>;
 
 const loadFieldsSchema = z.object({
   name: z.string().optional(),

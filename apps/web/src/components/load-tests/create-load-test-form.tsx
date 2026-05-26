@@ -33,10 +33,7 @@ import type {
   OpenApiImportPreview,
 } from "@/api/generated/types.gen";
 import { LoadTestFormAccordion } from "@/components/load-tests/load-test-form-accordion";
-import {
-  LoadTestUrlsEditor,
-  type UrlRow,
-} from "@/components/load-tests/load-test-urls-editor";
+import { LoadTestUrlsEditor } from "@/components/load-tests/load-test-urls-editor";
 import { OpenApiPreviewPanel } from "@/components/load-tests/openapi-preview-panel";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import {
@@ -44,6 +41,11 @@ import {
   buildOpenApiPreviewBody,
 } from "@/lib/load-test-openapi";
 import { loadTestsListQueryKeyForOrg } from "@/lib/load-test-queries";
+import {
+  emptyUrlRow,
+  urlRowToHttpRequest,
+} from "@/lib/load-test-request-mappers";
+import type { UrlRow } from "@/schemas/load-tests";
 import {
   type CreateManualLoadTestFormValues,
   type CreateOpenApiFileLoadTestFormValues,
@@ -119,7 +121,7 @@ export function CreateLoadTestForm({
   const manualForm = useForm({
     defaultValues: {
       ...defaultLoadFields,
-      urls: [{ url: "", request_type: "GET" }] as UrlRow[],
+      urls: [emptyUrlRow()],
     } satisfies CreateManualLoadTestFormValues,
     validators: { onSubmit: createManualLoadTestSchema },
     onSubmit: async ({ value }) => {
@@ -138,10 +140,7 @@ export function CreateLoadTestForm({
             name: value.name || null,
             notes: value.notes || null,
             callback_email: value.callback_email || null,
-            urls: value.urls.map((u) => ({
-              url: u.url,
-              request_type: u.request_type ?? "GET",
-            })),
+            urls: value.urls.map(urlRowToHttpRequest),
           },
         });
         await invalidateList();
@@ -338,7 +337,7 @@ export function CreateLoadTestForm({
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-8">
+    <div className="flex w-full flex-col gap-8">
       {noHosts ? (
         <Card>
           <CardHeader>

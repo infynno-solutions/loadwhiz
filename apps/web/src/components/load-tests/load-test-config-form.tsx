@@ -11,15 +11,17 @@ import { loadTestsUpdateMutation } from "@/api/generated/@tanstack/react-query.g
 import type { HostResponse, LoadTestResponse } from "@/api/generated/types.gen";
 import { LoadTestConfigAccordion } from "@/components/load-tests/load-test-config-accordion";
 import { LoadTestFormAccordion } from "@/components/load-tests/load-test-form-accordion";
-import {
-  LoadTestUrlsEditor,
-  type UrlRow,
-} from "@/components/load-tests/load-test-urls-editor";
+import { LoadTestUrlsEditor } from "@/components/load-tests/load-test-urls-editor";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import {
   loadTestsGetQueryKeyFor,
   loadTestsListQueryKeyForOrg,
 } from "@/lib/load-test-queries";
+import {
+  httpRequestToUrlRow,
+  urlRowToHttpRequest,
+} from "@/lib/load-test-request-mappers";
+import type { UrlRow } from "@/schemas/load-tests";
 import {
   type UpdateLoadTestFormValues,
   updateLoadTestSchema,
@@ -54,10 +56,7 @@ export function LoadTestConfigForm({
       error_threshold: test.error_threshold,
       notes: test.notes ?? "",
       callback_email: test.callback_email ?? "",
-      urls: test.urls.map((u) => ({
-        url: u.url,
-        request_type: u.request_type ?? "GET",
-      })) as UrlRow[],
+      urls: test.urls.map(httpRequestToUrlRow),
     } satisfies UpdateLoadTestFormValues,
     validators: { onSubmit: updateLoadTestSchema },
     onSubmit: async ({ value }) => {
@@ -74,10 +73,7 @@ export function LoadTestConfigForm({
             error_threshold: value.error_threshold,
             notes: value.notes || null,
             callback_email: value.callback_email || null,
-            urls: value.urls?.map((u) => ({
-              url: u.url,
-              request_type: u.request_type ?? "GET",
-            })),
+            urls: value.urls?.map(urlRowToHttpRequest),
           },
         });
         await Promise.all([
@@ -106,10 +102,7 @@ export function LoadTestConfigForm({
       error_threshold: test.error_threshold,
       notes: test.notes ?? "",
       callback_email: test.callback_email ?? "",
-      urls: test.urls.map((u) => ({
-        url: u.url,
-        request_type: u.request_type ?? "GET",
-      })) as UrlRow[],
+      urls: test.urls.map(httpRequestToUrlRow),
     });
   }, [test.test_id, test.updated_at]);
 

@@ -5,9 +5,6 @@ import { loadTestsGetOptions } from "@/api/generated/@tanstack/react-query.gen";
 import { getLoadTestDisplayName } from "@/lib/load-test-queries";
 
 export const Route = createFileRoute("/app/tests/$testId")({
-  staticData: {
-    breadcrumb: "Test",
-  },
   beforeLoad: async ({ params, context }) => {
     const orgId = context.me?.active_organization_id;
     if (!orgId) return { breadcrumb: "Test" };

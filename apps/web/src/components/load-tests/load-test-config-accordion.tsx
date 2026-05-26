@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@loadwhiz/ui/components/accordion";
 import type { LoadTestResponse } from "@/api/generated/types.gen";
+import { HttpRequestSummary } from "@/components/load-tests/http-request-summary";
 import { LoadTestFormSection } from "@/components/load-tests/load-test-form-section";
 import { LOAD_TEST_TYPE_OPTIONS } from "@/schemas/load-tests";
 
@@ -92,16 +93,13 @@ export function LoadTestConfigAccordion({
               description={`${test.urls.length} endpoint${test.urls.length === 1 ? "" : "s"} in run order.`}
               showSeparator={false}
             >
-              <ul className="space-y-2 font-mono text-xs">
-                {test.urls.map((u) => (
+              <ul className="space-y-2">
+                {test.urls.map((u, index) => (
                   <li
-                    key={`${u.request_type}-${u.url}`}
+                    key={`${index}-${u.request_type}-${u.url}`}
                     className="rounded-md border bg-muted/30 px-3 py-2"
                   >
-                    <span className="font-medium font-sans text-muted-foreground">
-                      {u.request_type ?? "GET"}
-                    </span>{" "}
-                    {u.url}
+                    <HttpRequestSummary request={u} />
                   </li>
                 ))}
               </ul>

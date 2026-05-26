@@ -52,7 +52,7 @@ function CreateLoadTestPage() {
 
       <div>
         <h1 className="font-semibold text-xl">Create load test</h1>
-        <p className="mt-1 max-w-2xl text-muted-foreground text-sm">
+        <p className="mt-1 text-muted-foreground text-sm">
           Set up a load test configuration for a verified host. Choose how
           requests are defined, tune virtual clients and duration, then run from
           the test detail page when you are ready.

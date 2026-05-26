@@ -13,7 +13,10 @@ function CollapsibleTrigger({
   return (
     <CollapsiblePrimitive.Trigger
       data-slot="collapsible-trigger"
-      className={cn("cursor-pointer disabled:cursor-not-allowed", className)}
+      className={cn(
+        "group/collapsible-trigger cursor-pointer disabled:cursor-not-allowed",
+        className,
+      )}
       {...props}
     />
   );

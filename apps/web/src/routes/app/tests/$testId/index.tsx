@@ -8,8 +8,13 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@loadwhiz/ui/components/empty";
-import { Separator } from "@loadwhiz/ui/components/separator";
 import { Skeleton } from "@loadwhiz/ui/components/skeleton";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@loadwhiz/ui/components/tabs";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { DeleteLoadTestDialog } from "@/components/load-tests/delete-load-test-dialog";
@@ -107,40 +112,42 @@ function TestDetailPage() {
         onDelete={() => setDeleteOpen(true)}
       />
 
-      <section className="flex flex-col gap-4">
-        {!canEditLoadTest(test) ? (
-          <p className="text-muted-foreground text-sm">
-            Expand configuration to review all settings for this test.
-          </p>
-        ) : (
-          <p className="text-muted-foreground text-sm">
-            Expand configuration to edit this draft. Save when you are done.
-          </p>
-        )}
-        <LoadTestConfigForm
-          orgId={orgId}
-          test={test}
-          verifiedHosts={verifiedHosts}
-          hostLabel={hostNameById.get(test.host_id)}
-          readOnly={!canEditLoadTest(test)}
-        />
-      </section>
+      <Tabs defaultValue="history" className="gap-4">
+        <TabsList>
+          <TabsTrigger value="history">Run history</TabsTrigger>
+          <TabsTrigger value="configuration">Configuration</TabsTrigger>
+        </TabsList>
 
-      <Separator />
-
-      <section className="flex flex-col gap-4">
-        <div>
-          <h2 className="font-semibold text-lg">Run history</h2>
+        <TabsContent value="history" className="flex flex-col gap-4">
           <p className="text-muted-foreground text-sm">
-            Past runs and links to detailed results.
+            Past runs and links to detailed results for passed runs.
           </p>
-        </div>
-        <LoadTestResultsTable
-          testId={testId}
-          results={displayResults}
-          isLoading={resultsPending}
-        />
-      </section>
+          <LoadTestResultsTable
+            testId={testId}
+            results={displayResults}
+            isLoading={resultsPending}
+          />
+        </TabsContent>
+
+        <TabsContent value="configuration" className="flex flex-col gap-4">
+          {!canEditLoadTest(test) ? (
+            <p className="text-muted-foreground text-sm">
+              Expand configuration to review all settings for this test.
+            </p>
+          ) : (
+            <p className="text-muted-foreground text-sm">
+              Expand configuration to edit this draft. Save when you are done.
+            </p>
+          )}
+          <LoadTestConfigForm
+            orgId={orgId}
+            test={test}
+            verifiedHosts={verifiedHosts}
+            hostLabel={hostNameById.get(test.host_id)}
+            readOnly={!canEditLoadTest(test)}
+          />
+        </TabsContent>
+      </Tabs>
 
       <DeleteLoadTestDialog
         orgId={orgId}
