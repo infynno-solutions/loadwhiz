@@ -16,7 +16,6 @@
 
 - [ ] `bun run check`
 - [ ] `bun run build --filter=web` (if web changed)
-- [ ] `bun run --filter=api test` (if API changed)
 - [ ] Manual QA: <!-- describe -->
 
 ## Related issues

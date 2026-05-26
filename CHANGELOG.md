@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Open source release under MIT License (Infynno Solutions)
 - Contributing guide, Code of Conduct, security policy, and GitHub issue templates
-- CI workflow for web lint/build and API tests
+- CI workflow for web lint and build
 
 ## [0.1.0] - 2026-05-25
 

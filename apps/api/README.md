@@ -109,9 +109,3 @@ bun run openapi:pull
 
 Updates [`../../api.json`](../../api.json) for the web app's OpenAPI client generation.
 
-## Tests
-
-```bash
-bun run test
-# or: poetry run pytest
-```

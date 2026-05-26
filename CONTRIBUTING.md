@@ -93,13 +93,6 @@ bun run build --filter=web
 bun run check-types
 ```
 
-**Python** (API):
-
-```bash
-cd apps/api
-poetry run pytest
-```
-
 Install git hooks from the repo root (optional but recommended):
 
 ```bash
@@ -134,7 +127,7 @@ Commit new Alembic revision files under `apps/api/src/db/migrations/`.
 4. Link related issues (`Fixes #123` when appropriate)
 5. A maintainer will review; address feedback with additional commits or squash as requested
 
-We may ask for tests for bug fixes and new API behavior. UI-only changes should include a brief manual test plan in the PR.
+Include a brief manual test plan in the PR when behavior changes.
 
 ## Reporting Bugs
 

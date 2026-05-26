@@ -104,7 +104,7 @@ You need a running API (local or remote) and a valid `VITE_API_URL` for authenti
 | `bun run check` | Biome lint + format |
 | `bun run check-types` | TypeScript across the monorepo |
 
-API-specific scripts (migrations, Celery, OpenAPI export, pytest): see [apps/api/README.md](./apps/api/README.md).
+API-specific scripts (migrations, Celery, OpenAPI export): see [apps/api/README.md](./apps/api/README.md).
 
 ## Project structure
 
@@ -147,13 +147,10 @@ cd apps/api && bun run openapi:pull
 cd ../web && bun run openapi-ts
 ```
 
-## Testing
+## Verify changes
 
 ```bash
-# API unit tests
-bun run --filter=api test
-
-# Web production build
+bun run check
 bun run build --filter=web
 ```
 

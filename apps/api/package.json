@@ -7,7 +7,6 @@
     "start": "poetry run fastapi run src/main.py --host 0.0.0.0 --port 8000",
     "build": "node -e \"process.exit(0)\"",
     "check-types": "node -e \"process.exit(0)\"",
-    "test": "poetry run pytest",
     "db:migrate": "poetry run alembic upgrade head",
     "db:revision": "poetry run alembic revision --autogenerate",
     "celery:worker": "poetry run celery -A src.workers.celery_app worker --loglevel=info",

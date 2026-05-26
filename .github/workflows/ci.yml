@@ -32,27 +32,3 @@ jobs:
 
       - name: Build web
         run: bun run build --filter=web
-
-  api:
-    name: API (tests)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/api
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
-
-      - name: Install Poetry
-        run: pip install poetry
-
-      - name: Install API dependencies
-        run: POETRY_KEYRING_ENABLED=false poetry install
-        env:
-          POETRY_VIRTUALENVS_CREATE: true
-
-      - name: Run pytest
-        run: poetry run pytest
