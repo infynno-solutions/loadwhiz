@@ -10,6 +10,7 @@ import {
   LandingStaggerItem,
 } from "@/components/landing/landing-motion";
 import { LandingSection } from "@/components/landing/landing-section";
+import { landingBody } from "@/components/landing/landing-styles";
 
 const WITHOUT_ITEMS = [
   "Performance issues discovered in production, not pre-release",
@@ -46,7 +47,10 @@ export function LandingValueProp() {
                 {WITHOUT_ITEMS.map((item) => (
                   <li
                     key={item}
-                    className="flex gap-3 text-muted-foreground text-sm leading-relaxed"
+                    className={cn(
+                      "flex gap-3 text-sm leading-relaxed",
+                      landingBody,
+                    )}
                   >
                     <HiXCircle
                       className="mt-0.5 size-4 shrink-0 text-rose-500/60"
@@ -75,7 +79,10 @@ export function LandingValueProp() {
                   {WITH_ITEMS.map((item) => (
                     <li
                       key={item}
-                      className="flex gap-3 text-muted-foreground text-sm leading-relaxed"
+                      className={cn(
+                        "flex gap-3 text-sm leading-relaxed",
+                        landingBody,
+                      )}
                     >
                       <HiCheckCircle
                         className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"

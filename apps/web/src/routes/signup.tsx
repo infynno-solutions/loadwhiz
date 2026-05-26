@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AuthPageBrand } from "@/components/auth/auth-page-brand";
+import { AuthPageShell } from "@/components/auth/auth-page-layout";
 import { SignupForm } from "@/components/auth/signup-form";
 import { redirectIfAuthenticated } from "@/lib/auth";
 
@@ -12,11 +12,8 @@ export const Route = createFileRoute("/signup")({
 
 function SignupPage() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
-        <AuthPageBrand />
-        <SignupForm />
-      </div>
-    </div>
+    <AuthPageShell>
+      <SignupForm />
+    </AuthPageShell>
   );
 }

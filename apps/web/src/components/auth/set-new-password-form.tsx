@@ -1,16 +1,7 @@
-import { Button } from "@loadwhiz/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@loadwhiz/ui/components/card";
 import {
   Field,
   FieldDescription,
   FieldError,
-  FieldGroup,
   FieldLabel,
 } from "@loadwhiz/ui/components/field";
 import { InputPassword } from "@loadwhiz/ui/components/input-password";
@@ -22,6 +13,18 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import { authResetPasswordMutation } from "@/api/generated/@tanstack/react-query.gen";
+import { AuthFormHeader } from "@/components/auth/auth-form-header";
+import { AuthLegalNotice } from "@/components/auth/auth-legal-notice";
+import {
+  authFieldDescriptionClass,
+  authFormClass,
+  authFormFooterClass,
+  authFormFooterLinkClass,
+  authInputGroupClass,
+  authLabelClass,
+  authPrimaryButtonClass,
+} from "@/components/auth/auth-styles";
+import { LandingBrandButton } from "@/components/landing/landing-brand-button";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import {
   type SetNewPasswordFormValues,
@@ -73,92 +76,91 @@ export function SetNewPasswordForm({
   });
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Choose a new password</CardTitle>
-          <CardDescription>
-            Enter a new password for your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
-          >
-            <FieldGroup>
-              <form.Field
-                name="password"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor="password">New Password</FieldLabel>
-                      <InputPassword
-                        id="password"
-                        name={field.name}
-                        required
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                      />
-                      <FieldDescription>
-                        Must be at least 8 characters long.
-                      </FieldDescription>
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  );
-                }}
-              />
-              <form.Field
-                name="confirmPassword"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor="confirm-password">
-                        Confirm Password
-                      </FieldLabel>
-                      <InputPassword
-                        id="confirm-password"
-                        name={field.name}
-                        required
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  );
-                }}
-              />
-              <Field>
-                <Button type="submit" disabled={resetPassword.isPending}>
-                  {resetPassword.isPending ? <Spinner /> : "Reset password"}
-                </Button>
-                <FieldDescription className="text-center">
-                  Remember your password? <Link to="/login">Back to login</Link>
+    <div className={cn(className)} {...props}>
+      <AuthFormHeader
+        title="Choose a new password"
+        description="Enter a new password for your account."
+      />
+      <form
+        className={authFormClass}
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit();
+        }}
+      >
+        <form.Field
+          name="password"
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor="password" className={authLabelClass}>
+                  New password
+                </FieldLabel>
+                <InputPassword
+                  id="password"
+                  name={field.name}
+                  placeholder="••••••••"
+                  required
+                  className={authInputGroupClass}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                <FieldDescription className={authFieldDescriptionClass}>
+                  Must be at least 8 characters.
                 </FieldDescription>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-      <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our{" "}
-        <Link to="/terms">Terms of Service</Link> and{" "}
-        <Link to="/privacy">Privacy Policy</Link>.
-      </FieldDescription>
+            );
+          }}
+        />
+        <form.Field
+          name="confirmPassword"
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel
+                  htmlFor="confirm-password"
+                  className={authLabelClass}
+                >
+                  Confirm password
+                </FieldLabel>
+                <InputPassword
+                  id="confirm-password"
+                  name={field.name}
+                  placeholder="••••••••"
+                  required
+                  className={authInputGroupClass}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        />
+        <LandingBrandButton
+          type="submit"
+          disabled={resetPassword.isPending}
+          className={authPrimaryButtonClass}
+        >
+          {resetPassword.isPending ? <Spinner /> : "Reset password"}
+        </LandingBrandButton>
+      </form>
+      <p className={authFormFooterClass}>
+        Remember your password?{" "}
+        <Link to="/login" className={authFormFooterLinkClass}>
+          Back to sign in
+        </Link>
+      </p>
+      <AuthLegalNotice />
     </div>
   );
 }

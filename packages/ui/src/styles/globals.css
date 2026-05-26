@@ -122,6 +122,10 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
   --font-heading: var(--font-sans);
+  --shadow-input:
+    0px 2px 3px -1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
+  --shadow-input-dark: 0px 0px 0px 1px rgba(255, 255, 255, 0.08);
 }
 
 @layer base {

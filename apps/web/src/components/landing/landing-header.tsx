@@ -23,27 +23,10 @@ import {
   LANDING_GITHUB_URL,
   LANDING_NAV,
 } from "@/components/landing/landing-constants";
+import { LandingSectionLink } from "@/components/landing/landing-section-link";
 import { landingNavLink } from "@/components/landing/landing-styles";
 import { useLandingAuth } from "@/components/landing/use-landing-auth";
 import { useLandingHeaderScroll } from "@/components/landing/use-landing-header-scroll";
-
-function NavLink({
-  href,
-  children,
-  onClick,
-  className,
-}: {
-  href: string;
-  children: React.ReactNode;
-  onClick?: () => void;
-  className?: string;
-}) {
-  return (
-    <a href={href} onClick={onClick} className={cn(landingNavLink, className)}>
-      {children}
-    </a>
-  );
-}
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -134,15 +117,15 @@ function HeaderActions({
 
 function Logo({ className }: { className?: string }) {
   return (
-    <a
-      href="#top"
+    <Link
+      to="/"
       className={cn(
         "flex items-center gap-2 rounded-md outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}
     >
       <AppLogo />
-    </a>
+    </Link>
   );
 }
 
@@ -152,7 +135,6 @@ export function LandingHeader() {
   const mode = useLandingHeaderScroll();
   const isTop = mode === "top";
   const isFloating = mode === "floating";
-  const isHidden = mode === "hidden";
 
   const closeSheet = () => setOpen(false);
 
@@ -163,11 +145,6 @@ export function LandingHeader() {
         isFloating && "pt-3",
       )}
       initial={false}
-      animate={{
-        y: isHidden ? "-100%" : 0,
-        opacity: isHidden ? 0 : 1,
-      }}
-      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
     >
       <a
         href="#main"
@@ -181,9 +158,7 @@ export function LandingHeader() {
             "flex h-14 items-center justify-between px-4 transition-all duration-300 sm:h-16 md:px-8",
             isFloating
               ? "rounded-full border border-neutral-200/80 bg-white/80 shadow-lg backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/85"
-              : isTop
-                ? "border-transparent border-b bg-transparent shadow-none"
-                : "border-neutral-200/80 border-b bg-white/80 shadow-sm backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/85",
+              : "border-transparent border-b bg-transparent shadow-none",
           )}
           data-scrolled={!isTop}
         >
@@ -194,9 +169,9 @@ export function LandingHeader() {
             aria-label="Primary"
           >
             {LANDING_NAV.map((item) => (
-              <NavLink key={item.href} href={item.href}>
+              <LandingSectionLink key={item.href} href={item.href}>
                 {item.label}
-              </NavLink>
+              </LandingSectionLink>
             ))}
           </nav>
 
@@ -231,13 +206,13 @@ export function LandingHeader() {
                   <SheetClose
                     key={item.href}
                     render={
-                      <NavLink
+                      <LandingSectionLink
                         href={item.href}
                         onClick={closeSheet}
                         className="rounded-xl px-4 py-3.5 text-base"
                       >
                         {item.label}
-                      </NavLink>
+                      </LandingSectionLink>
                     }
                   />
                 ))}

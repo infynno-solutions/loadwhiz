@@ -64,11 +64,7 @@ export function LandingSection({
             </h2>
             {description ? (
               <p
-                className={cn(
-                  landingBody,
-                  "max-w-2xl",
-                  centered && "mx-auto",
-                )}
+                className={cn(landingBody, "max-w-2xl", centered && "mx-auto")}
               >
                 {description}
               </p>

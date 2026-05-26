@@ -22,6 +22,10 @@ import {
   LandingStaggerItem,
 } from "@/components/landing/landing-motion";
 import { LandingSection } from "@/components/landing/landing-section";
+import {
+  landingBody,
+  landingTextPrimary,
+} from "@/components/landing/landing-styles";
 
 type Feature = {
   title: string;
@@ -109,10 +113,10 @@ function FeatureCard({
     <div className={cn(bentoCardClass, "gap-4 p-6 md:p-8", className)}>
       <LandingIcon icon={feature.icon} tone={feature.tone} size="lg" />
       <div className="flex flex-col gap-2">
-        <h3 className="font-semibold text-neutral-900 text-sm dark:text-white">
+        <h3 className={cn("font-semibold text-sm", landingTextPrimary)}>
           {feature.title}
         </h3>
-        <p className="text-balance text-neutral-600 text-sm dark:text-neutral-400">
+        <p className={cn("text-balance text-sm", landingBody)}>
           {feature.description}
         </p>
       </div>

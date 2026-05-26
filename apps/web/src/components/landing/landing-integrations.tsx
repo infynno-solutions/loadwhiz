@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@loadwhiz/ui/components/card";
+import { cn } from "@loadwhiz/ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import {
   HiArrowRight,
@@ -14,7 +15,6 @@ import {
   HiOutlineCodeBracket,
 } from "react-icons/hi2";
 import { TbWebhook } from "react-icons/tb";
-
 import { LandingIcon } from "@/components/landing/landing-icon";
 import {
   LandingGlowCard,
@@ -22,7 +22,12 @@ import {
   LandingStagger,
   LandingStaggerItem,
 } from "@/components/landing/landing-motion";
+
 import { LandingSection } from "@/components/landing/landing-section";
+import {
+  landingBody,
+  landingTextPrimary,
+} from "@/components/landing/landing-styles";
 
 const INTEGRATIONS = [
   {
@@ -92,10 +97,15 @@ export function LandingIntegrations() {
                     Self-hostable
                   </span>
                 </div>
-                <h3 className="font-bold text-xl tracking-tight md:text-2xl">
+                <h3
+                  className={cn(
+                    "font-bold text-xl tracking-tight md:text-2xl",
+                    landingTextPrimary,
+                  )}
+                >
                   Your data, your infrastructure
                 </h3>
-                <p className="max-w-xl text-muted-foreground leading-relaxed">
+                <p className={cn("max-w-xl leading-relaxed", landingBody)}>
                   Run LoadWhiz entirely on your own stack with a straightforward
                   Docker setup. Full control over where your data lives — ideal
                   for regulated industries and security-conscious teams.
@@ -108,7 +118,10 @@ export function LandingIntegrations() {
                   ].map((point) => (
                     <li
                       key={point}
-                      className="flex items-center gap-2 text-muted-foreground text-sm"
+                      className={cn(
+                        "flex items-center gap-2 text-sm",
+                        landingBody,
+                      )}
                     >
                       <span className="size-1.5 shrink-0 rounded-full bg-emerald-500" />
                       {point}

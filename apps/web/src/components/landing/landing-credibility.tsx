@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@loadwhiz/ui/lib/utils";
 import {
   HiClock,
   HiDocumentText,
@@ -8,7 +9,11 @@ import {
 } from "react-icons/hi2";
 
 import { LandingReveal } from "@/components/landing/landing-motion";
-import { landingContainer } from "@/components/landing/landing-styles";
+import {
+  landingContainer,
+  landingTextHeading,
+  landingTextMuted,
+} from "@/components/landing/landing-styles";
 
 const ITEMS = [
   {
@@ -35,7 +40,7 @@ const ITEMS = [
 
 export function LandingCredibility() {
   return (
-    <div className="border-y border-neutral-200 bg-neutral-50 py-10 md:py-14 dark:border-neutral-800 dark:bg-neutral-900/50">
+    <div className="border-neutral-200 border-y bg-neutral-50 py-10 md:py-14 dark:border-neutral-800 dark:bg-neutral-900/50">
       <div className={landingContainer}>
         <div className="grid grid-cols-2 gap-y-10 lg:grid-cols-4 lg:divide-x lg:divide-neutral-200 dark:lg:divide-neutral-800">
           {ITEMS.map((item) => (
@@ -45,10 +50,10 @@ export function LandingCredibility() {
                   <item.icon className="size-6" aria-hidden />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="font-medium text-neutral-800 text-sm dark:text-neutral-200">
+                  <p className={cn("font-medium text-sm", landingTextHeading)}>
                     {item.label}
                   </p>
-                  <p className="text-neutral-500 text-xs dark:text-neutral-500">
+                  <p className={cn("text-xs", landingTextMuted)}>
                     {item.sublabel}
                   </p>
                 </div>

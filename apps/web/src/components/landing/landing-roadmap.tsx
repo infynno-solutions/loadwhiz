@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@loadwhiz/ui/components/card";
+import { cn } from "@loadwhiz/ui/lib/utils";
 import { HiGlobeAlt } from "react-icons/hi2";
 import { PiPlugsConnectedBold } from "react-icons/pi";
 import { TbTemplate } from "react-icons/tb";
@@ -18,6 +19,11 @@ import {
   LandingStaggerItem,
 } from "@/components/landing/landing-motion";
 import { LandingSection } from "@/components/landing/landing-section";
+import {
+  landingBody,
+  landingTextMuted,
+  landingTextPrimary,
+} from "@/components/landing/landing-styles";
 
 const ROADMAP = [
   {
@@ -61,14 +67,19 @@ export function LandingRoadmap() {
                   <LandingIcon icon={item.icon} tone={item.tone} size="md" />
                   <Badge
                     variant="outline"
-                    className="shrink-0 border-border/50 text-muted-foreground text-xs"
+                    className={cn(
+                      "shrink-0 border-border/50 text-xs",
+                      landingTextMuted,
+                    )}
                   >
                     Coming soon
                   </Badge>
                 </div>
                 <div className="flex flex-col gap-2">
                   <CardTitle className="text-base">{item.title}</CardTitle>
-                  <CardDescription className="leading-relaxed">
+                  <CardDescription
+                    className={cn("leading-relaxed", landingBody)}
+                  >
                     {item.description}
                   </CardDescription>
                 </div>
@@ -79,13 +90,16 @@ export function LandingRoadmap() {
       </LandingStagger>
 
       <LandingReveal delay={0.1} className="mt-6">
-        <p className="text-center text-muted-foreground text-sm">
+        <p className={cn("text-center text-sm", landingTextMuted)}>
           Have a use case in mind?{" "}
           <a
             href={`${LANDING_GITHUB_URL}/issues`}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+            className={cn(
+              "font-medium underline underline-offset-4 hover:text-primary",
+              landingTextPrimary,
+            )}
           >
             Open a GitHub issue
           </a>{" "}

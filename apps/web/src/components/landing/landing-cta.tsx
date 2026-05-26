@@ -14,11 +14,12 @@ import {
   landingBody,
   landingContainer,
   landingHeadingSection,
+  landingTextMuted,
 } from "@/components/landing/landing-styles";
 
 export function LandingCta() {
   return (
-    <section className="relative overflow-hidden border-t border-neutral-200 py-20 md:py-28 dark:border-neutral-800">
+    <section className="relative overflow-hidden border-neutral-200 border-t py-20 md:py-28 dark:border-neutral-800">
       <LandingBackground variant="section" />
       <div
         className={cn(
@@ -67,7 +68,7 @@ export function LandingCta() {
         </LandingReveal>
 
         <LandingReveal delay={0.25}>
-          <p className="text-neutral-500 text-sm">
+          <p className={cn("text-sm", landingTextMuted)}>
             Free to start · Deploy on your infrastructure · No vendor lock-in
           </p>
         </LandingReveal>

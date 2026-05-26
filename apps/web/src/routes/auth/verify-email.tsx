@@ -1,17 +1,13 @@
-import { Button } from "@loadwhiz/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@loadwhiz/ui/components/card";
 import { Spinner } from "@loadwhiz/ui/components/spinner";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { AuthPageBrand } from "@/components/auth/auth-page-brand";
+
+import { AuthFormHeader } from "@/components/auth/auth-form-header";
+import { AuthPageShell } from "@/components/auth/auth-page-layout";
+import { authPrimaryButtonClass } from "@/components/auth/auth-styles";
+import { LandingBrandButton } from "@/components/landing/landing-brand-button";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import { verifyEmail } from "@/lib/auth-api";
 
@@ -59,30 +55,20 @@ function VerifyEmailPage() {
   }, [token]);
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
-        <AuthPageBrand />
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">Verify email</CardTitle>
-            <CardDescription>{message}</CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            {status === "loading" ? (
-              <Spinner className="size-6" />
-            ) : (
-              <Button
-                asChild
-                variant={status === "error" ? "outline" : "default"}
-              >
-                <Link to="/login">
-                  {status === "success" ? "Continue to login" : "Back to login"}
-                </Link>
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+    <AuthPageShell>
+      <AuthFormHeader title="Verify email" description={message} />
+      <div className="flex justify-center py-2">
+        {status === "loading" ? (
+          <Spinner className="size-6" />
+        ) : (
+          <LandingBrandButton
+            className={authPrimaryButtonClass}
+            render={<Link to="/login" />}
+          >
+            {status === "success" ? "Continue to sign in" : "Back to sign in"}
+          </LandingBrandButton>
+        )}
       </div>
-    </div>
+    </AuthPageShell>
   );
 }

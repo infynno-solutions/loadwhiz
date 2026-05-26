@@ -1,27 +1,22 @@
-import { Button } from "@loadwhiz/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@loadwhiz/ui/components/card";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@loadwhiz/ui/components/field";
-import { Input } from "@loadwhiz/ui/components/input";
+import { Field, FieldError, FieldLabel } from "@loadwhiz/ui/components/field";
 import { Spinner } from "@loadwhiz/ui/components/spinner";
 import { cn } from "@loadwhiz/ui/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-
 import { authForgotPasswordMutation } from "@/api/generated/@tanstack/react-query.gen";
+import { AuthFormHeader } from "@/components/auth/auth-form-header";
+import { AuthLegalNotice } from "@/components/auth/auth-legal-notice";
+import {
+  authFormClass,
+  authFormFooterClass,
+  authFormFooterLinkClass,
+  authLabelClass,
+  authPrimaryButtonClass,
+} from "@/components/auth/auth-styles";
+import { AuthTextInput } from "@/components/auth/auth-text-input";
+import { LandingBrandButton } from "@/components/landing/landing-brand-button";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import {
   type ForgotPasswordFormValues,
@@ -59,65 +54,59 @@ export function ForgotPasswordForm({
   });
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Reset your password</CardTitle>
-          <CardDescription>
-            Enter your email and we&apos;ll send you a reset link
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
-          >
-            <FieldGroup>
-              <form.Field
-                name="email"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor="email">Email</FieldLabel>
-                      <Input
-                        id="email"
-                        name={field.name}
-                        type="email"
-                        placeholder="m@example.com"
-                        required
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  );
-                }}
-              />
-              <Field>
-                <Button type="submit" disabled={forgotPassword.isPending}>
-                  {forgotPassword.isPending ? <Spinner /> : "Send reset link"}
-                </Button>
-                <FieldDescription className="text-center">
-                  Remember your password? <Link to="/login">Back to login</Link>
-                </FieldDescription>
+    <div className={cn(className)} {...props}>
+      <AuthFormHeader
+        title="Reset your password"
+        description="Enter your email and we'll send you a reset link."
+      />
+      <form
+        className={authFormClass}
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit();
+        }}
+      >
+        <form.Field
+          name="email"
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor="email" className={authLabelClass}>
+                  Email
+                </FieldLabel>
+                <AuthTextInput
+                  id="email"
+                  name={field.name}
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-      <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our{" "}
-        <Link to="/terms">Terms of Service</Link> and{" "}
-        <Link to="/privacy">Privacy Policy</Link>.
-      </FieldDescription>
+            );
+          }}
+        />
+        <LandingBrandButton
+          type="submit"
+          disabled={forgotPassword.isPending}
+          className={authPrimaryButtonClass}
+        >
+          {forgotPassword.isPending ? <Spinner /> : "Send reset link"}
+        </LandingBrandButton>
+      </form>
+      <p className={authFormFooterClass}>
+        Remember your password?{" "}
+        <Link to="/login" className={authFormFooterLinkClass}>
+          Back to sign in
+        </Link>
+      </p>
+      <AuthLegalNotice />
     </div>
   );
 }

@@ -17,6 +17,8 @@ import {
   landingContainer,
   landingEyebrow,
   landingHeadingHero,
+  landingTextMuted,
+  landingTextPrimary,
 } from "@/components/landing/landing-styles";
 
 const heroStagger = {
@@ -58,7 +60,7 @@ export function LandingHero() {
           animate={reduced ? undefined : "visible"}
         >
           <motion.a
-            href="#features"
+            href="/#features"
             variants={reduced ? undefined : heroItem}
             className={landingEyebrow}
           >
@@ -72,9 +74,7 @@ export function LandingHero() {
           >
             <h1 id="hero-title" className={landingHeadingHero}>
               Your users expect it to work.{" "}
-              <span className="text-neutral-900 dark:text-white">
-                Make sure it does.
-              </span>
+              <span className={landingTextPrimary}>Make sure it does.</span>
             </h1>
             <p className={cn(landingBodyLg, "mx-auto max-w-2xl text-center")}>
               LoadWhiz gives engineering teams a complete performance testing
@@ -109,7 +109,7 @@ export function LandingHero() {
                 View on GitHub
               </a>
             </div>
-            <p className="text-neutral-500 text-sm dark:text-neutral-500">
+            <p className={cn("text-sm", landingTextMuted)}>
               Free to start · Deploy on your infrastructure · No vendor lock-in
             </p>
           </motion.div>

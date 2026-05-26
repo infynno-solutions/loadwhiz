@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { AuthPageBrand } from "@/components/auth/auth-page-brand";
+import { AuthPageShell } from "@/components/auth/auth-page-layout";
 import { SetNewPasswordForm } from "@/components/auth/set-new-password-form";
 import { redirectIfAuthenticated } from "@/lib/auth";
 
@@ -20,11 +20,8 @@ function ResetPasswordPage() {
   const { token } = Route.useSearch();
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
-        <AuthPageBrand />
-        <SetNewPasswordForm token={token} />
-      </div>
-    </div>
+    <AuthPageShell>
+      <SetNewPasswordForm token={token} />
+    </AuthPageShell>
   );
 }

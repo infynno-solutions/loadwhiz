@@ -21,7 +21,7 @@ export function LandingBackground({
     >
       <div
         className={cn(
-          "absolute inset-0 mask-b-from-50%",
+          "mask-b-from-50% absolute inset-0",
           variant === "hero" ? "opacity-100" : "opacity-60",
         )}
       >

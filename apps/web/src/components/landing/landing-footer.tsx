@@ -12,12 +12,17 @@ import {
   LANDING_FOOTER_COLUMNS,
   LANDING_GITHUB_URL,
 } from "@/components/landing/landing-constants";
+import { LandingSectionLink } from "@/components/landing/landing-section-link";
+import {
+  landingBody,
+  landingTextMuted,
+} from "@/components/landing/landing-styles";
+import { marketingTextLabel } from "@/lib/marketing-text";
 
 const footerLinkClass =
-  "transition-colors hover:text-neutral-800 dark:hover:text-white";
+  "transition-colors hover:text-neutral-900 dark:hover:text-white";
 
-const footerColumnTitleClass =
-  "font-bold text-neutral-600 dark:text-neutral-300";
+const footerColumnTitleClass = cn("font-bold", marketingTextLabel);
 
 function FooterThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -42,7 +47,11 @@ function FooterThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="flex cursor-pointer items-center justify-center text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+      className={cn(
+        "flex cursor-pointer items-center justify-center transition-colors",
+        landingTextMuted,
+        "hover:text-neutral-900 dark:hover:text-white",
+      )}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? (
@@ -63,10 +72,7 @@ function FooterLink({
   href: string;
   external?: boolean;
 }) {
-  const className = cn(
-    "text-neutral-600 dark:text-neutral-300",
-    footerLinkClass,
-  );
+  const className = cn(landingBody, footerLinkClass);
 
   if (external || href.startsWith("http")) {
     return (
@@ -81,11 +87,11 @@ function FooterLink({
     );
   }
 
-  if (href.startsWith("#")) {
+  if (href.startsWith("/#")) {
     return (
-      <a href={href} className={className}>
+      <LandingSectionLink href={href} className={className}>
         {label}
-      </a>
+      </LandingSectionLink>
     );
   }
 
@@ -100,16 +106,21 @@ export function LandingFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative w-full border-neutral-100 border-t bg-white px-8 pt-20 pb-16 dark:border-white/10 dark:bg-neutral-950 md:pb-20">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 text-neutral-500 text-sm lg:flex-row lg:items-start lg:justify-between lg:gap-16">
+    <footer className="relative w-full border-neutral-100 border-t bg-white px-8 pt-20 pb-16 md:pb-20 dark:border-white/10 dark:bg-neutral-950">
+      <div
+        className={cn(
+          "mx-auto flex w-full max-w-7xl flex-col gap-12 text-sm lg:flex-row lg:items-start lg:justify-between lg:gap-16",
+          landingTextMuted,
+        )}
+      >
         <div className="max-w-md shrink-0 lg:max-w-lg lg:pr-8">
           <div className="mb-4">
-            <a
-              href="#top"
+            <Link
+              to="/"
               className="relative z-20 inline-flex items-center space-x-2 rounded-md px-2 py-1 outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
             >
               <AppLogo size="sm" wordmarkClassName="text-foreground" />
-            </a>
+            </Link>
           </div>
 
           <p className="mb-6 max-w-sm text-neutral-600 leading-relaxed dark:text-neutral-400">
@@ -122,7 +133,10 @@ export function LandingFooter() {
               href={LANDING_GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+              className={cn(
+                "transition-colors hover:text-neutral-900 dark:hover:text-white",
+                landingTextMuted,
+              )}
               aria-label="GitHub"
             >
               <SiGithub className="size-5" aria-hidden />
@@ -130,7 +144,7 @@ export function LandingFooter() {
             <FooterThemeToggle />
           </div>
 
-          <p className="mt-6 text-neutral-500 dark:text-neutral-400">
+          <p className={cn("mt-6", landingTextMuted)}>
             © {year} LoadWhiz. All rights reserved.
           </p>
         </div>
