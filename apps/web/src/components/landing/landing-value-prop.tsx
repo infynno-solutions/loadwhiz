@@ -3,14 +3,13 @@
 import { Card, CardHeader, CardTitle } from "@loadwhiz/ui/components/card";
 import { cn } from "@loadwhiz/ui/lib/utils";
 import { HiCheckCircle, HiXCircle } from "react-icons/hi2";
-
-import { LandingSection } from "@/components/landing/landing-section";
 import { LandingIcon } from "@/components/landing/landing-icon";
 import {
   LandingGlowCard,
   LandingStagger,
   LandingStaggerItem,
 } from "@/components/landing/landing-motion";
+import { LandingSection } from "@/components/landing/landing-section";
 
 const WITHOUT_ITEMS = [
   "Performance issues discovered in production, not pre-release",
@@ -40,11 +39,16 @@ export function LandingValueProp() {
             <CardHeader className="gap-4">
               <div className="flex items-center gap-2">
                 <LandingIcon icon={HiXCircle} tone="rose" size="md" />
-                <CardTitle className="text-base">The guesswork approach</CardTitle>
+                <CardTitle className="text-base">
+                  The guesswork approach
+                </CardTitle>
               </div>
               <ul className="flex flex-col gap-3">
                 {WITHOUT_ITEMS.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm text-muted-foreground leading-relaxed">
+                  <li
+                    key={item}
+                    className="flex gap-3 text-muted-foreground text-sm leading-relaxed"
+                  >
                     <HiXCircle
                       className="mt-0.5 size-4 shrink-0 text-rose-500/60"
                       aria-hidden
@@ -70,7 +74,10 @@ export function LandingValueProp() {
                 </div>
                 <ul className="flex flex-col gap-3">
                   {WITH_ITEMS.map((item) => (
-                    <li key={item} className="flex gap-3 text-sm text-muted-foreground leading-relaxed">
+                    <li
+                      key={item}
+                      className="flex gap-3 text-muted-foreground text-sm leading-relaxed"
+                    >
                       <HiCheckCircle
                         className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"
                         aria-hidden

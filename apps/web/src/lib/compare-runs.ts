@@ -177,16 +177,10 @@ export function mergeDistributionForCompare(
   }
 
   const aMap = new Map(
-    (aBuckets ?? []).map((b) => [
-      `${b.bucket_start_ms}-${b.bucket_end_ms}`,
-      b,
-    ]),
+    (aBuckets ?? []).map((b) => [`${b.bucket_start_ms}-${b.bucket_end_ms}`, b]),
   );
   const bMap = new Map(
-    (bBuckets ?? []).map((b) => [
-      `${b.bucket_start_ms}-${b.bucket_end_ms}`,
-      b,
-    ]),
+    (bBuckets ?? []).map((b) => [`${b.bucket_start_ms}-${b.bucket_end_ms}`, b]),
   );
 
   return [...keys]

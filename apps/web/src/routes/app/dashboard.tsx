@@ -107,10 +107,7 @@ function PageHeader({
         </p>
       </div>
       {canRunTest ? (
-        <Button
-          size="sm"
-          render={<Link to="/app/tests/new" />}
-        >
+        <Button size="sm" render={<Link to="/app/tests/new" />}>
           <PlusIcon />
           New test
         </Button>

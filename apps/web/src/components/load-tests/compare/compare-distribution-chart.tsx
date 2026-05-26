@@ -9,9 +9,9 @@ import {
   ChartTooltipContent,
 } from "@loadwhiz/ui/components/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import type { LoadTestResultDashboardResponse } from "@/api/generated/types.gen";
 import { RESULT_CHART_HEIGHT_CLASS } from "@/components/load-tests/chart-layout";
 import { mergeDistributionForCompare } from "@/lib/compare-runs";
-import type { LoadTestResultDashboardResponse } from "@/api/generated/types.gen";
 
 const chartConfig = {
   a_count: { label: "Run A", color: "var(--chart-1)" },
@@ -52,16 +52,8 @@ export function CompareDistributionChart({
         <YAxis tickLine={false} axisLine={false} width={40} />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Bar
-          dataKey="a_count"
-          fill="var(--color-a_count)"
-          radius={4}
-        />
-        <Bar
-          dataKey="b_count"
-          fill="var(--color-b_count)"
-          radius={4}
-        />
+        <Bar dataKey="a_count" fill="var(--color-a_count)" radius={4} />
+        <Bar dataKey="b_count" fill="var(--color-b_count)" radius={4} />
       </BarChart>
     </ChartContainer>
   );

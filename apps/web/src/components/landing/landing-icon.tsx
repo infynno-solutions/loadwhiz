@@ -19,8 +19,7 @@ const toneClass: Record<LandingIconTone, string> = {
   sky: "bg-sky-500/12 text-sky-700 ring-sky-500/20 dark:text-sky-300",
   emerald:
     "bg-emerald-500/12 text-emerald-700 ring-emerald-500/20 dark:text-emerald-300",
-  amber:
-    "bg-amber-500/12 text-amber-800 ring-amber-500/20 dark:text-amber-300",
+  amber: "bg-amber-500/12 text-amber-800 ring-amber-500/20 dark:text-amber-300",
   rose: "bg-rose-500/12 text-rose-700 ring-rose-500/20 dark:text-rose-300",
   orange:
     "bg-orange-500/12 text-orange-700 ring-orange-500/20 dark:text-orange-300",

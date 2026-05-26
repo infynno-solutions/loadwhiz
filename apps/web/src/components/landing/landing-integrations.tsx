@@ -8,7 +8,11 @@ import {
   CardTitle,
 } from "@loadwhiz/ui/components/card";
 import { Link } from "@tanstack/react-router";
-import { HiArrowRight, HiEnvelope, HiOutlineCodeBracket } from "react-icons/hi2";
+import {
+  HiArrowRight,
+  HiEnvelope,
+  HiOutlineCodeBracket,
+} from "react-icons/hi2";
 import { TbWebhook } from "react-icons/tb";
 
 import { LandingIcon } from "@/components/landing/landing-icon";

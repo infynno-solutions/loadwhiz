@@ -1,10 +1,4 @@
-import {
-  Document,
-  Page,
-  StyleSheet,
-  Text,
-  View,
-} from "@react-pdf/renderer";
+import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import type {
   LoadTestResultDashboardResponse,
   LoadTestResultSummary,
@@ -129,7 +123,11 @@ function MultiColumnTable({
         {headers.map((h) => (
           <Text
             key={h}
-            style={headers.length > 2 && h === headers[0] ? styles.cellWide : styles.cell}
+            style={
+              headers.length > 2 && h === headers[0]
+                ? styles.cellWide
+                : styles.cell
+            }
           >
             {h}
           </Text>
@@ -140,7 +138,9 @@ function MultiColumnTable({
           {row.cells.map((cell, j) => (
             <Text
               key={j}
-              style={j === 0 && headers.length > 2 ? styles.cellWide : styles.cell}
+              style={
+                j === 0 && headers.length > 2 ? styles.cellWide : styles.cell
+              }
             >
               {cell}
             </Text>
@@ -203,9 +203,7 @@ export function ResultPdfDocument({
           <>
             <Text style={styles.sectionTitle}>
               Requests over time
-              {(dashboard.timeseries?.length ?? 0) > 60
-                ? " (sampled)"
-                : ""}
+              {(dashboard.timeseries?.length ?? 0) > 60 ? " (sampled)" : ""}
             </Text>
             <MultiColumnTable
               headers={["Time", "Requests", "Avg response", "Errors"]}

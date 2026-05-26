@@ -2,11 +2,7 @@
 
 import { Badge } from "@loadwhiz/ui/components/badge";
 import { Button } from "@loadwhiz/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@loadwhiz/ui/components/card";
+import { Card, CardContent, CardHeader } from "@loadwhiz/ui/components/card";
 import { Separator } from "@loadwhiz/ui/components/separator";
 import { Skeleton } from "@loadwhiz/ui/components/skeleton";
 import { Link } from "@tanstack/react-router";
@@ -48,10 +44,14 @@ export function DashboardPerformanceHighlight({
   const m = highlight.metrics;
 
   const canLink =
-    highlight.status !== "not_ready" && highlight.test_id && highlight.result_id;
+    highlight.status !== "not_ready" &&
+    highlight.test_id &&
+    highlight.result_id;
 
   return (
-    <Card className={isActive ? "ring-sky-500/30 dark:ring-sky-500/20" : undefined}>
+    <Card
+      className={isActive ? "ring-sky-500/30 dark:ring-sky-500/20" : undefined}
+    >
       <CardHeader className="pb-0">
         <div className="flex flex-wrap items-start justify-between gap-3">
           {/* Left: label + title + meta */}

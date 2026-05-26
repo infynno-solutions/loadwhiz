@@ -112,9 +112,11 @@ export function DashboardRecentRuns({ runs }: DashboardRecentRunsProps) {
                     </TableCell>
 
                     <TableCell className="hidden text-sm tabular-nums md:table-cell">
-                      {run.metrics?.rps != null
-                        ? `${run.metrics.rps.toFixed(1)}`
-                        : <span className="text-muted-foreground/50">—</span>}
+                      {run.metrics?.rps != null ? (
+                        `${run.metrics.rps.toFixed(1)}`
+                      ) : (
+                        <span className="text-muted-foreground/50">—</span>
+                      )}
                     </TableCell>
 
                     <TableCell className="hidden text-sm tabular-nums md:table-cell">

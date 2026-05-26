@@ -26,10 +26,7 @@ import { CompareOverviewTable } from "@/components/load-tests/compare/compare-ov
 import { CompareRunCards } from "@/components/load-tests/compare/compare-run-cards";
 import { CompareTimeseriesChart } from "@/components/load-tests/compare/compare-timeseries-chart";
 import { isCompareDashboardReady } from "@/lib/compare-runs";
-import {
-  useCompareDashboards,
-  useLoadTest,
-} from "@/lib/load-test-queries";
+import { useCompareDashboards, useLoadTest } from "@/lib/load-test-queries";
 import { useCurrentUser } from "@/lib/user-queries";
 
 const compareSearchSchema = z.object({
@@ -53,13 +50,8 @@ function CompareRunsPage() {
   const orgId = user?.active_organization_id ?? undefined;
 
   const { data: test } = useLoadTest(orgId, testId);
-  const {
-    dashboardA,
-    dashboardB,
-    isPending,
-    isError,
-    refetch,
-  } = useCompareDashboards(orgId, testId, a, b);
+  const { dashboardA, dashboardB, isPending, isError, refetch } =
+    useCompareDashboards(orgId, testId, a, b);
 
   const readyA = isCompareDashboardReady(dashboardA);
   const readyB = isCompareDashboardReady(dashboardB);

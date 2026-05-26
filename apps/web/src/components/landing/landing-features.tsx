@@ -18,7 +18,10 @@ import {
 import { SiOpenapiinitiative } from "react-icons/si";
 import { TbBrandDocker } from "react-icons/tb";
 
-import { LandingIcon, type LandingIconTone } from "@/components/landing/landing-icon";
+import {
+  LandingIcon,
+  type LandingIconTone,
+} from "@/components/landing/landing-icon";
 import {
   LandingGlowCard,
   LandingStagger,
@@ -116,7 +119,11 @@ export function LandingFeatures() {
               <LandingGlowCard className="h-full">
                 <Card className="h-full border-primary/15 bg-linear-to-br from-muted/50 to-card shadow-sm transition-shadow duration-300 hover:shadow-lg">
                   <CardHeader className="gap-4 pt-6 pb-6">
-                    <LandingIcon icon={feature.icon} tone={feature.tone} size="lg" />
+                    <LandingIcon
+                      icon={feature.icon}
+                      tone={feature.tone}
+                      size="lg"
+                    />
                     <div className="flex flex-col gap-1.5">
                       <CardTitle className="text-lg">{feature.title}</CardTitle>
                       <CardDescription className="leading-relaxed">
@@ -136,7 +143,11 @@ export function LandingFeatures() {
             <LandingStaggerItem key={feature.title}>
               <Card className="h-full transition-all duration-300 hover:border-border/80 hover:shadow-md">
                 <CardHeader className="gap-4">
-                  <LandingIcon icon={feature.icon} tone={feature.tone} size="md" />
+                  <LandingIcon
+                    icon={feature.icon}
+                    tone={feature.tone}
+                    size="md"
+                  />
                   <div className="flex flex-col gap-1.5">
                     <CardTitle className="text-base">{feature.title}</CardTitle>
                     <CardDescription className="leading-relaxed">

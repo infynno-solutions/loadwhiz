@@ -2,9 +2,9 @@
 
 import { cn } from "@loadwhiz/ui/lib/utils";
 import {
+  type HTMLMotionProps,
   motion,
   useReducedMotion,
-  type HTMLMotionProps,
   type Variants,
 } from "framer-motion";
 import type { ReactNode } from "react";

@@ -9,9 +9,9 @@ import {
   ChartTooltipContent,
 } from "@loadwhiz/ui/components/chart";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import type { LoadTestResultDashboardResponse } from "@/api/generated/types.gen";
 import { RESULT_CHART_HEIGHT_CLASS } from "@/components/load-tests/chart-layout";
 import { mergeTimeseriesForCompare } from "@/lib/compare-runs";
-import type { LoadTestResultDashboardResponse } from "@/api/generated/types.gen";
 
 const requestsConfig = {
   a_requests: { label: "Run A requests", color: "var(--chart-1)" },
@@ -40,9 +40,7 @@ export function CompareTimeseriesChart({
   );
 
   if (data.length === 0) {
-    return (
-      <p className="text-muted-foreground text-sm">No timeseries data.</p>
-    );
+    return <p className="text-muted-foreground text-sm">No timeseries data.</p>;
   }
 
   const config = metric === "requests" ? requestsConfig : latencyConfig;

@@ -28,7 +28,9 @@ export function CompareByUrlTable({
 
   if (rows.length === 0) {
     return (
-      <p className="text-muted-foreground text-sm">No per-URL data to compare.</p>
+      <p className="text-muted-foreground text-sm">
+        No per-URL data to compare.
+      </p>
     );
   }
 
@@ -100,11 +102,7 @@ export function CompareByUrlTable({
   );
 }
 
-function DeltaCell({
-  delta,
-}: {
-  delta: ReturnType<typeof formatDelta>;
-}) {
+function DeltaCell({ delta }: { delta: ReturnType<typeof formatDelta> }) {
   if (!delta) return <span className="text-muted-foreground">—</span>;
   return (
     <span

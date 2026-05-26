@@ -14,7 +14,10 @@ import {
   HiShieldCheck,
 } from "react-icons/hi2";
 
-import { LandingIcon, type LandingIconTone } from "@/components/landing/landing-icon";
+import {
+  LandingIcon,
+  type LandingIconTone,
+} from "@/components/landing/landing-icon";
 import {
   LandingGlowCard,
   LandingStagger,

@@ -40,7 +40,7 @@ export function LandingBackground({
       <div className="absolute top-0 left-1/2 size-[min(110%,44rem)] -translate-x-1/2 rounded-full bg-primary/18 blur-3xl dark:bg-primary/12" />
       <div className="absolute top-1/4 -right-20 size-80 rounded-full bg-violet-500/15 blur-3xl" />
       <div className="absolute top-1/3 -left-28 size-72 rounded-full bg-sky-500/12 blur-3xl" />
-      <div className="absolute -bottom-20 right-1/4 size-96 rounded-full bg-emerald-500/10 blur-3xl" />
+      <div className="absolute right-1/4 -bottom-20 size-96 rounded-full bg-emerald-500/10 blur-3xl" />
       {variant === "hero" ? (
         <div className="absolute right-[8%] bottom-[20%] size-56 rounded-full bg-amber-500/8 blur-3xl" />
       ) : null}

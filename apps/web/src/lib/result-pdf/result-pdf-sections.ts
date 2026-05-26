@@ -34,9 +34,7 @@ export function buildResultPdfFilename(
   const testName = sanitizePdfFilename(dashboard.meta.test_name);
   const shortId = result.result_id.slice(0, 8);
   const date = result.finished_at ?? result.started_at ?? result.created_at;
-  const datePart = date
-    ? new Date(date).toISOString().slice(0, 10)
-    : "report";
+  const datePart = date ? new Date(date).toISOString().slice(0, 10) : "report";
   return `${testName}-${shortId}-${datePart}.pdf`;
 }
 
@@ -64,7 +62,9 @@ export function overviewRows(
     { cells: ["Error rate", `${formatNum(overview.error_rate_percent)}%`] },
     { cells: ["Total requests", String(overview.total_requests ?? "—")] },
     { cells: ["RPS", formatNum(overview.rps)] },
-    { cells: ["P95", m?.p95_ms != null ? `${formatNum(m.p95_ms, 0)} ms` : "—"] },
+    {
+      cells: ["P95", m?.p95_ms != null ? `${formatNum(m.p95_ms, 0)} ms` : "—"],
+    },
     {
       cells: [
         "Duration",
@@ -143,10 +143,7 @@ export function distributionRows(
   buckets: DashboardDistributionBucket[],
 ): PdfTableRow[] {
   return buckets.map((b) => ({
-    cells: [
-      `${b.bucket_start_ms}–${b.bucket_end_ms} ms`,
-      String(b.count),
-    ],
+    cells: [`${b.bucket_start_ms}–${b.bucket_end_ms} ms`, String(b.count)],
   }));
 }
 

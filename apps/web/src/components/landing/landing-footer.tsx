@@ -29,8 +29,8 @@ export function LandingFooter() {
               </span>
             </a>
             <p className="max-w-sm text-muted-foreground text-sm leading-relaxed">
-              Performance testing for engineering teams who ship often and
-              can't afford surprises.
+              Performance testing for engineering teams who ship often and can't
+              afford surprises.
             </p>
           </div>
 

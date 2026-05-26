@@ -8,12 +8,12 @@ import {
 } from "@loadwhiz/ui/components/accordion";
 
 import { LandingDashboardPreview } from "@/components/landing/landing-dashboard-preview";
-import { LandingSection } from "@/components/landing/landing-section";
 import {
   LandingReveal,
   LandingStagger,
   LandingStaggerItem,
 } from "@/components/landing/landing-motion";
+import { LandingSection } from "@/components/landing/landing-section";
 
 const BULLETS = [
   "Metrics stream live throughout the entire test — no polling, no waiting",
@@ -35,7 +35,7 @@ export function LandingLiveResults() {
         <LandingStagger className="flex flex-col gap-3">
           {BULLETS.map((item) => (
             <LandingStaggerItem key={item}>
-              <div className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
+              <div className="flex gap-3 text-muted-foreground text-sm leading-relaxed">
                 <span
                   className="mt-2 size-1.5 shrink-0 rounded-full bg-primary"
                   aria-hidden

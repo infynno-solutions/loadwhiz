@@ -19,7 +19,8 @@ type LandingSectionProps = {
 
 const eyebrowToneClass = {
   brand: "border-primary/25 bg-primary/10 text-primary",
-  violet: "border-violet-500/25 bg-violet-500/10 text-violet-700 dark:text-violet-300",
+  violet:
+    "border-violet-500/25 bg-violet-500/10 text-violet-700 dark:text-violet-300",
   sky: "border-sky-500/25 bg-sky-500/10 text-sky-700 dark:text-sky-300",
   emerald:
     "border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",

@@ -27,9 +27,7 @@ export function OpenApiPreviewPanel({ preview }: OpenApiPreviewPanelProps) {
       </CardHeader>
       <CardContent className="flex flex-col gap-3 text-sm">
         <div className="flex flex-wrap gap-2">
-          <Badge variant="info">
-            {preview.operations.length} operations
-          </Badge>
+          <Badge variant="info">{preview.operations.length} operations</Badge>
           {preview.skipped.length > 0 ? (
             <Badge variant="warning">{preview.skipped.length} skipped</Badge>
           ) : null}

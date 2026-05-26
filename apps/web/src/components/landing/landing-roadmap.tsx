@@ -10,9 +10,8 @@ import {
 import { HiGlobeAlt } from "react-icons/hi2";
 import { PiPlugsConnectedBold } from "react-icons/pi";
 import { TbTemplate } from "react-icons/tb";
-
-import { LandingIcon } from "@/components/landing/landing-icon";
 import { LANDING_GITHUB_URL } from "@/components/landing/landing-constants";
+import { LandingIcon } from "@/components/landing/landing-icon";
 import {
   LandingReveal,
   LandingStagger,

@@ -4,19 +4,19 @@ import { Button } from "@loadwhiz/ui/components/button";
 import { Link } from "@tanstack/react-router";
 import { HiArrowRight } from "react-icons/hi2";
 import { SiGithub } from "react-icons/si";
-
-import { LANDING_GITHUB_URL } from "@/components/landing/landing-constants";
 import { LandingBackground } from "@/components/landing/landing-background";
+import { LANDING_GITHUB_URL } from "@/components/landing/landing-constants";
 import { LandingReveal } from "@/components/landing/landing-motion";
 
 export function LandingCta() {
   return (
     <section className="relative overflow-hidden border-t bg-linear-to-br from-primary/8 via-background to-violet-500/8 py-24 md:py-32">
       <LandingBackground variant="section" className="opacity-50" />
-      <div
-        className="mx-auto w-full max-w-6xl px-4 sm:px-6 relative flex flex-col items-center gap-8 text-center"
-      >
-        <LandingReveal variant="fadeUp" className="flex flex-col items-center gap-4">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-4 text-center sm:px-6">
+        <LandingReveal
+          variant="fadeUp"
+          className="flex flex-col items-center gap-4"
+        >
           <h2 className="text-balance font-bold text-3xl tracking-tight md:text-4xl lg:text-5xl">
             Start protecting your users from performance surprises
           </h2>
@@ -27,7 +27,10 @@ export function LandingCta() {
           </p>
         </LandingReveal>
 
-        <LandingReveal delay={0.15} className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <LandingReveal
+          delay={0.15}
+          className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
+        >
           <Button
             size="lg"
             className="h-12 gap-2 px-8 text-base"

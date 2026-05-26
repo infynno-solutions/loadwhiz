@@ -9,8 +9,8 @@ import { HiArrowRight } from "react-icons/hi2";
 import { SiGithub } from "react-icons/si";
 
 import { LandingBackground } from "@/components/landing/landing-background";
-import { LandingDashboardPreview } from "@/components/landing/landing-dashboard-preview";
 import { LANDING_GITHUB_URL } from "@/components/landing/landing-constants";
+import { LandingDashboardPreview } from "@/components/landing/landing-dashboard-preview";
 import { landingEase } from "@/components/landing/landing-motion";
 
 const heroStagger = {
@@ -127,7 +127,7 @@ export function LandingHero() {
           >
             <LandingDashboardPreview
               variant="live"
-              className="shadow-xl shadow-primary/10"
+              className="shadow-primary/10 shadow-xl"
             />
           </motion.div>
         </motion.div>

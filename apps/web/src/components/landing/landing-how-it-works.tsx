@@ -15,12 +15,15 @@ import {
 } from "react-icons/hi2";
 
 import { LandingBackground } from "@/components/landing/landing-background";
-import { LandingIcon, type LandingIconTone } from "@/components/landing/landing-icon";
-import { LandingSection } from "@/components/landing/landing-section";
+import {
+  LandingIcon,
+  type LandingIconTone,
+} from "@/components/landing/landing-icon";
 import {
   LandingStagger,
   LandingStaggerItem,
 } from "@/components/landing/landing-motion";
+import { LandingSection } from "@/components/landing/landing-section";
 
 const STEPS: Array<{
   step: number;

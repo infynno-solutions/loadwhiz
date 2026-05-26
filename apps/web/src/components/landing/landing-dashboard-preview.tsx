@@ -12,9 +12,8 @@ import { Separator } from "@loadwhiz/ui/components/separator";
 import { Skeleton } from "@loadwhiz/ui/components/skeleton";
 import { cn } from "@loadwhiz/ui/lib/utils";
 import { motion, useReducedMotion } from "framer-motion";
-
-import { RESULT_CHART_HEIGHT_CLASS } from "@/components/load-tests/chart-layout";
 import { landingEase } from "@/components/landing/landing-motion";
+import { RESULT_CHART_HEIGHT_CLASS } from "@/components/load-tests/chart-layout";
 
 type LandingDashboardPreviewProps = {
   variant?: "live" | "complete";
@@ -108,11 +107,7 @@ export function LandingDashboardPreview({
           <CardDescription>15 clients · 60 sec · per-test</CardDescription>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {isLive ? (
-            <LiveBadge />
-          ) : (
-            <Badge variant="info">Ready</Badge>
-          )}
+          {isLive ? <LiveBadge /> : <Badge variant="info">Ready</Badge>}
           {!isLive ? <Badge variant="success">Passed</Badge> : null}
         </div>
       </CardHeader>

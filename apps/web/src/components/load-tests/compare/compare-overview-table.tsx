@@ -80,7 +80,7 @@ export function CompareOverviewTable({
                   {delta ? (
                     <span
                       className={cn(
-                        "tabular-nums text-sm",
+                        "text-sm tabular-nums",
                         delta.regression && "font-medium text-destructive",
                         !delta.regression &&
                           delta.absolute.startsWith("-") &&
