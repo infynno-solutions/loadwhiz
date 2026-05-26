@@ -9,6 +9,7 @@ from src.api.v1.organizations.schemas import (
     InviteResponse,
     MemberResponse,
     MessageResponse,
+    OrgDashboardResponse,
     OrganizationResponse,
     OrganizationWithRoleResponse,
     UpdateMemberRoleRequest,
@@ -21,9 +22,13 @@ from src.db.session import get_db
 from src.models.organization_member import MemberRole, OrganizationMember
 from src.models.user import User
 from src.repositories.auth_repository import AuthRepository
+from src.repositories.host_repository import HostRepository
+from src.repositories.load_test_repository import LoadTestRepository
+from src.repositories.load_test_result_repository import LoadTestResultRepository
 from src.repositories.organization_invite_repository import OrganizationInviteRepository
 from src.repositories.organization_member_repository import OrganizationMemberRepository
 from src.repositories.organization_repository import OrganizationRepository
+from src.services.dashboard_service import DashboardService
 from src.services.email_service import EmailService
 from src.services.invite_service import InviteService
 from src.services.organization_service import OrganizationService
@@ -39,6 +44,14 @@ def get_organization_service(db: AsyncSession = Depends(get_db)) -> Organization
         organization_repository=OrganizationRepository(db),
         member_repository=OrganizationMemberRepository(db),
         auth_repository=AuthRepository(db),
+    )
+
+
+def get_dashboard_service(db: AsyncSession = Depends(get_db)) -> DashboardService:
+    return DashboardService(
+        test_repository=LoadTestRepository(db),
+        result_repository=LoadTestResultRepository(db),
+        host_repository=HostRepository(db),
     )
 
 
@@ -112,6 +125,29 @@ async def get_organization(
         created_at=organization.created_at,
         updated_at=organization.updated_at,
     )
+
+
+@router.get(
+    "/{org_id}/dashboard",
+    operation_id="organizations.dashboard",
+    response_model=OrgDashboardResponse,
+    summary="Get organization dashboard",
+    description=(
+        "Returns aggregated stats, a performance highlight for the most recent run, "
+        "and the 10 most recent test runs across the organization."
+    ),
+    responses={
+        401: {"description": "Authentication required."},
+        403: {"description": "Not a member of this organization."},
+        404: {"description": "Organization not found."},
+    },
+)
+async def get_org_dashboard(
+    org_id: uuid.UUID,
+    service: DashboardService = Depends(get_dashboard_service),
+    _membership: OrganizationMember = Depends(get_org_member),
+) -> OrgDashboardResponse:
+    return await service.get_org_dashboard(org_id)
 
 
 @router.patch(

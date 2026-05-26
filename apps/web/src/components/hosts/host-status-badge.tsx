@@ -4,18 +4,18 @@ const statusConfig: Record<
   string,
   {
     label: string;
-    variant: "default" | "secondary" | "outline" | "destructive";
+    variant: "warning" | "success" | "destructive" | "neutral";
   }
 > = {
-  pending: { label: "Pending", variant: "outline" },
-  verified: { label: "Verified", variant: "default" },
+  pending: { label: "Pending", variant: "warning" },
+  verified: { label: "Verified", variant: "success" },
   failed: { label: "Failed", variant: "destructive" },
 };
 
 export function HostStatusBadge({ status }: { status: string }) {
   const config = statusConfig[status] ?? {
     label: status,
-    variant: "secondary" as const,
+    variant: "neutral" as const,
   };
 
   return <Badge variant={config.variant}>{config.label}</Badge>;

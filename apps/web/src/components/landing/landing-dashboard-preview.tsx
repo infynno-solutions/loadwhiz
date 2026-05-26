@@ -44,10 +44,7 @@ function LiveBadge() {
   const reduced = useReducedMotion();
 
   return (
-    <Badge
-      variant="outline"
-      className="gap-1.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-    >
+    <Badge variant="success" className="gap-1.5">
       {!reduced ? (
         <motion.span
           className="size-1.5 rounded-full bg-emerald-500"
@@ -114,9 +111,9 @@ export function LandingDashboardPreview({
           {isLive ? (
             <LiveBadge />
           ) : (
-            <Badge variant="secondary">Ready</Badge>
+            <Badge variant="info">Ready</Badge>
           )}
-          {!isLive ? <Badge variant="secondary">Passed</Badge> : null}
+          {!isLive ? <Badge variant="success">Passed</Badge> : null}
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">

@@ -149,14 +149,14 @@ export function ResultDashboard({
             <h1 className="font-semibold text-xl">Run result</h1>
             <LoadTestResultStatusBadge status={result?.status ?? meta.status} />
             {isLive ? (
-              <Badge variant="outline" className="gap-1 text-xs">
+              <Badge variant="success" className="gap-1 text-xs">
                 {!streamConnected ? <Spinner className="size-3" /> : null}
                 {liveLabel}
               </Badge>
             ) : null}
             {!isLive && meta.passed != null ? (
               <Badge
-                variant={meta.passed ? "secondary" : "destructive"}
+                variant={meta.passed ? "success" : "destructive"}
                 className="text-xs"
               >
                 {meta.passed ? "Passed" : "Failed"}

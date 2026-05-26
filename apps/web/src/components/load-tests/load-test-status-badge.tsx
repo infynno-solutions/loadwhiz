@@ -10,12 +10,12 @@ const STATUS_LABELS: Record<LoadTestStatusEnum, string> = {
 
 const STATUS_VARIANTS: Record<
   LoadTestStatusEnum,
-  "default" | "secondary" | "destructive" | "outline"
+  "neutral" | "warning" | "info" | "success"
 > = {
-  draft: "secondary",
-  pending: "outline",
-  running: "default",
-  complete: "secondary",
+  draft: "neutral",
+  pending: "warning",
+  running: "info",
+  complete: "success",
 };
 
 export function LoadTestStatusBadge({

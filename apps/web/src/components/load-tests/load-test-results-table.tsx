@@ -90,7 +90,7 @@ export function LoadTestResultsTable({
                 {result.passed == null ? (
                   <span className="text-muted-foreground">—</span>
                 ) : (
-                  <Badge variant={result.passed ? "secondary" : "destructive"}>
+                  <Badge variant={result.passed ? "success" : "destructive"}>
                     {result.passed ? "Passed" : "Failed"}
                   </Badge>
                 )}

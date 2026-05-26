@@ -13,7 +13,7 @@ export function RoleBadge({ role, className }: RoleBadgeProps) {
 
   return (
     <Badge
-      variant={normalized === "owner" ? "default" : "secondary"}
+      variant={normalized === "owner" ? "default" : "neutral"}
       className={cn("capitalize", className)}
     >
       {normalized}

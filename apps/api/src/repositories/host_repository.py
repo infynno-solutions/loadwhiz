@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.host import Host, HostStatus
@@ -34,6 +34,27 @@ class HostRepository:
             .order_by(Host.created_at.desc())
         )
         return list(result.scalars().all())
+
+    async def count_by_organization(self, organization_id: uuid.UUID) -> int:
+        result = await self.db.execute(
+            select(func.count())
+            .select_from(Host)
+            .where(Host.organization_id == organization_id)
+        )
+        return int(result.scalar_one())
+
+    async def count_by_status(
+        self, organization_id: uuid.UUID, status: HostStatus
+    ) -> int:
+        result = await self.db.execute(
+            select(func.count())
+            .select_from(Host)
+            .where(
+                Host.organization_id == organization_id,
+                Host.status == status,
+            )
+        )
+        return int(result.scalar_one())
 
     async def create(self, host: Host) -> Host:
         self.db.add(host)

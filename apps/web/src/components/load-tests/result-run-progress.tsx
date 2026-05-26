@@ -21,7 +21,7 @@ export function ResultRunProgress({ result, partial }: ResultRunProgressProps) {
         <span className="font-medium">Run in progress</span>
         <LoadTestResultStatusBadge status={result.status} />
         {partial ? (
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="info" className="text-xs">
             Live metrics
           </Badge>
         ) : null}

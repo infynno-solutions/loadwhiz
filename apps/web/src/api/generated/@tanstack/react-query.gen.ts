@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { authForgotPassword, authLogin, authLogout, authRefresh, authRegister, authResendVerification, authResetPassword, authVerifyEmail, healthCheck, hostsCreate, hostsDelete, hostsGet, hostsList, hostsRetry, hostsVerify, invitesAccept, invitesDecline, loadTestsCreate, loadTestsCreateFromOpenapi, loadTestsDelete, loadTestsGet, loadTestsImportPreview, loadTestsList, loadTestsResultsDashboard, loadTestsResultsGet, loadTestsResultsList, loadTestsRun, loadTestsStop, loadTestsUpdate, loadTestsUpdateFromOpenapi, onboardingCompleteOrganization, type Options, organizationsCreate, organizationsDelete, organizationsGet, organizationsInvitesCreate, organizationsInvitesList, organizationsInvitesRevoke, organizationsList, organizationsMembersList, organizationsMembersRemove, organizationsMembersUpdateRole, organizationsUpdate, usersChangePassword, usersMe, usersSetActiveOrganization, usersUpdateMe } from '../sdk.gen';
-import type { AuthForgotPasswordData, AuthForgotPasswordError, AuthForgotPasswordResponse, AuthLoginData, AuthLoginError, AuthLoginResponse, AuthLogoutData, AuthLogoutError, AuthLogoutResponse, AuthRefreshData, AuthRefreshError, AuthRefreshResponse, AuthRegisterData, AuthRegisterError, AuthRegisterResponse, AuthResendVerificationData, AuthResendVerificationResponse, AuthResetPasswordData, AuthResetPasswordError, AuthResetPasswordResponse, AuthVerifyEmailData, AuthVerifyEmailError, AuthVerifyEmailResponse, HealthCheckData, HostsCreateData, HostsCreateResponse, HostsDeleteData, HostsDeleteError, HostsDeleteResponse, HostsGetData, HostsListData, HostsRetryData, HostsRetryError, HostsRetryResponse, HostsVerifyData, HostsVerifyError, HostsVerifyResponse, InvitesAcceptData, InvitesAcceptError, InvitesAcceptResponse, InvitesDeclineData, InvitesDeclineError, InvitesDeclineResponse, LoadTestsCreateData, LoadTestsCreateFromOpenapiData, LoadTestsCreateFromOpenapiResponse, LoadTestsCreateResponse, LoadTestsDeleteData, LoadTestsDeleteError, LoadTestsDeleteResponse, LoadTestsGetData, LoadTestsImportPreviewData, LoadTestsImportPreviewError, LoadTestsImportPreviewResponse, LoadTestsListData, LoadTestsResultsDashboardData, LoadTestsResultsGetData, LoadTestsResultsListData, LoadTestsRunData, LoadTestsRunResponse, LoadTestsStopData, LoadTestsStopError, LoadTestsStopResponse, LoadTestsUpdateData, LoadTestsUpdateFromOpenapiData, LoadTestsUpdateFromOpenapiResponse, LoadTestsUpdateResponse, OnboardingCompleteOrganizationData, OnboardingCompleteOrganizationError, OnboardingCompleteOrganizationResponse, OrganizationsCreateData, OrganizationsCreateError, OrganizationsCreateResponse, OrganizationsDeleteData, OrganizationsDeleteError, OrganizationsDeleteResponse, OrganizationsGetData, OrganizationsInvitesCreateData, OrganizationsInvitesCreateError, OrganizationsInvitesCreateResponse, OrganizationsInvitesListData, OrganizationsInvitesRevokeData, OrganizationsInvitesRevokeError, OrganizationsInvitesRevokeResponse, OrganizationsListData, OrganizationsMembersListData, OrganizationsMembersRemoveData, OrganizationsMembersRemoveError, OrganizationsMembersRemoveResponse, OrganizationsMembersUpdateRoleData, OrganizationsMembersUpdateRoleError, OrganizationsMembersUpdateRoleResponse, OrganizationsUpdateData, OrganizationsUpdateError, OrganizationsUpdateResponse, UsersChangePasswordData, UsersChangePasswordError, UsersChangePasswordResponse, UsersMeData, UsersSetActiveOrganizationData, UsersSetActiveOrganizationError, UsersSetActiveOrganizationResponse, UsersUpdateMeData, UsersUpdateMeError, UsersUpdateMeResponse } from '../types.gen';
+import { authForgotPassword, authLogin, authLogout, authRefresh, authRegister, authResendVerification, authResetPassword, authVerifyEmail, healthCheck, hostsCreate, hostsDelete, hostsGet, hostsList, hostsRetry, hostsVerify, invitesAccept, invitesDecline, loadTestsCreate, loadTestsCreateFromOpenapi, loadTestsDelete, loadTestsGet, loadTestsImportPreview, loadTestsList, loadTestsResultsDashboard, loadTestsResultsGet, loadTestsResultsList, loadTestsResultsStream, loadTestsRun, loadTestsStop, loadTestsUpdate, loadTestsUpdateFromOpenapi, onboardingCompleteOrganization, type Options, organizationsCreate, organizationsDashboard, organizationsDelete, organizationsGet, organizationsInvitesCreate, organizationsInvitesList, organizationsInvitesRevoke, organizationsList, organizationsMembersList, organizationsMembersRemove, organizationsMembersUpdateRole, organizationsUpdate, usersChangePassword, usersMe, usersSetActiveOrganization, usersUpdateMe } from '../sdk.gen';
+import type { AuthForgotPasswordData, AuthForgotPasswordError, AuthForgotPasswordResponse, AuthLoginData, AuthLoginError, AuthLoginResponse, AuthLogoutData, AuthLogoutError, AuthLogoutResponse, AuthRefreshData, AuthRefreshError, AuthRefreshResponse, AuthRegisterData, AuthRegisterError, AuthRegisterResponse, AuthResendVerificationData, AuthResendVerificationResponse, AuthResetPasswordData, AuthResetPasswordError, AuthResetPasswordResponse, AuthVerifyEmailData, AuthVerifyEmailError, AuthVerifyEmailResponse, HealthCheckData, HealthCheckResponse, HostsCreateData, HostsCreateResponse, HostsDeleteData, HostsDeleteError, HostsDeleteResponse, HostsGetData, HostsGetError, HostsGetResponse, HostsListData, HostsListError, HostsListResponse, HostsRetryData, HostsRetryError, HostsRetryResponse, HostsVerifyData, HostsVerifyError, HostsVerifyResponse, InvitesAcceptData, InvitesAcceptError, InvitesAcceptResponse, InvitesDeclineData, InvitesDeclineError, InvitesDeclineResponse, LoadTestsCreateData, LoadTestsCreateFromOpenapiData, LoadTestsCreateFromOpenapiResponse, LoadTestsCreateResponse, LoadTestsDeleteData, LoadTestsDeleteError, LoadTestsDeleteResponse, LoadTestsGetData, LoadTestsGetError, LoadTestsGetResponse, LoadTestsImportPreviewData, LoadTestsImportPreviewError, LoadTestsImportPreviewResponse, LoadTestsListData, LoadTestsListError, LoadTestsListResponse, LoadTestsResultsDashboardData, LoadTestsResultsDashboardError, LoadTestsResultsDashboardResponse, LoadTestsResultsGetData, LoadTestsResultsGetError, LoadTestsResultsGetResponse, LoadTestsResultsListData, LoadTestsResultsListError, LoadTestsResultsListResponse, LoadTestsResultsStreamData, LoadTestsResultsStreamError, LoadTestsRunData, LoadTestsRunResponse, LoadTestsStopData, LoadTestsStopError, LoadTestsStopResponse, LoadTestsUpdateData, LoadTestsUpdateFromOpenapiData, LoadTestsUpdateFromOpenapiResponse, LoadTestsUpdateResponse, OnboardingCompleteOrganizationData, OnboardingCompleteOrganizationError, OnboardingCompleteOrganizationResponse, OrganizationsCreateData, OrganizationsCreateError, OrganizationsCreateResponse, OrganizationsDashboardData, OrganizationsDashboardError, OrganizationsDashboardResponse, OrganizationsDeleteData, OrganizationsDeleteError, OrganizationsDeleteResponse, OrganizationsGetData, OrganizationsGetError, OrganizationsGetResponse, OrganizationsInvitesCreateData, OrganizationsInvitesCreateError, OrganizationsInvitesCreateResponse, OrganizationsInvitesListData, OrganizationsInvitesListError, OrganizationsInvitesListResponse, OrganizationsInvitesRevokeData, OrganizationsInvitesRevokeError, OrganizationsInvitesRevokeResponse, OrganizationsListData, OrganizationsListResponse, OrganizationsMembersListData, OrganizationsMembersListError, OrganizationsMembersListResponse, OrganizationsMembersRemoveData, OrganizationsMembersRemoveError, OrganizationsMembersRemoveResponse, OrganizationsMembersUpdateRoleData, OrganizationsMembersUpdateRoleError, OrganizationsMembersUpdateRoleResponse, OrganizationsUpdateData, OrganizationsUpdateError, OrganizationsUpdateResponse, UsersChangePasswordData, UsersChangePasswordError, UsersChangePasswordResponse, UsersMeData, UsersMeResponse, UsersSetActiveOrganizationData, UsersSetActiveOrganizationError, UsersSetActiveOrganizationResponse, UsersUpdateMeData, UsersUpdateMeError, UsersUpdateMeResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -36,9 +36,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (options?.query) {
         params.query = options.query;
     }
-    return [
-        params
-    ];
+    return [params];
 };
 
 export const healthCheckQueryKey = (options?: Options<HealthCheckData>) => createQueryKey('healthCheck', options);
@@ -48,20 +46,18 @@ export const healthCheckQueryKey = (options?: Options<HealthCheckData>) => creat
  *
  * Returns service availability status.
  */
-export const healthCheckOptions = (options?: Options<HealthCheckData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await healthCheck({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: healthCheckQueryKey(options)
-    });
-};
+export const healthCheckOptions = (options?: Options<HealthCheckData>) => queryOptions<HealthCheckResponse, DefaultError, HealthCheckResponse, ReturnType<typeof healthCheckQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await healthCheck({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: healthCheckQueryKey(options)
+});
 
 export const usersMeQueryKey = (options?: Options<UsersMeData>) => createQueryKey('usersMe', options);
 
@@ -70,20 +66,18 @@ export const usersMeQueryKey = (options?: Options<UsersMeData>) => createQueryKe
  *
  * Returns the authenticated user's profile, organization memberships, and active organization.
  */
-export const usersMeOptions = (options?: Options<UsersMeData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await usersMe({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: usersMeQueryKey(options)
-    });
-};
+export const usersMeOptions = (options?: Options<UsersMeData>) => queryOptions<UsersMeResponse, DefaultError, UsersMeResponse, ReturnType<typeof usersMeQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await usersMe({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: usersMeQueryKey(options)
+});
 
 /**
  * Update current user profile
@@ -320,20 +314,18 @@ export const organizationsListQueryKey = (options?: Options<OrganizationsListDat
  *
  * Returns organizations the authenticated user belongs to, including role and join date.
  */
-export const organizationsListOptions = (options?: Options<OrganizationsListData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await organizationsList({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: organizationsListQueryKey(options)
-    });
-};
+export const organizationsListOptions = (options?: Options<OrganizationsListData>) => queryOptions<OrganizationsListResponse, DefaultError, OrganizationsListResponse, ReturnType<typeof organizationsListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await organizationsList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: organizationsListQueryKey(options)
+});
 
 /**
  * Create organization
@@ -380,20 +372,18 @@ export const organizationsGetQueryKey = (options: Options<OrganizationsGetData>)
  *
  * Retrieve organization details. Requires membership in the organization.
  */
-export const organizationsGetOptions = (options: Options<OrganizationsGetData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await organizationsGet({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: organizationsGetQueryKey(options)
-    });
-};
+export const organizationsGetOptions = (options: Options<OrganizationsGetData>) => queryOptions<OrganizationsGetResponse, OrganizationsGetError, OrganizationsGetResponse, ReturnType<typeof organizationsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await organizationsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: organizationsGetQueryKey(options)
+});
 
 /**
  * Update organization
@@ -414,6 +404,26 @@ export const organizationsUpdateMutation = (options?: Partial<Options<Organizati
     return mutationOptions;
 };
 
+export const organizationsDashboardQueryKey = (options: Options<OrganizationsDashboardData>) => createQueryKey('organizationsDashboard', options);
+
+/**
+ * Get organization dashboard
+ *
+ * Returns aggregated stats, a performance highlight for the most recent run, and the 10 most recent test runs across the organization.
+ */
+export const organizationsDashboardOptions = (options: Options<OrganizationsDashboardData>) => queryOptions<OrganizationsDashboardResponse, OrganizationsDashboardError, OrganizationsDashboardResponse, ReturnType<typeof organizationsDashboardQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await organizationsDashboard({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: organizationsDashboardQueryKey(options)
+});
+
 export const organizationsMembersListQueryKey = (options: Options<OrganizationsMembersListData>) => createQueryKey('organizationsMembersList', options);
 
 /**
@@ -421,20 +431,18 @@ export const organizationsMembersListQueryKey = (options: Options<OrganizationsM
  *
  * Returns all members of the organization.
  */
-export const organizationsMembersListOptions = (options: Options<OrganizationsMembersListData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await organizationsMembersList({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: organizationsMembersListQueryKey(options)
-    });
-};
+export const organizationsMembersListOptions = (options: Options<OrganizationsMembersListData>) => queryOptions<OrganizationsMembersListResponse, OrganizationsMembersListError, OrganizationsMembersListResponse, ReturnType<typeof organizationsMembersListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await organizationsMembersList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: organizationsMembersListQueryKey(options)
+});
 
 /**
  * Remove member
@@ -481,20 +489,18 @@ export const organizationsInvitesListQueryKey = (options: Options<OrganizationsI
  *
  * Returns pending invitations for the organization. Requires the owner or admin role.
  */
-export const organizationsInvitesListOptions = (options: Options<OrganizationsInvitesListData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await organizationsInvitesList({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: organizationsInvitesListQueryKey(options)
-    });
-};
+export const organizationsInvitesListOptions = (options: Options<OrganizationsInvitesListData>) => queryOptions<OrganizationsInvitesListResponse, OrganizationsInvitesListError, OrganizationsInvitesListResponse, ReturnType<typeof organizationsInvitesListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await organizationsInvitesList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: organizationsInvitesListQueryKey(options)
+});
 
 /**
  * Create organization invite
@@ -579,20 +585,18 @@ export const hostsListQueryKey = (options: Options<HostsListData>) => createQuer
  *
  * List target hosts registered for the organization.
  */
-export const hostsListOptions = (options: Options<HostsListData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await hostsList({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: hostsListQueryKey(options)
-    });
-};
+export const hostsListOptions = (options: Options<HostsListData>) => queryOptions<HostsListResponse, HostsListError, HostsListResponse, ReturnType<typeof hostsListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await hostsList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: hostsListQueryKey(options)
+});
 
 /**
  * Register host
@@ -639,20 +643,18 @@ export const hostsGetQueryKey = (options: Options<HostsGetData>) => createQueryK
  *
  * Retrieve host details, status, and verification instructions.
  */
-export const hostsGetOptions = (options: Options<HostsGetData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await hostsGet({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: hostsGetQueryKey(options)
-    });
-};
+export const hostsGetOptions = (options: Options<HostsGetData>) => queryOptions<HostsGetResponse, HostsGetError, HostsGetResponse, ReturnType<typeof hostsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await hostsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: hostsGetQueryKey(options)
+});
 
 /**
  * Verify host
@@ -718,20 +720,18 @@ export const loadTestsListQueryKey = (options: Options<LoadTestsListData>) => cr
  *
  * Returns load tests for the organization. Optionally filter by target host.
  */
-export const loadTestsListOptions = (options: Options<LoadTestsListData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await loadTestsList({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: loadTestsListQueryKey(options)
-    });
-};
+export const loadTestsListOptions = (options: Options<LoadTestsListData>) => queryOptions<LoadTestsListResponse, LoadTestsListError, LoadTestsListResponse, ReturnType<typeof loadTestsListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await loadTestsList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: loadTestsListQueryKey(options)
+});
 
 /**
  * Create load test
@@ -801,20 +801,18 @@ export const loadTestsGetQueryKey = (options: Options<LoadTestsGetData>) => crea
  *
  * Retrieve a load test configuration by identifier.
  */
-export const loadTestsGetOptions = (options: Options<LoadTestsGetData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await loadTestsGet({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: loadTestsGetQueryKey(options)
-    });
-};
+export const loadTestsGetOptions = (options: Options<LoadTestsGetData>) => queryOptions<LoadTestsGetResponse, LoadTestsGetError, LoadTestsGetResponse, ReturnType<typeof loadTestsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await loadTestsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: loadTestsGetQueryKey(options)
+});
 
 /**
  * Update load test
@@ -899,20 +897,18 @@ export const loadTestsResultsListQueryKey = (options: Options<LoadTestsResultsLi
  *
  * Returns execution history for a load test, newest first.
  */
-export const loadTestsResultsListOptions = (options: Options<LoadTestsResultsListData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await loadTestsResultsList({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: loadTestsResultsListQueryKey(options)
-    });
-};
+export const loadTestsResultsListOptions = (options: Options<LoadTestsResultsListData>) => queryOptions<LoadTestsResultsListResponse, LoadTestsResultsListError, LoadTestsResultsListResponse, ReturnType<typeof loadTestsResultsListQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await loadTestsResultsList({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: loadTestsResultsListQueryKey(options)
+});
 
 export const loadTestsResultsGetQueryKey = (options: Options<LoadTestsResultsGetData>) => createQueryKey('loadTestsResultsGet', options);
 
@@ -921,20 +917,18 @@ export const loadTestsResultsGetQueryKey = (options: Options<LoadTestsResultsGet
  *
  * Retrieve a single run result by identifier.
  */
-export const loadTestsResultsGetOptions = (options: Options<LoadTestsResultsGetData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await loadTestsResultsGet({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: loadTestsResultsGetQueryKey(options)
-    });
-};
+export const loadTestsResultsGetOptions = (options: Options<LoadTestsResultsGetData>) => queryOptions<LoadTestsResultsGetResponse, LoadTestsResultsGetError, LoadTestsResultsGetResponse, ReturnType<typeof loadTestsResultsGetQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await loadTestsResultsGet({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: loadTestsResultsGetQueryKey(options)
+});
 
 export const loadTestsResultsDashboardQueryKey = (options: Options<LoadTestsResultsDashboardData>) => createQueryKey('loadTestsResultsDashboard', options);
 
@@ -943,17 +937,35 @@ export const loadTestsResultsDashboardQueryKey = (options: Options<LoadTestsResu
  *
  * Returns chart-ready metrics for the results dashboard: overview, aggregates, time series, per-URL breakdown, and latency distribution. Raw k6 summary is not included.
  */
-export const loadTestsResultsDashboardOptions = (options: Options<LoadTestsResultsDashboardData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await loadTestsResultsDashboard({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: loadTestsResultsDashboardQueryKey(options)
-    });
-};
+export const loadTestsResultsDashboardOptions = (options: Options<LoadTestsResultsDashboardData>) => queryOptions<LoadTestsResultsDashboardResponse, LoadTestsResultsDashboardError, LoadTestsResultsDashboardResponse, ReturnType<typeof loadTestsResultsDashboardQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await loadTestsResultsDashboard({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: loadTestsResultsDashboardQueryKey(options)
+});
+
+export const loadTestsResultsStreamQueryKey = (options: Options<LoadTestsResultsStreamData>) => createQueryKey('loadTestsResultsStream', options);
+
+/**
+ * Stream load test result updates
+ *
+ * Server-sent events for live run progress: snapshot, metrics, dashboard updates, and a terminal `done` event.
+ */
+export const loadTestsResultsStreamOptions = (options: Options<LoadTestsResultsStreamData>) => queryOptions<unknown, LoadTestsResultsStreamError, unknown, ReturnType<typeof loadTestsResultsStreamQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await loadTestsResultsStream({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: loadTestsResultsStreamQueryKey(options)
+});

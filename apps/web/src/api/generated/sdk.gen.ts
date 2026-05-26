@@ -2,9 +2,9 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AuthForgotPasswordData, AuthForgotPasswordErrors, AuthForgotPasswordResponses, AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutErrors, AuthLogoutResponses, AuthRefreshData, AuthRefreshErrors, AuthRefreshResponses, AuthRegisterData, AuthRegisterErrors, AuthRegisterResponses, AuthResendVerificationData, AuthResendVerificationErrors, AuthResendVerificationResponses, AuthResetPasswordData, AuthResetPasswordErrors, AuthResetPasswordResponses, AuthVerifyEmailData, AuthVerifyEmailErrors, AuthVerifyEmailResponses, HealthCheckData, HealthCheckResponses, HostsCreateData, HostsCreateErrors, HostsCreateResponses, HostsDeleteData, HostsDeleteErrors, HostsDeleteResponses, HostsGetData, HostsGetErrors, HostsGetResponses, HostsListData, HostsListErrors, HostsListResponses, HostsRetryData, HostsRetryErrors, HostsRetryResponses, HostsVerifyData, HostsVerifyErrors, HostsVerifyResponses, InvitesAcceptData, InvitesAcceptErrors, InvitesAcceptResponses, InvitesDeclineData, InvitesDeclineErrors, InvitesDeclineResponses, LoadTestsCreateData, LoadTestsCreateErrors, LoadTestsCreateFromOpenapiData, LoadTestsCreateFromOpenapiErrors, LoadTestsCreateFromOpenapiResponses, LoadTestsCreateResponses, LoadTestsDeleteData, LoadTestsDeleteErrors, LoadTestsDeleteResponses, LoadTestsGetData, LoadTestsGetErrors, LoadTestsGetResponses, LoadTestsImportPreviewData, LoadTestsImportPreviewErrors, LoadTestsImportPreviewResponses, LoadTestsListData, LoadTestsListErrors, LoadTestsListResponses, LoadTestsResultsDashboardData, LoadTestsResultsDashboardErrors, LoadTestsResultsDashboardResponses, LoadTestsResultsGetData, LoadTestsResultsGetErrors, LoadTestsResultsGetResponses, LoadTestsResultsListData, LoadTestsResultsListErrors, LoadTestsResultsListResponses, LoadTestsResultsStreamData, LoadTestsResultsStreamErrors, LoadTestsResultsStreamResponses, LoadTestsRunData, LoadTestsRunErrors, LoadTestsRunResponses, LoadTestsStopData, LoadTestsStopErrors, LoadTestsStopResponses, LoadTestsUpdateData, LoadTestsUpdateErrors, LoadTestsUpdateFromOpenapiData, LoadTestsUpdateFromOpenapiErrors, LoadTestsUpdateFromOpenapiResponses, LoadTestsUpdateResponses, OnboardingCompleteOrganizationData, OnboardingCompleteOrganizationErrors, OnboardingCompleteOrganizationResponses, OrganizationsCreateData, OrganizationsCreateErrors, OrganizationsCreateResponses, OrganizationsDeleteData, OrganizationsDeleteErrors, OrganizationsDeleteResponses, OrganizationsGetData, OrganizationsGetErrors, OrganizationsGetResponses, OrganizationsInvitesCreateData, OrganizationsInvitesCreateErrors, OrganizationsInvitesCreateResponses, OrganizationsInvitesListData, OrganizationsInvitesListErrors, OrganizationsInvitesListResponses, OrganizationsInvitesRevokeData, OrganizationsInvitesRevokeErrors, OrganizationsInvitesRevokeResponses, OrganizationsListData, OrganizationsListErrors, OrganizationsListResponses, OrganizationsMembersListData, OrganizationsMembersListErrors, OrganizationsMembersListResponses, OrganizationsMembersRemoveData, OrganizationsMembersRemoveErrors, OrganizationsMembersRemoveResponses, OrganizationsMembersUpdateRoleData, OrganizationsMembersUpdateRoleErrors, OrganizationsMembersUpdateRoleResponses, OrganizationsUpdateData, OrganizationsUpdateErrors, OrganizationsUpdateResponses, UsersChangePasswordData, UsersChangePasswordErrors, UsersChangePasswordResponses, UsersMeData, UsersMeErrors, UsersMeResponses, UsersSetActiveOrganizationData, UsersSetActiveOrganizationErrors, UsersSetActiveOrganizationResponses, UsersUpdateMeData, UsersUpdateMeErrors, UsersUpdateMeResponses } from './types.gen';
+import type { AuthForgotPasswordData, AuthForgotPasswordErrors, AuthForgotPasswordResponses, AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutErrors, AuthLogoutResponses, AuthRefreshData, AuthRefreshErrors, AuthRefreshResponses, AuthRegisterData, AuthRegisterErrors, AuthRegisterResponses, AuthResendVerificationData, AuthResendVerificationErrors, AuthResendVerificationResponses, AuthResetPasswordData, AuthResetPasswordErrors, AuthResetPasswordResponses, AuthVerifyEmailData, AuthVerifyEmailErrors, AuthVerifyEmailResponses, HealthCheckData, HealthCheckResponses, HostsCreateData, HostsCreateErrors, HostsCreateResponses, HostsDeleteData, HostsDeleteErrors, HostsDeleteResponses, HostsGetData, HostsGetErrors, HostsGetResponses, HostsListData, HostsListErrors, HostsListResponses, HostsRetryData, HostsRetryErrors, HostsRetryResponses, HostsVerifyData, HostsVerifyErrors, HostsVerifyResponses, InvitesAcceptData, InvitesAcceptErrors, InvitesAcceptResponses, InvitesDeclineData, InvitesDeclineErrors, InvitesDeclineResponses, LoadTestsCreateData, LoadTestsCreateErrors, LoadTestsCreateFromOpenapiData, LoadTestsCreateFromOpenapiErrors, LoadTestsCreateFromOpenapiResponses, LoadTestsCreateResponses, LoadTestsDeleteData, LoadTestsDeleteErrors, LoadTestsDeleteResponses, LoadTestsGetData, LoadTestsGetErrors, LoadTestsGetResponses, LoadTestsImportPreviewData, LoadTestsImportPreviewErrors, LoadTestsImportPreviewResponses, LoadTestsListData, LoadTestsListErrors, LoadTestsListResponses, LoadTestsResultsDashboardData, LoadTestsResultsDashboardErrors, LoadTestsResultsDashboardResponses, LoadTestsResultsGetData, LoadTestsResultsGetErrors, LoadTestsResultsGetResponses, LoadTestsResultsListData, LoadTestsResultsListErrors, LoadTestsResultsListResponses, LoadTestsResultsStreamData, LoadTestsResultsStreamErrors, LoadTestsResultsStreamResponses, LoadTestsRunData, LoadTestsRunErrors, LoadTestsRunResponses, LoadTestsStopData, LoadTestsStopErrors, LoadTestsStopResponses, LoadTestsUpdateData, LoadTestsUpdateErrors, LoadTestsUpdateFromOpenapiData, LoadTestsUpdateFromOpenapiErrors, LoadTestsUpdateFromOpenapiResponses, LoadTestsUpdateResponses, OnboardingCompleteOrganizationData, OnboardingCompleteOrganizationErrors, OnboardingCompleteOrganizationResponses, OrganizationsCreateData, OrganizationsCreateErrors, OrganizationsCreateResponses, OrganizationsDashboardData, OrganizationsDashboardErrors, OrganizationsDashboardResponses, OrganizationsDeleteData, OrganizationsDeleteErrors, OrganizationsDeleteResponses, OrganizationsGetData, OrganizationsGetErrors, OrganizationsGetResponses, OrganizationsInvitesCreateData, OrganizationsInvitesCreateErrors, OrganizationsInvitesCreateResponses, OrganizationsInvitesListData, OrganizationsInvitesListErrors, OrganizationsInvitesListResponses, OrganizationsInvitesRevokeData, OrganizationsInvitesRevokeErrors, OrganizationsInvitesRevokeResponses, OrganizationsListData, OrganizationsListErrors, OrganizationsListResponses, OrganizationsMembersListData, OrganizationsMembersListErrors, OrganizationsMembersListResponses, OrganizationsMembersRemoveData, OrganizationsMembersRemoveErrors, OrganizationsMembersRemoveResponses, OrganizationsMembersUpdateRoleData, OrganizationsMembersUpdateRoleErrors, OrganizationsMembersUpdateRoleResponses, OrganizationsUpdateData, OrganizationsUpdateErrors, OrganizationsUpdateResponses, UsersChangePasswordData, UsersChangePasswordErrors, UsersChangePasswordResponses, UsersMeData, UsersMeErrors, UsersMeResponses, UsersSetActiveOrganizationData, UsersSetActiveOrganizationErrors, UsersSetActiveOrganizationResponses, UsersUpdateMeData, UsersUpdateMeErrors, UsersUpdateMeResponses } from './types.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
+export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -23,665 +23,463 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  *
  * Returns service availability status.
  */
-export const healthCheck = <ThrowOnError extends boolean = false>(options?: Options<HealthCheckData, ThrowOnError>) => {
-    return (options?.client ?? client).get<HealthCheckResponses, unknown, ThrowOnError>({
-        url: '/',
-        ...options
-    });
-};
+export const healthCheck = <ThrowOnError extends boolean = false>(options?: Options<HealthCheckData, ThrowOnError>) => (options?.client ?? client).get<HealthCheckResponses, unknown, ThrowOnError>({ url: '/', ...options });
 
 /**
  * Get current user profile
  *
  * Returns the authenticated user's profile, organization memberships, and active organization.
  */
-export const usersMe = <ThrowOnError extends boolean = false>(options?: Options<UsersMeData, ThrowOnError>) => {
-    return (options?.client ?? client).get<UsersMeResponses, UsersMeErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/users/me',
-        ...options
-    });
-};
+export const usersMe = <ThrowOnError extends boolean = false>(options?: Options<UsersMeData, ThrowOnError>) => (options?.client ?? client).get<UsersMeResponses, UsersMeErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/users/me',
+    ...options
+});
 
 /**
  * Update current user profile
  *
  * Update the authenticated user's profile fields.
  */
-export const usersUpdateMe = <ThrowOnError extends boolean = false>(options: Options<UsersUpdateMeData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UsersUpdateMeResponses, UsersUpdateMeErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/users/me',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const usersUpdateMe = <ThrowOnError extends boolean = false>(options: Options<UsersUpdateMeData, ThrowOnError>) => (options.client ?? client).patch<UsersUpdateMeResponses, UsersUpdateMeErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/users/me',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Change password
  *
  * Change the authenticated user's password. Revokes all active sessions.
  */
-export const usersChangePassword = <ThrowOnError extends boolean = false>(options: Options<UsersChangePasswordData, ThrowOnError>) => {
-    return (options.client ?? client).post<UsersChangePasswordResponses, UsersChangePasswordErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/users/me/change-password',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const usersChangePassword = <ThrowOnError extends boolean = false>(options: Options<UsersChangePasswordData, ThrowOnError>) => (options.client ?? client).post<UsersChangePasswordResponses, UsersChangePasswordErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/users/me/change-password',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Set active organization
  *
  * Set the organization used as the default workspace for the authenticated user.
  */
-export const usersSetActiveOrganization = <ThrowOnError extends boolean = false>(options: Options<UsersSetActiveOrganizationData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UsersSetActiveOrganizationResponses, UsersSetActiveOrganizationErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/users/me/active-organization',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const usersSetActiveOrganization = <ThrowOnError extends boolean = false>(options: Options<UsersSetActiveOrganizationData, ThrowOnError>) => (options.client ?? client).patch<UsersSetActiveOrganizationResponses, UsersSetActiveOrganizationErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/users/me/active-organization',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Register account
  *
  * Create a new user account and return authentication tokens.
  */
-export const authRegister = <ThrowOnError extends boolean = false>(options: Options<AuthRegisterData, ThrowOnError>) => {
-    return (options.client ?? client).post<AuthRegisterResponses, AuthRegisterErrors, ThrowOnError>({
-        url: '/api/v1/auth/register',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const authRegister = <ThrowOnError extends boolean = false>(options: Options<AuthRegisterData, ThrowOnError>) => (options.client ?? client).post<AuthRegisterResponses, AuthRegisterErrors, ThrowOnError>({
+    url: '/api/v1/auth/register',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Sign in
  *
  * Authenticate with email and password.
  */
-export const authLogin = <ThrowOnError extends boolean = false>(options: Options<AuthLoginData, ThrowOnError>) => {
-    return (options.client ?? client).post<AuthLoginResponses, AuthLoginErrors, ThrowOnError>({
-        url: '/api/v1/auth/login',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const authLogin = <ThrowOnError extends boolean = false>(options: Options<AuthLoginData, ThrowOnError>) => (options.client ?? client).post<AuthLoginResponses, AuthLoginErrors, ThrowOnError>({
+    url: '/api/v1/auth/login',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Refresh access token
  *
  * Exchange a valid refresh token for a new access token.
  */
-export const authRefresh = <ThrowOnError extends boolean = false>(options: Options<AuthRefreshData, ThrowOnError>) => {
-    return (options.client ?? client).post<AuthRefreshResponses, AuthRefreshErrors, ThrowOnError>({
-        url: '/api/v1/auth/refresh',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const authRefresh = <ThrowOnError extends boolean = false>(options: Options<AuthRefreshData, ThrowOnError>) => (options.client ?? client).post<AuthRefreshResponses, AuthRefreshErrors, ThrowOnError>({
+    url: '/api/v1/auth/refresh',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Sign out
  *
  * Revoke the current refresh token and end the session.
  */
-export const authLogout = <ThrowOnError extends boolean = false>(options: Options<AuthLogoutData, ThrowOnError>) => {
-    return (options.client ?? client).post<AuthLogoutResponses, AuthLogoutErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/auth/logout',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const authLogout = <ThrowOnError extends boolean = false>(options: Options<AuthLogoutData, ThrowOnError>) => (options.client ?? client).post<AuthLogoutResponses, AuthLogoutErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/auth/logout',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Verify email address
  *
  * Confirm email ownership using the verification token.
  */
-export const authVerifyEmail = <ThrowOnError extends boolean = false>(options: Options<AuthVerifyEmailData, ThrowOnError>) => {
-    return (options.client ?? client).post<AuthVerifyEmailResponses, AuthVerifyEmailErrors, ThrowOnError>({
-        url: '/api/v1/auth/verify-email',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const authVerifyEmail = <ThrowOnError extends boolean = false>(options: Options<AuthVerifyEmailData, ThrowOnError>) => (options.client ?? client).post<AuthVerifyEmailResponses, AuthVerifyEmailErrors, ThrowOnError>({
+    url: '/api/v1/auth/verify-email',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Resend verification email
  *
  * Send a new email verification message to the authenticated user.
  */
-export const authResendVerification = <ThrowOnError extends boolean = false>(options?: Options<AuthResendVerificationData, ThrowOnError>) => {
-    return (options?.client ?? client).post<AuthResendVerificationResponses, AuthResendVerificationErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/auth/resend-verification',
-        ...options
-    });
-};
+export const authResendVerification = <ThrowOnError extends boolean = false>(options?: Options<AuthResendVerificationData, ThrowOnError>) => (options?.client ?? client).post<AuthResendVerificationResponses, AuthResendVerificationErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/auth/resend-verification',
+    ...options
+});
 
 /**
  * Request password reset
  *
  * Initiate a password reset for the given email address.
  */
-export const authForgotPassword = <ThrowOnError extends boolean = false>(options: Options<AuthForgotPasswordData, ThrowOnError>) => {
-    return (options.client ?? client).post<AuthForgotPasswordResponses, AuthForgotPasswordErrors, ThrowOnError>({
-        url: '/api/v1/auth/forgot-password',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const authForgotPassword = <ThrowOnError extends boolean = false>(options: Options<AuthForgotPasswordData, ThrowOnError>) => (options.client ?? client).post<AuthForgotPasswordResponses, AuthForgotPasswordErrors, ThrowOnError>({
+    url: '/api/v1/auth/forgot-password',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Reset password
  *
  * Set a new password using a password reset token.
  */
-export const authResetPassword = <ThrowOnError extends boolean = false>(options: Options<AuthResetPasswordData, ThrowOnError>) => {
-    return (options.client ?? client).post<AuthResetPasswordResponses, AuthResetPasswordErrors, ThrowOnError>({
-        url: '/api/v1/auth/reset-password',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const authResetPassword = <ThrowOnError extends boolean = false>(options: Options<AuthResetPasswordData, ThrowOnError>) => (options.client ?? client).post<AuthResetPasswordResponses, AuthResetPasswordErrors, ThrowOnError>({
+    url: '/api/v1/auth/reset-password',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Complete organization onboarding
  *
  * Create the user's first organization and mark onboarding as complete. Available only while onboarding has not been completed.
  */
-export const onboardingCompleteOrganization = <ThrowOnError extends boolean = false>(options: Options<OnboardingCompleteOrganizationData, ThrowOnError>) => {
-    return (options.client ?? client).post<OnboardingCompleteOrganizationResponses, OnboardingCompleteOrganizationErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/onboarding/organization',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const onboardingCompleteOrganization = <ThrowOnError extends boolean = false>(options: Options<OnboardingCompleteOrganizationData, ThrowOnError>) => (options.client ?? client).post<OnboardingCompleteOrganizationResponses, OnboardingCompleteOrganizationErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/onboarding/organization',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * List organizations
  *
  * Returns organizations the authenticated user belongs to, including role and join date.
  */
-export const organizationsList = <ThrowOnError extends boolean = false>(options?: Options<OrganizationsListData, ThrowOnError>) => {
-    return (options?.client ?? client).get<OrganizationsListResponses, OrganizationsListErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations',
-        ...options
-    });
-};
+export const organizationsList = <ThrowOnError extends boolean = false>(options?: Options<OrganizationsListData, ThrowOnError>) => (options?.client ?? client).get<OrganizationsListResponses, OrganizationsListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations',
+    ...options
+});
 
 /**
  * Create organization
  *
  * Create a new organization. The authenticated user becomes the owner.
  */
-export const organizationsCreate = <ThrowOnError extends boolean = false>(options: Options<OrganizationsCreateData, ThrowOnError>) => {
-    return (options.client ?? client).post<OrganizationsCreateResponses, OrganizationsCreateErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const organizationsCreate = <ThrowOnError extends boolean = false>(options: Options<OrganizationsCreateData, ThrowOnError>) => (options.client ?? client).post<OrganizationsCreateResponses, OrganizationsCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Delete organization
  *
  * Permanently delete an organization. Requires the owner role.
  */
-export const organizationsDelete = <ThrowOnError extends boolean = false>(options: Options<OrganizationsDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<OrganizationsDeleteResponses, OrganizationsDeleteErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}',
-        ...options
-    });
-};
+export const organizationsDelete = <ThrowOnError extends boolean = false>(options: Options<OrganizationsDeleteData, ThrowOnError>) => (options.client ?? client).delete<OrganizationsDeleteResponses, OrganizationsDeleteErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}',
+    ...options
+});
 
 /**
  * Get organization
  *
  * Retrieve organization details. Requires membership in the organization.
  */
-export const organizationsGet = <ThrowOnError extends boolean = false>(options: Options<OrganizationsGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<OrganizationsGetResponses, OrganizationsGetErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}',
-        ...options
-    });
-};
+export const organizationsGet = <ThrowOnError extends boolean = false>(options: Options<OrganizationsGetData, ThrowOnError>) => (options.client ?? client).get<OrganizationsGetResponses, OrganizationsGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}',
+    ...options
+});
 
 /**
  * Update organization
  *
  * Update organization settings. Requires the owner or admin role.
  */
-export const organizationsUpdate = <ThrowOnError extends boolean = false>(options: Options<OrganizationsUpdateData, ThrowOnError>) => {
-    return (options.client ?? client).patch<OrganizationsUpdateResponses, OrganizationsUpdateErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const organizationsUpdate = <ThrowOnError extends boolean = false>(options: Options<OrganizationsUpdateData, ThrowOnError>) => (options.client ?? client).patch<OrganizationsUpdateResponses, OrganizationsUpdateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get organization dashboard
+ *
+ * Returns aggregated stats, a performance highlight for the most recent run, and the 10 most recent test runs across the organization.
+ */
+export const organizationsDashboard = <ThrowOnError extends boolean = false>(options: Options<OrganizationsDashboardData, ThrowOnError>) => (options.client ?? client).get<OrganizationsDashboardResponses, OrganizationsDashboardErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/dashboard',
+    ...options
+});
 
 /**
  * List organization members
  *
  * Returns all members of the organization.
  */
-export const organizationsMembersList = <ThrowOnError extends boolean = false>(options: Options<OrganizationsMembersListData, ThrowOnError>) => {
-    return (options.client ?? client).get<OrganizationsMembersListResponses, OrganizationsMembersListErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/members',
-        ...options
-    });
-};
+export const organizationsMembersList = <ThrowOnError extends boolean = false>(options: Options<OrganizationsMembersListData, ThrowOnError>) => (options.client ?? client).get<OrganizationsMembersListResponses, OrganizationsMembersListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/members',
+    ...options
+});
 
 /**
  * Remove member
  *
  * Remove a member from the organization. Requires the owner or admin role.
  */
-export const organizationsMembersRemove = <ThrowOnError extends boolean = false>(options: Options<OrganizationsMembersRemoveData, ThrowOnError>) => {
-    return (options.client ?? client).delete<OrganizationsMembersRemoveResponses, OrganizationsMembersRemoveErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/members/{user_id}',
-        ...options
-    });
-};
+export const organizationsMembersRemove = <ThrowOnError extends boolean = false>(options: Options<OrganizationsMembersRemoveData, ThrowOnError>) => (options.client ?? client).delete<OrganizationsMembersRemoveResponses, OrganizationsMembersRemoveErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/members/{user_id}',
+    ...options
+});
 
 /**
  * Update member role
  *
  * Change a member's role. Requires the owner role. The owner role cannot be assigned via this endpoint.
  */
-export const organizationsMembersUpdateRole = <ThrowOnError extends boolean = false>(options: Options<OrganizationsMembersUpdateRoleData, ThrowOnError>) => {
-    return (options.client ?? client).patch<OrganizationsMembersUpdateRoleResponses, OrganizationsMembersUpdateRoleErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/members/{user_id}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const organizationsMembersUpdateRole = <ThrowOnError extends boolean = false>(options: Options<OrganizationsMembersUpdateRoleData, ThrowOnError>) => (options.client ?? client).patch<OrganizationsMembersUpdateRoleResponses, OrganizationsMembersUpdateRoleErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/members/{user_id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * List pending invites
  *
  * Returns pending invitations for the organization. Requires the owner or admin role.
  */
-export const organizationsInvitesList = <ThrowOnError extends boolean = false>(options: Options<OrganizationsInvitesListData, ThrowOnError>) => {
-    return (options.client ?? client).get<OrganizationsInvitesListResponses, OrganizationsInvitesListErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/invites',
-        ...options
-    });
-};
+export const organizationsInvitesList = <ThrowOnError extends boolean = false>(options: Options<OrganizationsInvitesListData, ThrowOnError>) => (options.client ?? client).get<OrganizationsInvitesListResponses, OrganizationsInvitesListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/invites',
+    ...options
+});
 
 /**
  * Create organization invite
  *
  * Invite a user to join the organization by email. Requires the owner or admin role.
  */
-export const organizationsInvitesCreate = <ThrowOnError extends boolean = false>(options: Options<OrganizationsInvitesCreateData, ThrowOnError>) => {
-    return (options.client ?? client).post<OrganizationsInvitesCreateResponses, OrganizationsInvitesCreateErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/invites',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const organizationsInvitesCreate = <ThrowOnError extends boolean = false>(options: Options<OrganizationsInvitesCreateData, ThrowOnError>) => (options.client ?? client).post<OrganizationsInvitesCreateResponses, OrganizationsInvitesCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/invites',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Revoke invite
  *
  * Revoke a pending invitation. Requires the owner or admin role.
  */
-export const organizationsInvitesRevoke = <ThrowOnError extends boolean = false>(options: Options<OrganizationsInvitesRevokeData, ThrowOnError>) => {
-    return (options.client ?? client).delete<OrganizationsInvitesRevokeResponses, OrganizationsInvitesRevokeErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/invites/{invite_id}',
-        ...options
-    });
-};
+export const organizationsInvitesRevoke = <ThrowOnError extends boolean = false>(options: Options<OrganizationsInvitesRevokeData, ThrowOnError>) => (options.client ?? client).delete<OrganizationsInvitesRevokeResponses, OrganizationsInvitesRevokeErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/invites/{invite_id}',
+    ...options
+});
 
 /**
  * Accept organization invite
  *
  * Accept an invitation and join the organization. The invite email must match the authenticated user's email.
  */
-export const invitesAccept = <ThrowOnError extends boolean = false>(options: Options<InvitesAcceptData, ThrowOnError>) => {
-    return (options.client ?? client).post<InvitesAcceptResponses, InvitesAcceptErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/invites/accept',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const invitesAccept = <ThrowOnError extends boolean = false>(options: Options<InvitesAcceptData, ThrowOnError>) => (options.client ?? client).post<InvitesAcceptResponses, InvitesAcceptErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/invites/accept',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Decline organization invite
  *
  * Decline an invitation without joining the organization.
  */
-export const invitesDecline = <ThrowOnError extends boolean = false>(options: Options<InvitesDeclineData, ThrowOnError>) => {
-    return (options.client ?? client).post<InvitesDeclineResponses, InvitesDeclineErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/invites/decline',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const invitesDecline = <ThrowOnError extends boolean = false>(options: Options<InvitesDeclineData, ThrowOnError>) => (options.client ?? client).post<InvitesDeclineResponses, InvitesDeclineErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/invites/decline',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * List hosts
  *
  * List target hosts registered for the organization.
  */
-export const hostsList = <ThrowOnError extends boolean = false>(options: Options<HostsListData, ThrowOnError>) => {
-    return (options.client ?? client).get<HostsListResponses, HostsListErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/hosts',
-        ...options
-    });
-};
+export const hostsList = <ThrowOnError extends boolean = false>(options: Options<HostsListData, ThrowOnError>) => (options.client ?? client).get<HostsListResponses, HostsListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/hosts',
+    ...options
+});
 
 /**
  * Register host
  *
  * Register a domain for ownership verification before it can be used in load tests.
  */
-export const hostsCreate = <ThrowOnError extends boolean = false>(options: Options<HostsCreateData, ThrowOnError>) => {
-    return (options.client ?? client).post<HostsCreateResponses, HostsCreateErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/hosts',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const hostsCreate = <ThrowOnError extends boolean = false>(options: Options<HostsCreateData, ThrowOnError>) => (options.client ?? client).post<HostsCreateResponses, HostsCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/hosts',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Delete host
  *
  * Remove a host and its associated load test configurations.
  */
-export const hostsDelete = <ThrowOnError extends boolean = false>(options: Options<HostsDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<HostsDeleteResponses, HostsDeleteErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/hosts/{host_id}',
-        ...options
-    });
-};
+export const hostsDelete = <ThrowOnError extends boolean = false>(options: Options<HostsDeleteData, ThrowOnError>) => (options.client ?? client).delete<HostsDeleteResponses, HostsDeleteErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/hosts/{host_id}',
+    ...options
+});
 
 /**
  * Get host
  *
  * Retrieve host details, status, and verification instructions.
  */
-export const hostsGet = <ThrowOnError extends boolean = false>(options: Options<HostsGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<HostsGetResponses, HostsGetErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/hosts/{host_id}',
-        ...options
-    });
-};
+export const hostsGet = <ThrowOnError extends boolean = false>(options: Options<HostsGetData, ThrowOnError>) => (options.client ?? client).get<HostsGetResponses, HostsGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/hosts/{host_id}',
+    ...options
+});
 
 /**
  * Verify host
  *
  * Run an immediate verification check for a host in `pending` status.
  */
-export const hostsVerify = <ThrowOnError extends boolean = false>(options: Options<HostsVerifyData, ThrowOnError>) => {
-    return (options.client ?? client).post<HostsVerifyResponses, HostsVerifyErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/hosts/{host_id}/verify',
-        ...options
-    });
-};
+export const hostsVerify = <ThrowOnError extends boolean = false>(options: Options<HostsVerifyData, ThrowOnError>) => (options.client ?? client).post<HostsVerifyResponses, HostsVerifyErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/hosts/{host_id}/verify',
+    ...options
+});
 
 /**
  * Retry host verification
  *
  * Reset verification for a `failed` host and start a new verification window.
  */
-export const hostsRetry = <ThrowOnError extends boolean = false>(options: Options<HostsRetryData, ThrowOnError>) => {
-    return (options.client ?? client).post<HostsRetryResponses, HostsRetryErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/hosts/{host_id}/retry',
-        ...options
-    });
-};
+export const hostsRetry = <ThrowOnError extends boolean = false>(options: Options<HostsRetryData, ThrowOnError>) => (options.client ?? client).post<HostsRetryResponses, HostsRetryErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/hosts/{host_id}/retry',
+    ...options
+});
 
 /**
  * Preview OpenAPI import
  *
  * Parse an OpenAPI 3.0 or 3.1 specification and return HTTP operations that match the target host. No load test is created.
  */
-export const loadTestsImportPreview = <ThrowOnError extends boolean = false>(options: Options<LoadTestsImportPreviewData, ThrowOnError>) => {
-    return (options.client ?? client).post<LoadTestsImportPreviewResponses, LoadTestsImportPreviewErrors, ThrowOnError>({
-        ...formDataBodySerializer,
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/import/preview',
-        ...options,
-        headers: {
-            'Content-Type': null,
-            ...options.headers
-        }
-    });
-};
+export const loadTestsImportPreview = <ThrowOnError extends boolean = false>(options: Options<LoadTestsImportPreviewData, ThrowOnError>) => (options.client ?? client).post<LoadTestsImportPreviewResponses, LoadTestsImportPreviewErrors, ThrowOnError>({
+    ...formDataBodySerializer,
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/import/preview',
+    ...options,
+    headers: {
+        'Content-Type': null,
+        ...options.headers
+    }
+});
 
 /**
  * List load tests
  *
  * Returns load tests for the organization. Optionally filter by target host.
  */
-export const loadTestsList = <ThrowOnError extends boolean = false>(options: Options<LoadTestsListData, ThrowOnError>) => {
-    return (options.client ?? client).get<LoadTestsListResponses, LoadTestsListErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests',
-        ...options
-    });
-};
+export const loadTestsList = <ThrowOnError extends boolean = false>(options: Options<LoadTestsListData, ThrowOnError>) => (options.client ?? client).get<LoadTestsListResponses, LoadTestsListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests',
+    ...options
+});
 
 /**
  * Create load test
@@ -692,231 +490,147 @@ export const loadTestsList = <ThrowOnError extends boolean = false>(options: Opt
  * - Set `url_source` to `openapi` and provide `openapi_document` to import from an inline specification.
  * - To upload a specification file, use `POST /from-openapi` instead.
  */
-export const loadTestsCreate = <ThrowOnError extends boolean = false>(options: Options<LoadTestsCreateData, ThrowOnError>) => {
-    return (options.client ?? client).post<LoadTestsCreateResponses, LoadTestsCreateErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const loadTestsCreate = <ThrowOnError extends boolean = false>(options: Options<LoadTestsCreateData, ThrowOnError>) => (options.client ?? client).post<LoadTestsCreateResponses, LoadTestsCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Create load test from specification file
  *
  * Create a load test by uploading an OpenAPI 3.0 or 3.1 specification file. Request URLs are generated from operations whose host matches the verified target host.
  */
-export const loadTestsCreateFromOpenapi = <ThrowOnError extends boolean = false>(options: Options<LoadTestsCreateFromOpenapiData, ThrowOnError>) => {
-    return (options.client ?? client).post<LoadTestsCreateFromOpenapiResponses, LoadTestsCreateFromOpenapiErrors, ThrowOnError>({
-        ...formDataBodySerializer,
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/from-openapi',
-        ...options,
-        headers: {
-            'Content-Type': null,
-            ...options.headers
-        }
-    });
-};
+export const loadTestsCreateFromOpenapi = <ThrowOnError extends boolean = false>(options: Options<LoadTestsCreateFromOpenapiData, ThrowOnError>) => (options.client ?? client).post<LoadTestsCreateFromOpenapiResponses, LoadTestsCreateFromOpenapiErrors, ThrowOnError>({
+    ...formDataBodySerializer,
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/from-openapi',
+    ...options,
+    headers: {
+        'Content-Type': null,
+        ...options.headers
+    }
+});
 
 /**
  * Delete load test
  *
  * Delete a load test. Not allowed while a test is `pending` or `running`.
  */
-export const loadTestsDelete = <ThrowOnError extends boolean = false>(options: Options<LoadTestsDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<LoadTestsDeleteResponses, LoadTestsDeleteErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}',
-        ...options
-    });
-};
+export const loadTestsDelete = <ThrowOnError extends boolean = false>(options: Options<LoadTestsDeleteData, ThrowOnError>) => (options.client ?? client).delete<LoadTestsDeleteResponses, LoadTestsDeleteErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}',
+    ...options
+});
 
 /**
  * Get load test
  *
  * Retrieve a load test configuration by identifier.
  */
-export const loadTestsGet = <ThrowOnError extends boolean = false>(options: Options<LoadTestsGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<LoadTestsGetResponses, LoadTestsGetErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}',
-        ...options
-    });
-};
+export const loadTestsGet = <ThrowOnError extends boolean = false>(options: Options<LoadTestsGetData, ThrowOnError>) => (options.client ?? client).get<LoadTestsGetResponses, LoadTestsGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}',
+    ...options
+});
 
 /**
  * Update load test
  *
  * Update a load test while it is in `draft` status.
  */
-export const loadTestsUpdate = <ThrowOnError extends boolean = false>(options: Options<LoadTestsUpdateData, ThrowOnError>) => {
-    return (options.client ?? client).patch<LoadTestsUpdateResponses, LoadTestsUpdateErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const loadTestsUpdate = <ThrowOnError extends boolean = false>(options: Options<LoadTestsUpdateData, ThrowOnError>) => (options.client ?? client).patch<LoadTestsUpdateResponses, LoadTestsUpdateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Update load test from specification file
  *
  * Replace request URLs by re-importing an OpenAPI specification file. Available only while the load test is in `draft` status.
  */
-export const loadTestsUpdateFromOpenapi = <ThrowOnError extends boolean = false>(options: Options<LoadTestsUpdateFromOpenapiData, ThrowOnError>) => {
-    return (options.client ?? client).patch<LoadTestsUpdateFromOpenapiResponses, LoadTestsUpdateFromOpenapiErrors, ThrowOnError>({
-        ...formDataBodySerializer,
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}/from-openapi',
-        ...options,
-        headers: {
-            'Content-Type': null,
-            ...options.headers
-        }
-    });
-};
+export const loadTestsUpdateFromOpenapi = <ThrowOnError extends boolean = false>(options: Options<LoadTestsUpdateFromOpenapiData, ThrowOnError>) => (options.client ?? client).patch<LoadTestsUpdateFromOpenapiResponses, LoadTestsUpdateFromOpenapiErrors, ThrowOnError>({
+    ...formDataBodySerializer,
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}/from-openapi',
+    ...options,
+    headers: {
+        'Content-Type': null,
+        ...options.headers
+    }
+});
 
 /**
  * Run load test
  *
  * Start a load test run using Grafana k6 in Docker. The test must be in `draft` or `complete` status. If `scheduled_at` is in the future, execution is deferred until that time.
  */
-export const loadTestsRun = <ThrowOnError extends boolean = false>(options: Options<LoadTestsRunData, ThrowOnError>) => {
-    return (options.client ?? client).post<LoadTestsRunResponses, LoadTestsRunErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}/run',
-        ...options
-    });
-};
+export const loadTestsRun = <ThrowOnError extends boolean = false>(options: Options<LoadTestsRunData, ThrowOnError>) => (options.client ?? client).post<LoadTestsRunResponses, LoadTestsRunErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}/run',
+    ...options
+});
 
 /**
  * Stop load test
  *
  * Stop a pending or running load test by terminating the k6 container.
  */
-export const loadTestsStop = <ThrowOnError extends boolean = false>(options: Options<LoadTestsStopData, ThrowOnError>) => {
-    return (options.client ?? client).post<LoadTestsStopResponses, LoadTestsStopErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}/stop',
-        ...options
-    });
-};
+export const loadTestsStop = <ThrowOnError extends boolean = false>(options: Options<LoadTestsStopData, ThrowOnError>) => (options.client ?? client).post<LoadTestsStopResponses, LoadTestsStopErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}/stop',
+    ...options
+});
 
 /**
  * List load test results
  *
  * Returns execution history for a load test, newest first.
  */
-export const loadTestsResultsList = <ThrowOnError extends boolean = false>(options: Options<LoadTestsResultsListData, ThrowOnError>) => {
-    return (options.client ?? client).get<LoadTestsResultsListResponses, LoadTestsResultsListErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}/results',
-        ...options
-    });
-};
+export const loadTestsResultsList = <ThrowOnError extends boolean = false>(options: Options<LoadTestsResultsListData, ThrowOnError>) => (options.client ?? client).get<LoadTestsResultsListResponses, LoadTestsResultsListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}/results',
+    ...options
+});
 
 /**
  * Get load test result
  *
  * Retrieve a single run result by identifier.
  */
-export const loadTestsResultsGet = <ThrowOnError extends boolean = false>(options: Options<LoadTestsResultsGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<LoadTestsResultsGetResponses, LoadTestsResultsGetErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}/results/{result_id}',
-        ...options
-    });
-};
+export const loadTestsResultsGet = <ThrowOnError extends boolean = false>(options: Options<LoadTestsResultsGetData, ThrowOnError>) => (options.client ?? client).get<LoadTestsResultsGetResponses, LoadTestsResultsGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}/results/{result_id}',
+    ...options
+});
 
 /**
  * Get load test result dashboard
  *
  * Returns chart-ready metrics for the results dashboard: overview, aggregates, time series, per-URL breakdown, and latency distribution. Raw k6 summary is not included.
  */
-export const loadTestsResultsDashboard = <ThrowOnError extends boolean = false>(options: Options<LoadTestsResultsDashboardData, ThrowOnError>) => {
-    return (options.client ?? client).get<LoadTestsResultsDashboardResponses, LoadTestsResultsDashboardErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}/results/{result_id}/dashboard',
-        ...options
-    });
-};
+export const loadTestsResultsDashboard = <ThrowOnError extends boolean = false>(options: Options<LoadTestsResultsDashboardData, ThrowOnError>) => (options.client ?? client).get<LoadTestsResultsDashboardResponses, LoadTestsResultsDashboardErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}/results/{result_id}/dashboard',
+    ...options
+});
 
 /**
  * Stream load test result updates
  *
  * Server-sent events for live run progress: snapshot, metrics, dashboard updates, and a terminal `done` event.
  */
-export const loadTestsResultsStream = <ThrowOnError extends boolean = false>(options: Options<LoadTestsResultsStreamData, ThrowOnError>) => {
-    return (options.client ?? client).sse.get<LoadTestsResultsStreamResponses, LoadTestsResultsStreamErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/organizations/{org_id}/tests/{test_id}/results/{result_id}/stream',
-        ...options
-    });
-};
+export const loadTestsResultsStream = <ThrowOnError extends boolean = false>(options: Options<LoadTestsResultsStreamData, ThrowOnError>) => (options.client ?? client).get<LoadTestsResultsStreamResponses, LoadTestsResultsStreamErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}/results/{result_id}/stream',
+    ...options
+});

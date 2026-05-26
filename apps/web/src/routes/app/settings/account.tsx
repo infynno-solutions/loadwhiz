@@ -128,10 +128,10 @@ function AccountSettingsPage() {
                 <FieldLabel>Verification</FieldLabel>
                 <div className="flex flex-wrap items-center gap-2">
                   {user.is_email_verified ? (
-                    <Badge variant="secondary">Verified</Badge>
+                    <Badge variant="success">Verified</Badge>
                   ) : (
                     <>
-                      <Badge variant="outline">Unverified</Badge>
+                      <Badge variant="warning">Unverified</Badge>
                       <Button
                         type="button"
                         variant="outline"

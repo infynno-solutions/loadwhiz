@@ -11,13 +11,13 @@ const STATUS_LABELS: Record<LoadTestResultStatusEnum, string> = {
 
 const STATUS_VARIANTS: Record<
   LoadTestResultStatusEnum,
-  "default" | "secondary" | "destructive" | "outline"
+  "neutral" | "info" | "destructive"
 > = {
-  not_ready: "secondary",
-  ready: "outline",
-  running: "default",
+  not_ready: "neutral",
+  ready: "info",
+  running: "info",
   failed: "destructive",
-  cancelled: "secondary",
+  cancelled: "neutral",
 };
 
 export function LoadTestResultStatusBadge({

@@ -207,7 +207,7 @@ export type CreateLoadTestRequest = {
      *
      * Scheduled start time (ISO-8601 or `YYYY-MM-DD HH:MM` in UTC).
      */
-    scheduled_at?: string | null;
+    scheduled_at?: string | string | null;
     /**
      * `manual`: provide `urls`. `openapi`: provide `openapi_document`.
      */
@@ -1276,6 +1276,190 @@ export type OpenApiImportPreview = {
 };
 
 /**
+ * Org Dashboard Highlight
+ */
+export type OrgDashboardHighlight = {
+    /**
+     * Kind
+     */
+    kind: 'active' | 'latest_completed';
+    /**
+     * Test Id
+     */
+    test_id: string;
+    /**
+     * Test Name
+     */
+    test_name: string;
+    /**
+     * Host Hostname
+     */
+    host_hostname: string;
+    /**
+     * Result Id
+     */
+    result_id: string;
+    /**
+     * Status
+     *
+     * Load test result status.
+     */
+    status: string;
+    /**
+     * Passed
+     */
+    passed?: boolean | null;
+    /**
+     * Started At
+     */
+    started_at?: string | null;
+    /**
+     * Finished At
+     */
+    finished_at?: string | null;
+    metrics?: OrgDashboardResultMetrics | null;
+};
+
+/**
+ * OrgDashboardRecentRun
+ */
+export type OrgDashboardRecentRun = {
+    /**
+     * Result Id
+     */
+    result_id: string;
+    /**
+     * Test Id
+     */
+    test_id: string;
+    /**
+     * Test Name
+     */
+    test_name: string;
+    /**
+     * Host Hostname
+     */
+    host_hostname: string;
+    /**
+     * Status
+     *
+     * Load test result status.
+     */
+    status: string;
+    /**
+     * Passed
+     */
+    passed?: boolean | null;
+    /**
+     * Started At
+     */
+    started_at?: string | null;
+    /**
+     * Finished At
+     */
+    finished_at?: string | null;
+    metrics?: OrgDashboardResultMetrics | null;
+};
+
+/**
+ * Org Dashboard
+ */
+export type OrgDashboardResponse = {
+    stats: OrgDashboardStats;
+    performance_highlight?: OrgDashboardHighlight | null;
+    /**
+     * Recent Runs
+     */
+    recent_runs?: Array<OrgDashboardRecentRun>;
+};
+
+/**
+ * OrgDashboardResultMetrics
+ */
+export type OrgDashboardResultMetrics = {
+    /**
+     * Total Requests
+     */
+    total_requests?: number;
+    /**
+     * Error Rate Percent
+     */
+    error_rate_percent?: number;
+    /**
+     * Rps
+     */
+    rps?: number;
+    /**
+     * Avg Ms
+     */
+    avg_ms?: number | null;
+    /**
+     * P95 Ms
+     */
+    p95_ms?: number | null;
+};
+
+/**
+ * Org Dashboard Stats
+ */
+export type OrgDashboardStats = {
+    /**
+     * Total Tests
+     *
+     * Total load tests in the organization.
+     */
+    total_tests: number;
+    /**
+     * Active Runs
+     *
+     * Currently active (pending/running) test runs.
+     */
+    active_runs: number;
+    /**
+     * Draft Tests
+     *
+     * Tests with draft status.
+     */
+    draft_tests: number;
+    /**
+     * Failed Last Run
+     *
+     * Tests whose most recent result failed.
+     */
+    failed_last_run: number;
+    /**
+     * Runs Last 7 Days
+     *
+     * Test runs started in the last 7 days.
+     */
+    runs_last_7_days: number;
+    /**
+     * Hosts Total
+     *
+     * Total registered hosts.
+     */
+    hosts_total: number;
+    /**
+     * Hosts Verified
+     *
+     * Verified hosts.
+     */
+    hosts_verified: number;
+    /**
+     * Hosts Pending
+     *
+     * Hosts pending verification.
+     */
+    hosts_pending: number;
+    /**
+     * Hosts Failed
+     *
+     * Hosts that failed verification.
+     */
+    hosts_failed: number;
+};
+
+/**
  * Organization
  */
 export type OrganizationResponse = {
@@ -1628,7 +1812,7 @@ export type UpdateLoadTestRequest = {
     /**
      * Scheduled At
      */
-    scheduled_at?: string | null;
+    scheduled_at?: string | string | null;
     url_source?: LoadTestUrlSourceEnum | null;
     /**
      * Urls
@@ -1896,7 +2080,7 @@ export type FastapiCompatV2BodyLoadTestsCreateFromOpenapi = {
      *
      * OpenAPI specification (JSON or YAML).
      */
-    spec_file: string;
+    spec_file: Blob | File;
     /**
      * Client scheduling mode.
      */
@@ -1972,7 +2156,7 @@ export type FastapiCompatV2BodyLoadTestsUpdateFromOpenapi = {
      *
      * OpenAPI specification (JSON or YAML).
      */
-    spec_file: string;
+    spec_file: Blob | File;
 };
 
 /**
@@ -1990,7 +2174,7 @@ export type Preview = {
      *
      * OpenAPI specification (JSON or YAML).
      */
-    spec_file: string;
+    spec_file: Blob | File;
 };
 
 export type HealthCheckData = {
@@ -2585,6 +2769,48 @@ export type OrganizationsUpdateResponses = {
 };
 
 export type OrganizationsUpdateResponse = OrganizationsUpdateResponses[keyof OrganizationsUpdateResponses];
+
+export type OrganizationsDashboardData = {
+    body?: never;
+    path: {
+        /**
+         * Organization identifier.
+         */
+        org_id: string;
+    };
+    query?: never;
+    url: '/api/v1/organizations/{org_id}/dashboard';
+};
+
+export type OrganizationsDashboardErrors = {
+    /**
+     * Authentication required.
+     */
+    401: unknown;
+    /**
+     * Not a member of this organization.
+     */
+    403: unknown;
+    /**
+     * Organization not found.
+     */
+    404: unknown;
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type OrganizationsDashboardError = OrganizationsDashboardErrors[keyof OrganizationsDashboardErrors];
+
+export type OrganizationsDashboardResponses = {
+    /**
+     * Successful Response
+     */
+    200: OrgDashboardResponse;
+};
+
+export type OrganizationsDashboardResponse = OrganizationsDashboardResponses[keyof OrganizationsDashboardResponses];
 
 export type OrganizationsMembersListData = {
     body?: never;
@@ -3696,9 +3922,11 @@ export type LoadTestsResultsStreamData = {
     };
     query?: {
         /**
-         * Bearer token for EventSource clients that cannot send Authorization headers.
+         * Access Token
+         *
+         * JWT access token for EventSource clients that cannot send headers.
          */
-        access_token?: string;
+        access_token?: string | null;
     };
     url: '/api/v1/organizations/{org_id}/tests/{test_id}/results/{result_id}/stream';
 };
@@ -3712,13 +3940,17 @@ export type LoadTestsResultsStreamErrors = {
      * Load test or result not found.
      */
     404: unknown;
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
 };
+
+export type LoadTestsResultsStreamError = LoadTestsResultsStreamErrors[keyof LoadTestsResultsStreamErrors];
 
 export type LoadTestsResultsStreamResponses = {
     /**
      * Successful Response
      */
-    200: string;
+    200: unknown;
 };
-
-export type LoadTestsResultsStreamResponse = LoadTestsResultsStreamResponses[keyof LoadTestsResultsStreamResponses];
