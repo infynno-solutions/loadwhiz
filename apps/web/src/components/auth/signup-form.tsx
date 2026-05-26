@@ -57,7 +57,7 @@ export function SignupForm({
         toast.success("Account created", {
           description: `Welcome, ${data.user.name}`,
         });
-        navigate({ to: "/app/dashboard" });
+        navigate({ to: "/app/onboarding" });
       } catch (error) {
         toast.error(getApiErrorMessage(error));
       }

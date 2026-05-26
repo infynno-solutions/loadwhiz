@@ -31,14 +31,30 @@ export function reloadAppAfterOrganizationChange() {
   window.location.reload();
 }
 
+export function needsOrganizationOnboarding(
+  user: UserMeResponse | undefined,
+): boolean {
+  if (!user) return false;
+  return !user.onboarding_completed || user.organizations.length === 0;
+}
+
 export function isActiveOrganizationReady(
   user: UserMeResponse | undefined,
 ): boolean {
   if (!user) return false;
-  if (user.organizations.length === 0) return true;
+  if (user.organizations.length === 0) return false;
   if (!user.active_organization_id) return false;
   return user.organizations.some(
     (org) => org.id === user.active_organization_id,
+  );
+}
+
+export const APP_ONBOARDING_PATH = "/app/onboarding";
+
+export function isAppOnboardingPath(pathname: string): boolean {
+  return (
+    pathname === APP_ONBOARDING_PATH ||
+    pathname.startsWith(`${APP_ONBOARDING_PATH}/`)
   );
 }
 

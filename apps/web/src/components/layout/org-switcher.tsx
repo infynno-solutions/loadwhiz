@@ -28,19 +28,19 @@ import {
 } from "@loadwhiz/ui/components/sidebar";
 import { Spinner } from "@loadwhiz/ui/components/spinner";
 import { useMutation } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { Building2Icon, ChevronsUpDownIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import {
-  onboardingCompleteOrganizationMutation,
-  organizationsCreateMutation,
-  usersSetActiveOrganizationMutation,
-} from "@/api/generated/@tanstack/react-query.gen";
+import { usersSetActiveOrganizationMutation } from "@/api/generated/@tanstack/react-query.gen";
 import { getApiErrorMessage } from "@/lib/api-errors";
+import { useCreateOrganization } from "@/lib/use-create-organization";
 import {
+  APP_ONBOARDING_PATH,
   getInitials,
   isActiveOrganizationReady,
+  needsOrganizationOnboarding,
   reloadAppAfterOrganizationChange,
   useActiveOrganization,
   useCurrentUser,
@@ -56,12 +56,18 @@ export function OrgSwitcher() {
   const [orgName, setOrgName] = useState("");
 
   const setActiveOrg = useMutation(usersSetActiveOrganizationMutation());
-  const createOrg = useMutation(organizationsCreateMutation());
-  const completeOnboarding = useMutation(
-    onboardingCompleteOrganizationMutation(),
-  );
+  const { createOrganization, isPending: isCreatingOrg } =
+    useCreateOrganization({
+      user,
+      onSuccess: () => {
+        setCreateOpen(false);
+        setOrgName("");
+        reloadAppAfterOrganizationChange();
+      },
+    });
 
   const organizations = user?.organizations ?? [];
+  const needsOnboarding = needsOrganizationOnboarding(user);
 
   const handleSelectOrg = async (organizationId: string) => {
     if (organizationId === user?.active_organization_id) return;
@@ -76,36 +82,11 @@ export function OrgSwitcher() {
     }
   };
 
-  const handleCreateOrg = async () => {
-    const name = orgName.trim();
-    if (!name) return;
-
-    try {
-      if (user && !user.onboarding_completed) {
-        const result = await completeOnboarding.mutateAsync({ body: { name } });
-        if (result.organization.id !== user.active_organization_id) {
-          await setActiveOrg.mutateAsync({
-            body: { organization_id: result.organization.id },
-          });
-        }
-      } else {
-        const created = await createOrg.mutateAsync({ body: { name } });
-        if (created?.id && created.id !== user?.active_organization_id) {
-          await setActiveOrg.mutateAsync({
-            body: { organization_id: created.id },
-          });
-        }
-      }
-      reloadAppAfterOrganizationChange();
-    } catch (error) {
-      toast.error(getApiErrorMessage(error, "Could not create organization."));
-    }
+  const handleCreateOrg = () => {
+    void createOrganization(orgName);
   };
 
-  const isCreating =
-    createOrg.isPending ||
-    completeOnboarding.isPending ||
-    setActiveOrg.isPending;
+  const isCreating = isCreatingOrg || setActiveOrg.isPending;
 
   const showLoading =
     isPending ||
@@ -125,8 +106,29 @@ export function OrgSwitcher() {
     );
   }
 
+  if (needsOnboarding) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            size="lg"
+            render={<Link to={APP_ONBOARDING_PATH} />}
+          >
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <Building2Icon className="size-4" />
+            </div>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">Set up organization</span>
+              <span className="truncate text-xs">Required to continue</span>
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
   const displayName = activeOrg?.name ?? "No organization";
-  const displayRole = activeOrg?.role ?? "Create one to get started";
+  const displayRole = activeOrg?.role ?? "Select an organization";
 
   return (
     <>

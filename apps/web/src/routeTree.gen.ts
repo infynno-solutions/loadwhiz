@@ -19,6 +19,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppOnboardingRouteImport } from './routes/app/onboarding'
 import { Route as AppHostsRouteImport } from './routes/app/hosts'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
 import { Route as AppTestsIndexRouteImport } from './routes/app/tests/index'
@@ -77,6 +78,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppOnboardingRoute = AppOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppHostsRoute = AppHostsRouteImport.update({
   id: '/hosts',
   path: '/hosts',
@@ -126,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/hosts': typeof AppHostsRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app/': typeof AppIndexRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/hosts': typeof AppHostsRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app': typeof AppIndexRoute
   '/app/tests/new': typeof AppTestsNewRoute
   '/app/tests': typeof AppTestsIndexRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/hosts': typeof AppHostsRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app/': typeof AppIndexRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/app/dashboard'
     | '/app/hosts'
+    | '/app/onboarding'
     | '/app/'
     | '/app/tests/$testId'
     | '/app/tests/new'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/app/dashboard'
     | '/app/hosts'
+    | '/app/onboarding'
     | '/app'
     | '/app/tests/new'
     | '/app/tests'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/app/dashboard'
     | '/app/hosts'
+    | '/app/onboarding'
     | '/app/'
     | '/app/tests/$testId'
     | '/app/tests/new'
@@ -312,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/onboarding': {
+      id: '/app/onboarding'
+      path: '/onboarding'
+      fullPath: '/app/onboarding'
+      preLoaderRoute: typeof AppOnboardingRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/hosts': {
       id: '/app/hosts'
       path: '/hosts'
@@ -381,6 +400,7 @@ const AppTestsTestIdRouteWithChildren = AppTestsTestIdRoute._addFileChildren(
 interface AppRouteRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppHostsRoute: typeof AppHostsRoute
+  AppOnboardingRoute: typeof AppOnboardingRoute
   AppIndexRoute: typeof AppIndexRoute
   AppTestsTestIdRoute: typeof AppTestsTestIdRouteWithChildren
   AppTestsNewRoute: typeof AppTestsNewRoute
@@ -390,6 +410,7 @@ interface AppRouteRouteChildren {
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppHostsRoute: AppHostsRoute,
+  AppOnboardingRoute: AppOnboardingRoute,
   AppIndexRoute: AppIndexRoute,
   AppTestsTestIdRoute: AppTestsTestIdRouteWithChildren,
   AppTestsNewRoute: AppTestsNewRoute,
