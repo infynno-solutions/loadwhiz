@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@loadwhiz/ui/components/card";
+import { cn } from "@loadwhiz/ui/lib/utils";
 import type { IconType } from "react-icons";
 import {
   HiBellAlert,
@@ -23,7 +18,6 @@ import {
   type LandingIconTone,
 } from "@/components/landing/landing-icon";
 import {
-  LandingGlowCard,
   LandingStagger,
   LandingStaggerItem,
 } from "@/components/landing/landing-motion";
@@ -34,25 +28,23 @@ type Feature = {
   description: string;
   icon: IconType;
   tone: LandingIconTone;
-  featured?: boolean;
 };
 
-const FEATURES: Feature[] = [
-  {
-    title: "Safe, scoped testing",
-    description:
-      "Only test infrastructure your team owns — automated verification prevents misuse and protects your targets.",
-    icon: HiOutlineShieldCheck,
-    tone: "emerald",
-    featured: true,
-  },
+const BENTO_PRIMARY: Feature = {
+  title: "Safe, scoped testing",
+  description:
+    "Only test infrastructure your team owns — automated verification prevents misuse and protects your targets.",
+  icon: HiOutlineShieldCheck,
+  tone: "emerald",
+};
+
+const BENTO_SECONDARY: Feature[] = [
   {
     title: "Results as they happen",
     description:
       "Watch throughput, error rates, and latency build in real time. Catch issues before your test even finishes.",
     icon: HiOutlineBolt,
-    tone: "violet",
-    featured: true,
+    tone: "brand",
   },
   {
     title: "Test your full API in minutes",
@@ -75,6 +67,9 @@ const FEATURES: Feature[] = [
     icon: HiUserGroup,
     tone: "rose",
   },
+];
+
+const BENTO_TERTIARY: Feature[] = [
   {
     title: "Fits your existing workflow",
     description:
@@ -98,8 +93,32 @@ const FEATURES: Feature[] = [
   },
 ];
 
-const featured = FEATURES.filter((f) => f.featured);
-const regular = FEATURES.filter((f) => !f.featured);
+const bentoCardClass = cn(
+  "flex h-full flex-col rounded-2xl bg-white shadow-sm ring-1 ring-black/10",
+  "dark:bg-neutral-900 dark:shadow-white/5 dark:ring-white/10",
+);
+
+function FeatureCard({
+  feature,
+  className,
+}: {
+  feature: Feature;
+  className?: string;
+}) {
+  return (
+    <div className={cn(bentoCardClass, "gap-4 p-6 md:p-8", className)}>
+      <LandingIcon icon={feature.icon} tone={feature.tone} size="lg" />
+      <div className="flex flex-col gap-2">
+        <h3 className="font-semibold text-neutral-900 text-sm dark:text-white">
+          {feature.title}
+        </h3>
+        <p className="text-balance text-neutral-600 text-sm dark:text-neutral-400">
+          {feature.description}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export function LandingFeatures() {
   return (
@@ -107,55 +126,27 @@ export function LandingFeatures() {
       id="features"
       align="center"
       eyebrow="Platform"
-      eyebrowTone="violet"
       title="One platform to validate, monitor, and automate"
       description="From first test to post-launch confidence, LoadWhiz covers every stage of your release cycle."
     >
       <LandingStagger className="flex flex-col gap-4">
-        {/* Featured row — 2 cards, each half width */}
-        <div className="grid gap-4 md:grid-cols-2">
-          {featured.map((feature) => (
+        {/* Template-style bento: 1 tall card + 4 cells in a 3×2 grid */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-2">
+          <LandingStaggerItem className="h-full md:row-span-2">
+            <FeatureCard feature={BENTO_PRIMARY} />
+          </LandingStaggerItem>
+          {BENTO_SECONDARY.map((feature) => (
             <LandingStaggerItem key={feature.title} className="h-full">
-              <LandingGlowCard className="h-full">
-                <Card className="h-full border-primary/15 bg-linear-to-br from-muted/50 to-card shadow-sm transition-shadow duration-300 hover:shadow-lg">
-                  <CardHeader className="gap-4 pt-6 pb-6">
-                    <LandingIcon
-                      icon={feature.icon}
-                      tone={feature.tone}
-                      size="lg"
-                    />
-                    <div className="flex flex-col gap-1.5">
-                      <CardTitle className="text-lg">{feature.title}</CardTitle>
-                      <CardDescription className="leading-relaxed">
-                        {feature.description}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                </Card>
-              </LandingGlowCard>
+              <FeatureCard feature={feature} />
             </LandingStaggerItem>
           ))}
         </div>
 
-        {/* Regular grid — 3 columns */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {regular.map((feature) => (
-            <LandingStaggerItem key={feature.title}>
-              <Card className="h-full transition-all duration-300 hover:border-border/80 hover:shadow-md">
-                <CardHeader className="gap-4">
-                  <LandingIcon
-                    icon={feature.icon}
-                    tone={feature.tone}
-                    size="md"
-                  />
-                  <div className="flex flex-col gap-1.5">
-                    <CardTitle className="text-base">{feature.title}</CardTitle>
-                    <CardDescription className="leading-relaxed">
-                      {feature.description}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-              </Card>
+        {/* Remaining features in a simple 3-column row */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {BENTO_TERTIARY.map((feature) => (
+            <LandingStaggerItem key={feature.title} className="h-full">
+              <FeatureCard feature={feature} />
             </LandingStaggerItem>
           ))}
         </div>

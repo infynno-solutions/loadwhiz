@@ -8,56 +8,47 @@ import {
 } from "react-icons/hi2";
 
 import { LandingReveal } from "@/components/landing/landing-motion";
+import { landingContainer } from "@/components/landing/landing-styles";
 
 const ITEMS = [
   {
     label: "Set up in minutes",
     sublabel: "First test running fast",
     icon: HiClock,
-    color: "text-sky-500",
-    bg: "bg-sky-500/10",
   },
   {
     label: "Team collaboration",
     sublabel: "Roles, invites & workspaces",
     icon: HiUserGroup,
-    color: "text-violet-500",
-    bg: "bg-violet-500/10",
   },
   {
     label: "Your infrastructure",
     sublabel: "Full data control, self-hostable",
     icon: HiServer,
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10",
   },
   {
     label: "Complete audit trail",
     sublabel: "Every test run, fully logged",
     icon: HiDocumentText,
-    color: "text-amber-500",
-    bg: "bg-amber-500/10",
   },
 ] as const;
 
 export function LandingCredibility() {
   return (
-    <div className="border-y bg-muted/30 py-10 md:py-14">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        <div className="grid grid-cols-2 gap-y-10 lg:grid-cols-4 lg:divide-x lg:divide-border/50">
+    <div className="border-y border-neutral-200 bg-neutral-50 py-10 md:py-14 dark:border-neutral-800 dark:bg-neutral-900/50">
+      <div className={landingContainer}>
+        <div className="grid grid-cols-2 gap-y-10 lg:grid-cols-4 lg:divide-x lg:divide-neutral-200 dark:lg:divide-neutral-800">
           {ITEMS.map((item) => (
             <LandingReveal key={item.label} variant="fadeIn">
-              <div className="flex flex-col items-center gap-4 px-6 text-center">
-                <div
-                  className={`flex size-14 items-center justify-center rounded-2xl ${item.bg}`}
-                >
-                  <item.icon className={`size-7 ${item.color}`} aria-hidden />
+              <div className="flex flex-col items-center gap-3 px-6 text-center">
+                <div className="flex size-12 items-center justify-center rounded-xl border border-neutral-200 bg-white text-brand-primary dark:border-neutral-800 dark:bg-neutral-950">
+                  <item.icon className="size-6" aria-hidden />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="font-semibold text-sm leading-snug">
+                  <p className="font-medium text-neutral-800 text-sm dark:text-neutral-200">
                     {item.label}
                   </p>
-                  <p className="text-muted-foreground text-xs leading-snug">
+                  <p className="text-neutral-500 text-xs dark:text-neutral-500">
                     {item.sublabel}
                   </p>
                 </div>

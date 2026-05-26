@@ -13,7 +13,7 @@ export type LandingIconTone =
 
 const toneClass: Record<LandingIconTone, string> = {
   brand:
-    "bg-primary/12 text-primary ring-primary/25 dark:bg-primary/15 dark:text-primary-foreground",
+    "bg-brand-primary/12 text-brand-primary ring-brand-primary/25 dark:bg-brand-primary/15 dark:text-brand-primary",
   violet:
     "bg-violet-500/12 text-violet-700 ring-violet-500/20 dark:text-violet-300",
   sky: "bg-sky-500/12 text-sky-700 ring-sky-500/20 dark:text-sky-300",

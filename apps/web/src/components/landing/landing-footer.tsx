@@ -1,99 +1,160 @@
+"use client";
+
+import { cn } from "@loadwhiz/ui/lib/utils";
 import { Link } from "@tanstack/react-router";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { HiMoon, HiSun } from "react-icons/hi2";
+import { SiGithub } from "react-icons/si";
 
 import { AppLogo } from "@/components/app-logo";
 import {
+  LANDING_FOOTER_COLUMNS,
   LANDING_GITHUB_URL,
-  LANDING_NAV,
 } from "@/components/landing/landing-constants";
+
+const footerLinkClass =
+  "transition-colors hover:text-neutral-800 dark:hover:text-white";
+
+const footerColumnTitleClass =
+  "font-bold text-neutral-600 dark:text-neutral-300";
+
+function FooterThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <span
+        className="inline-block size-5 shrink-0 rounded-md bg-neutral-100 dark:bg-neutral-800"
+        aria-hidden
+      />
+    );
+  }
+
+  const isDark = resolvedTheme === "dark";
+
+  return (
+    <button
+      type="button"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="flex cursor-pointer items-center justify-center text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      {isDark ? (
+        <HiSun className="size-5" aria-hidden />
+      ) : (
+        <HiMoon className="size-5" aria-hidden />
+      )}
+    </button>
+  );
+}
+
+function FooterLink({
+  label,
+  href,
+  external,
+}: {
+  label: string;
+  href: string;
+  external?: boolean;
+}) {
+  const className = cn(
+    "text-neutral-600 dark:text-neutral-300",
+    footerLinkClass,
+  );
+
+  if (external || href.startsWith("http")) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {label}
+      </a>
+    );
+  }
+
+  if (href.startsWith("#")) {
+    return (
+      <a href={href} className={className}>
+        {label}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={href} className={className}>
+      {label}
+    </Link>
+  );
+}
 
 export function LandingFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-8">
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-20">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
-          <div className="flex flex-col gap-4">
+    <footer className="relative w-full border-neutral-100 border-t bg-white px-8 pt-20 pb-16 dark:border-white/10 dark:bg-neutral-950 md:pb-20">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 text-neutral-500 text-sm lg:flex-row lg:items-start lg:justify-between lg:gap-16">
+        <div className="max-w-md shrink-0 lg:max-w-lg lg:pr-8">
+          <div className="mb-4">
             <a
               href="#top"
-              className="w-fit rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+              className="relative z-20 inline-flex items-center space-x-2 rounded-md px-2 py-1 outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <AppLogo size="sm" />
+              <AppLogo size="sm" wordmarkClassName="text-foreground" />
             </a>
-            <p className="max-w-sm text-muted-foreground text-sm leading-relaxed">
-              Performance testing for engineering teams who ship often and can't
-              afford surprises.
-            </p>
           </div>
 
-          <div className="flex flex-col gap-4">
-            <p className="font-semibold text-foreground text-xs uppercase tracking-wider">
-              Product
-            </p>
-            <ul className="flex flex-col gap-3">
-              {LANDING_NAV.map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <p className="font-semibold text-foreground text-xs uppercase tracking-wider">
-              Legal & source
-            </p>
-            <ul className="flex flex-col gap-3">
-              <li>
-                <Link
-                  to="/privacy"
-                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-                >
-                  Privacy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/terms"
-                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-                >
-                  Terms
-                </Link>
-              </li>
-              <li>
-                <a
-                  href={LANDING_GITHUB_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-                >
-                  GitHub
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row">
-          <p className="text-center text-muted-foreground text-sm sm:text-left">
-            © {year} LoadWhiz
+          <p className="mb-6 max-w-sm text-neutral-600 leading-relaxed dark:text-neutral-400">
+            Performance testing for engineering teams who ship often and
+            can&apos;t afford surprises.
           </p>
-          <p className="text-center text-muted-foreground text-sm sm:text-right">
-            Built by{" "}
+
+          <div className="flex items-center gap-4">
             <a
-              href="https://infynno.com"
+              href={LANDING_GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-foreground/80 transition-colors hover:text-foreground"
+              className="text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+              aria-label="GitHub"
             >
-              Infynno Solutions
+              <SiGithub className="size-5" aria-hidden />
             </a>
+            <FooterThemeToggle />
+          </div>
+
+          <p className="mt-6 text-neutral-500 dark:text-neutral-400">
+            © {year} LoadWhiz. All rights reserved.
           </p>
+        </div>
+
+        <div className="grid shrink-0 grid-cols-2 items-start gap-x-10 gap-y-10 lg:ml-auto lg:grid-cols-4 lg:gap-x-12">
+          {LANDING_FOOTER_COLUMNS.map((column) => (
+            <div
+              key={column.title}
+              className="flex w-full flex-col justify-center gap-4"
+            >
+              <p className={footerColumnTitleClass}>{column.title}</p>
+              <ul className="flex list-none flex-col gap-4">
+                {column.links.map((link) => (
+                  <li key={link.label} className="list-none">
+                    <FooterLink
+                      label={link.label}
+                      href={link.href}
+                      external={"external" in link ? link.external : false}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </footer>

@@ -11,20 +11,21 @@ import {
 } from "@loadwhiz/ui/components/sheet";
 import { cn } from "@loadwhiz/ui/lib/utils";
 import { Link } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { HiBars3, HiMoon, HiSun } from "react-icons/hi2";
-
-import { AppLogo } from "@/components/app-logo";
 import { SiGithub } from "react-icons/si";
 
+import { AppLogo } from "@/components/app-logo";
+import { LandingBrandButton } from "@/components/landing/landing-brand-button";
 import {
   LANDING_GITHUB_URL,
   LANDING_NAV,
 } from "@/components/landing/landing-constants";
+import { landingNavLink } from "@/components/landing/landing-styles";
 import { useLandingAuth } from "@/components/landing/use-landing-auth";
-
-const SCROLL_THRESHOLD = 72;
+import { useLandingHeaderScroll } from "@/components/landing/use-landing-header-scroll";
 
 function NavLink({
   href,
@@ -38,14 +39,7 @@ function NavLink({
   className?: string;
 }) {
   return (
-    <a
-      href={href}
-      onClick={onClick}
-      className={cn(
-        "rounded-lg px-3.5 py-2 text-muted-foreground text-sm transition-colors hover:bg-muted/60 hover:text-foreground",
-        className,
-      )}
-    >
+    <a href={href} onClick={onClick} className={cn(landingNavLink, className)}>
       {children}
     </a>
   );
@@ -62,7 +56,7 @@ function ThemeToggle() {
   if (!mounted) {
     return (
       <span
-        className="inline-block size-11 shrink-0 rounded-lg bg-muted/50"
+        className="inline-block size-9 shrink-0 rounded-md bg-neutral-100 dark:bg-neutral-800"
         aria-hidden
       />
     );
@@ -74,7 +68,7 @@ function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+      className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? (
@@ -96,47 +90,42 @@ function HeaderActions({
   onNavigate?: () => void;
 }) {
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-2 sm:flex-row sm:items-center",
-        className,
-      )}
-    >
+    <div className={cn("flex items-center gap-3", className)}>
       <ThemeToggle />
       <a
         href={LANDING_GITHUB_URL}
         target="_blank"
         rel="noopener noreferrer"
         onClick={onNavigate}
-        className="inline-flex size-11 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+        className="inline-flex size-9 items-center justify-center rounded-md text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
         aria-label="View on GitHub"
       >
         <SiGithub className="size-5" aria-hidden />
       </a>
       {authed ? (
-        <Button
+        <LandingBrandButton
           size="default"
-          className="h-11 rounded-lg px-5 shadow-sm"
+          className="h-9 px-4 text-sm"
           render={<Link to="/app/dashboard" onClick={onNavigate} />}
         >
           Dashboard
-        </Button>
+        </LandingBrandButton>
       ) : (
         <>
           <Link
             to="/login"
             onClick={onNavigate}
-            className="inline-flex h-11 items-center justify-center rounded-lg px-4 text-muted-foreground text-sm transition-colors hover:bg-muted/60 hover:text-foreground"
+            className={cn(landingNavLink, "hidden sm:inline-flex")}
           >
             Log in
           </Link>
-          <Button
+          <LandingBrandButton
             size="default"
-            className="h-11 rounded-lg px-5 shadow-sm"
+            className="h-9 px-4 text-sm"
             render={<Link to="/signup" onClick={onNavigate} />}
           >
             Get started
-          </Button>
+          </LandingBrandButton>
         </>
       )}
     </div>
@@ -148,7 +137,7 @@ function Logo({ className }: { className?: string }) {
     <a
       href="#top"
       className={cn(
-        "rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "flex items-center gap-2 rounded-md outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}
     >
@@ -160,26 +149,25 @@ function Logo({ className }: { className?: string }) {
 export function LandingHeader() {
   const authed = useLandingAuth();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > SCROLL_THRESHOLD);
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const mode = useLandingHeaderScroll();
+  const isTop = mode === "top";
+  const isFloating = mode === "floating";
+  const isHidden = mode === "hidden";
 
   const closeSheet = () => setOpen(false);
 
   return (
-    <header
+    <motion.header
       className={cn(
-        "sticky top-0 z-50 motion-safe:transition-[padding] motion-safe:duration-200 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]",
-        scrolled ? "px-0 pt-0" : "px-4 pt-4 sm:px-6",
+        "fixed inset-x-0 top-0 z-50 transition-[padding] duration-300",
+        isFloating && "pt-3",
       )}
+      initial={false}
+      animate={{
+        y: isHidden ? "-100%" : 0,
+        opacity: isHidden ? 0 : 1,
+      }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
     >
       <a
         href="#main"
@@ -187,72 +175,80 @@ export function LandingHeader() {
       >
         Skip to content
       </a>
-      <div
-        className={cn(
-          "mx-auto flex h-16 w-full items-center justify-between gap-4 px-5 backdrop-blur-xl supports-backdrop-filter:bg-background/60 motion-safe:transition-[border-radius,box-shadow,max-width,background-color] motion-safe:duration-200 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]",
-          scrolled
-            ? "max-w-none rounded-none bg-background/90 shadow-sm supports-backdrop-filter:bg-background/75"
-            : "max-w-6xl rounded-2xl border border-border/50 bg-background/70 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)] supports-backdrop-filter:bg-background/50 dark:border-white/10 dark:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.45)]",
-        )}
-      >
-        <Logo />
-
-        <nav
-          className="hidden items-center gap-0.5 md:flex"
-          aria-label="Primary"
+      <div className="mx-auto w-full max-w-7xl transition-all duration-300">
+        <div
+          className={cn(
+            "flex h-14 items-center justify-between px-4 transition-all duration-300 sm:h-16 md:px-8",
+            isFloating
+              ? "rounded-full border border-neutral-200/80 bg-white/80 shadow-lg backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/85"
+              : isTop
+                ? "border-transparent border-b bg-transparent shadow-none"
+                : "border-neutral-200/80 border-b bg-white/80 shadow-sm backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/85",
+          )}
+          data-scrolled={!isTop}
         >
-          {LANDING_NAV.map((item) => (
-            <NavLink key={item.href} href={item.href}>
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
+          <Logo />
 
-        <HeaderActions authed={authed} className="hidden md:flex" />
-
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-11 rounded-lg md:hidden"
-                aria-label="Open menu"
-              />
-            }
+          <nav
+            className="hidden items-center gap-6 lg:flex lg:gap-8"
+            aria-label="Primary"
           >
-            <HiBars3 className="size-5" />
-          </SheetTrigger>
-          <SheetContent side="right" className="w-full max-w-xs">
-            <SheetHeader>
-              <SheetTitle className="sr-only">Navigation</SheetTitle>
-              <Logo />
-            </SheetHeader>
-            <nav
-              className="flex flex-col gap-0.5 px-4"
-              aria-label="Mobile primary"
-            >
-              {LANDING_NAV.map((item) => (
-                <SheetClose
-                  key={item.href}
-                  render={
-                    <NavLink
-                      href={item.href}
-                      onClick={closeSheet}
-                      className="w-full"
-                    >
-                      {item.label}
-                    </NavLink>
-                  }
+            {LANDING_NAV.map((item) => (
+              <NavLink key={item.href} href={item.href}>
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <HeaderActions authed={authed} className="hidden lg:flex" />
+
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-10 rounded-md lg:hidden"
+                  aria-label="Open menu"
                 />
-              ))}
-            </nav>
-            <div className="flex flex-col gap-2 px-4 pb-4">
-              <HeaderActions authed={authed} onNavigate={closeSheet} />
-            </div>
-          </SheetContent>
-        </Sheet>
+              }
+            >
+              <HiBars3 className="size-5 text-neutral-900 dark:text-white" />
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-full max-w-xs bg-white dark:bg-neutral-900"
+            >
+              <SheetHeader>
+                <SheetTitle className="sr-only">Navigation</SheetTitle>
+                <Logo />
+              </SheetHeader>
+              <nav
+                className="flex flex-col gap-1 px-4"
+                aria-label="Mobile primary"
+              >
+                {LANDING_NAV.map((item) => (
+                  <SheetClose
+                    key={item.href}
+                    render={
+                      <NavLink
+                        href={item.href}
+                        onClick={closeSheet}
+                        className="rounded-xl px-4 py-3.5 text-base"
+                      >
+                        {item.label}
+                      </NavLink>
+                    }
+                  />
+                ))}
+              </nav>
+              <div className="mt-auto flex flex-col gap-2 px-4 pb-4">
+                <HeaderActions authed={authed} onNavigate={closeSheet} />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

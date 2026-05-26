@@ -9,3 +9,34 @@ export const LANDING_NAV = [
   { label: "How it works", href: "#how-it-works" },
   { label: "Roadmap", href: "#roadmap" },
 ] as const;
+
+export const LANDING_FOOTER_COLUMNS = [
+  {
+    title: "Pages",
+    links: LANDING_NAV.map((item) => ({
+      label: item.label,
+      href: item.href,
+    })),
+  },
+  {
+    title: "Product",
+    links: [
+      { label: "GitHub", href: LANDING_GITHUB_URL, external: true },
+      { label: "API reference", href: LANDING_API_DOCS_URL, external: true },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+    ],
+  },
+  {
+    title: "Register",
+    links: [
+      { label: "Get started", href: "/signup" },
+      { label: "Login", href: "/login" },
+    ],
+  },
+] as const;

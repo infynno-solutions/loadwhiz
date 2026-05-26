@@ -54,7 +54,6 @@ export function LandingIntegrations() {
       id="integrations"
       align="center"
       eyebrow="Integrations"
-      eyebrowTone="amber"
       title="Fits into how your team already works"
       description="Connect LoadWhiz to the tools your team already uses — no new workflows required."
       className="bg-muted/20"

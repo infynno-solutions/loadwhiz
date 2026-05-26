@@ -67,7 +67,6 @@ export function LandingUseCases() {
       id="use-cases"
       align="center"
       eyebrow="Use cases"
-      eyebrowTone="sky"
       title="Built for teams that can't afford surprises"
       description="Whether you're shipping new APIs, enforcing SLAs, or scaling for a major launch — LoadWhiz fits into how your team already works."
       className="bg-muted/20"

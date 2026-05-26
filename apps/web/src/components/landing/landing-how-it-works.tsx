@@ -72,7 +72,6 @@ export function LandingHowItWorks() {
       id="how-it-works"
       align="center"
       eyebrow="Workflow"
-      eyebrowTone="sky"
       title="How it works"
       description="Four steps from verified target to actionable results."
       className="bg-muted/20"

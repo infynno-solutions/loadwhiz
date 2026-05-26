@@ -27,7 +27,6 @@ export function LandingLiveResults() {
     <LandingSection
       id="live-results"
       eyebrow="Real-time visibility"
-      eyebrowTone="violet"
       title="See what's happening — while it's happening"
       description="Most tools make you wait for a report. LoadWhiz streams performance data live so your team can act on what they see, not guess at what happened."
     >

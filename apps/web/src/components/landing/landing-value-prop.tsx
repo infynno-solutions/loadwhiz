@@ -29,7 +29,6 @@ export function LandingValueProp() {
       id="why"
       align="center"
       eyebrow="Why LoadWhiz"
-      eyebrowTone="emerald"
       title="Release fast without flying blind"
       description="Engineering teams that ship often need to know their systems can handle it. LoadWhiz makes performance validation a repeatable part of your release process — not an afterthought."
     >

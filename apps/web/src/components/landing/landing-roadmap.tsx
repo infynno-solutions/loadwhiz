@@ -49,7 +49,6 @@ export function LandingRoadmap() {
       id="roadmap"
       align="center"
       eyebrow="Roadmap"
-      eyebrowTone="amber"
       title="On the roadmap"
       description="We build in the open. These are the next areas we're exploring — your feedback shapes priority."
     >

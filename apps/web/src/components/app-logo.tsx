@@ -23,12 +23,15 @@ type AppLogoProps = {
   className?: string;
   size?: keyof typeof sizeStyles;
   showWordmark?: boolean;
+  /** Single-color wordmark (e.g. footer). Omit for default Load + primary Whiz. */
+  wordmarkClassName?: string;
 };
 
 export function AppLogo({
   className,
   size = "md",
   showWordmark = true,
+  wordmarkClassName,
 }: AppLogoProps) {
   const styles = sizeStyles[size];
 
@@ -41,8 +44,20 @@ export function AppLogo({
         className={cn(styles.img, "block shrink-0")}
       />
       {showWordmark ? (
-        <span className={cn("truncate font-bold tracking-tight", styles.wordmark)}>
-          Load<span className="text-primary">Whiz</span>
+        <span
+          className={cn(
+            "truncate font-bold tracking-tight",
+            styles.wordmark,
+            wordmarkClassName,
+          )}
+        >
+          {wordmarkClassName ? (
+            "LoadWhiz"
+          ) : (
+            <>
+              Load<span className="text-primary">Whiz</span>
+            </>
+          )}
         </span>
       ) : null}
     </span>
