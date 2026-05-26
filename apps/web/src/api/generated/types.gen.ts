@@ -264,6 +264,10 @@ export type CreateOrganizationRequest = {
 export type DashboardAggregates = {
     response_times: DashboardResponseTimes;
     response_counts: DashboardResponseCounts;
+    /**
+     * By Status Code
+     */
+    by_status_code: Array<DashboardStatusCodeCount>;
     bandwidth: DashboardBandwidth;
     redirects: DashboardRedirects;
 };
@@ -464,6 +468,20 @@ export type DashboardResponseCounts = {
      * Network Errors
      */
     network_errors?: number;
+};
+
+/**
+ * DashboardStatusCodeCount
+ */
+export type DashboardStatusCodeCount = {
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Count
+     */
+    count?: number;
 };
 
 /**

@@ -10,6 +10,7 @@ import {
   overviewRows,
   responseCountRows,
   responseTimeRows,
+  statusCodeRows,
   timeseriesRows,
 } from "@/lib/result-pdf/result-pdf-sections";
 
@@ -198,6 +199,16 @@ export function ResultPdfDocument({
 
         <Text style={styles.sectionTitle}>Response counts & bandwidth</Text>
         <KeyValueTable rows={responseCountRows(dashboard)} />
+
+        {(dashboard.aggregates.by_status_code?.length ?? 0) > 0 ? (
+          <>
+            <Text style={styles.sectionTitle}>Requests by status code</Text>
+            <MultiColumnTable
+              headers={["Status", "Requests"]}
+              rows={statusCodeRows(dashboard)}
+            />
+          </>
+        ) : null}
 
         {tsRows.length > 0 ? (
           <>

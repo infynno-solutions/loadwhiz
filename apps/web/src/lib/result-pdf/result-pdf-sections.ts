@@ -90,6 +90,22 @@ export function responseTimeRows(
   ];
 }
 
+export function statusCodeRows(
+  dashboard: LoadTestResultDashboardResponse,
+): PdfTableRow[] {
+  const rows = dashboard.aggregates.by_status_code ?? [];
+  if (rows.length === 0) {
+    return [{ cells: ["—", "No status breakdown"] }];
+  }
+  return rows.map((row) => {
+    const label =
+      !row.status || row.status === "0" ? "Timeout / no response" : row.status;
+    return {
+      cells: [label, String(row.count ?? 0)],
+    };
+  });
+}
+
 export function responseCountRows(
   dashboard: LoadTestResultDashboardResponse,
 ): PdfTableRow[] {

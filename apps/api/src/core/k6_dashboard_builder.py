@@ -61,7 +61,20 @@ def refresh_dashboard_meta(
             "partial": active and bool(meta.get("partial", True)),
         }
     )
-    return {**dashboard, "meta": meta}
+    payload: dict[str, Any] = {**dashboard, "meta": meta}
+    if not active and isinstance(result.summary, dict):
+        metrics = extract_metrics(result.summary)
+        overview = dict(payload.get("overview") or {})
+        overview.update(
+            {
+                "avg_response_ms": metrics.get("avg_ms"),
+                "error_rate_percent": metrics.get("error_rate_percent", 0.0),
+                "total_requests": metrics.get("total_requests", 0),
+                "rps": metrics.get("rps", 0.0),
+            }
+        )
+        payload["overview"] = overview
+    return payload
 
 
 def build_live_dashboard_skeleton(
@@ -113,6 +126,7 @@ def build_live_dashboard_skeleton(
             },
             "bandwidth": {"bytes_sent": 0, "bytes_received": 0},
             "redirects": {"valid": 0, "invalid": 0},
+            "by_status_code": [],
         },
         "timeseries": [],
         "by_url": [],
@@ -151,6 +165,10 @@ def build_dashboard_payload(
             ndjson,
             duration_seconds=load_test.duration_seconds,
         )
+
+    ndjson_error_rate = _error_rate_percent_from_ndjson(ndjson)
+    if ndjson_error_rate is not None:
+        metrics["error_rate_percent"] = ndjson_error_rate
 
     overview = {
         "avg_response_ms": metrics.get("avg_ms"),
@@ -353,11 +371,13 @@ def _build_aggregates(
 ) -> dict[str, Any]:
     response_times = _response_times_from_summary(summary)
     response_counts = _response_counts(summary, metrics, ndjson)
+    by_status_code = _status_code_counts(ndjson)
     bandwidth = _bandwidth_from_summary(summary)
     redirects = _redirects(summary, metrics, ndjson)
     return {
         "response_times": response_times,
         "response_counts": response_counts,
+        "by_status_code": by_status_code,
         "bandwidth": bandwidth,
         "redirects": redirects,
     }
@@ -408,6 +428,42 @@ def _classify_status(status: str) -> str:
     return "network"
 
 
+def _status_code_sort_key(status: str) -> tuple[int, int | str]:
+    if not status or status == "0":
+        return (0, 0)
+    try:
+        return (1, int(status))
+    except ValueError:
+        return (2, status)
+
+
+def _status_code_counts(ndjson: NdjsonMetrics) -> list[dict[str, Any]]:
+    histogram: dict[str, int] = defaultdict(int)
+    for statuses in ndjson.status_by_url.values():
+        for status in statuses:
+            key = status if status else "0"
+            histogram[key] += 1
+    if not histogram:
+        return []
+    return [
+        {"status": status, "count": count}
+        for status, count in sorted(
+            histogram.items(),
+            key=lambda item: _status_code_sort_key(item[0]),
+        )
+    ]
+
+
+def _error_rate_percent_from_ndjson(ndjson: NdjsonMetrics) -> float | None:
+    all_statuses: list[str] = []
+    for statuses in ndjson.status_by_url.values():
+        all_statuses.extend(statuses)
+    if not all_statuses:
+        return None
+    success = sum(1 for status in all_statuses if _classify_status(status) == "success")
+    return round((len(all_statuses) - success) / len(all_statuses) * 100, 2)
+
+
 def _response_counts(
     summary: dict[str, Any] | None,
     metrics: dict[str, Any],
@@ -449,8 +505,10 @@ def _response_counts(
     counts["success"] = max(0, total - failed)
     if summary:
         failed_metric = (summary.get("metrics") or {}).get("http_req_failed") or {}
-        fails = int(_metric_values(failed_metric).get("fails") or 0)
-        counts["network_errors"] = max(0, fails - failed)
+        failed_values = _metric_values(failed_metric)
+        # k6 "passes" = failed requests for http_req_failed; "fails" = successful
+        k6_failed = int(failed_values.get("passes") or 0)
+        counts["network_errors"] = max(0, k6_failed - failed)
     return counts
 
 

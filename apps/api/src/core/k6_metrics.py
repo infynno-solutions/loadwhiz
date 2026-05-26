@@ -29,6 +29,27 @@ def _metric_rate(metric: dict[str, Any]) -> float:
     return 0.0
 
 
+def _http_req_failed_rate(metric: dict[str, Any]) -> float:
+    """Failure ratio from k6's http_req_failed rate metric.
+
+    Summary export uses ``value`` for the ratio; ``rate`` may be absent. For this
+    metric, ``passes`` counts failed requests (non-zero samples) and ``fails``
+    counts successful ones — see grafana/k6#2306.
+    """
+    values = _metric_values(metric)
+    for key in ("rate", "value"):
+        raw = values.get(key)
+        if raw is not None:
+            return float(raw)
+    passes = values.get("passes")
+    fails = values.get("fails")
+    if passes is not None and fails is not None:
+        total = int(passes) + int(fails)
+        if total > 0:
+            return int(passes) / total
+    return 0.0
+
+
 def extract_metrics(summary: dict[str, Any]) -> dict[str, Any]:
     metrics_root = summary.get("metrics") or {}
     http_reqs = metrics_root.get("http_reqs") or {}
@@ -40,7 +61,7 @@ def extract_metrics(summary: dict[str, Any]) -> dict[str, Any]:
     if total_requests == 0:
         total_requests = _metric_count(iterations)
 
-    failed_rate = _metric_rate(http_failed)
+    failed_rate = _http_req_failed_rate(http_failed)
     error_rate_percent = round(failed_rate * 100, 2)
 
     duration_values = _metric_values(duration)

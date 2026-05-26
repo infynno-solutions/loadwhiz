@@ -26,6 +26,7 @@ import { ByUrlTable } from "@/components/load-tests/by-url-table";
 import { DistributionChart } from "@/components/load-tests/distribution-chart";
 import { LoadTestResultStatusBadge } from "@/components/load-tests/load-test-result-status-badge";
 import { ResultOverviewCards } from "@/components/load-tests/result-overview-cards";
+import { StatusCodeCountsTable } from "@/components/load-tests/status-code-counts-table";
 import { TimeseriesChart } from "@/components/load-tests/timeseries-chart";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import { canAbortResultRun, formatLoadTestDate } from "@/lib/load-test-actions";
@@ -251,6 +252,21 @@ export function ResultDashboard({
         </CardHeader>
         <CardContent className="pt-0">
           <DistributionChart buckets={data.distribution ?? []} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Requests by status code</CardTitle>
+          <CardDescription>
+            HTTP status returned for each request in this run
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <StatusCodeCountsTable
+            rows={aggregates.by_status_code ?? []}
+            totalRequests={overview.total_requests}
+          />
         </CardContent>
       </Card>
 

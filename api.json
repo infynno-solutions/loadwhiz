@@ -2301,6 +2301,13 @@
           "response_counts": {
             "$ref": "#/components/schemas/DashboardResponseCounts"
           },
+          "by_status_code": {
+            "items": {
+              "$ref": "#/components/schemas/DashboardStatusCodeCount"
+            },
+            "type": "array",
+            "title": "By Status Code"
+          },
           "bandwidth": { "$ref": "#/components/schemas/DashboardBandwidth" },
           "redirects": { "$ref": "#/components/schemas/DashboardRedirects" }
         },
@@ -2308,6 +2315,7 @@
         "required": [
           "response_times",
           "response_counts",
+          "by_status_code",
           "bandwidth",
           "redirects"
         ],
@@ -2485,6 +2493,15 @@
         },
         "type": "object",
         "title": "DashboardResponseCounts"
+      },
+      "DashboardStatusCodeCount": {
+        "properties": {
+          "status": { "type": "string", "title": "Status" },
+          "count": { "type": "integer", "title": "Count", "default": 0 }
+        },
+        "type": "object",
+        "required": ["status"],
+        "title": "DashboardStatusCodeCount"
       },
       "DashboardResponseTimes": {
         "properties": {

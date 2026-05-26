@@ -10,6 +10,7 @@ from src.core.k6_dashboard_builder import (
     build_live_dashboard_skeleton,
     refresh_dashboard_meta,
 )
+from src.core.k6_metrics import extract_metrics
 from src.core.load_test_run_validation import validate_runnable_urls
 from src.core.load_test_validation import validate_host_verified
 from src.models.host import HostStatus
@@ -218,6 +219,13 @@ class LoadTestRunService:
         return load_test
 
     def _result_to_dict(self, result: LoadTestResult, load_test: LoadTest) -> dict:
+        metrics = result.metrics
+        if (
+            result.status
+            not in (LoadTestResultStatus.running, LoadTestResultStatus.not_ready)
+            and isinstance(result.summary, dict)
+        ):
+            metrics = extract_metrics(result.summary)
         return {
             "result_id": result.id,
             "test_id": load_test.id,
@@ -225,7 +233,7 @@ class LoadTestRunService:
             "started_at": result.started_at,
             "finished_at": result.finished_at,
             "passed": result.passed,
-            "metrics": result.metrics,
+            "metrics": metrics,
             "exit_code": result.exit_code,
             "error_message": result.error_message,
             "created_at": result.created_at,

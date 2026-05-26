@@ -8,6 +8,7 @@ from src.api.v1.organizations.schemas import (
     OrgDashboardResultMetrics,
     OrgDashboardStats,
 )
+from src.core.k6_metrics import extract_metrics
 from src.models.host import Host, HostStatus
 from src.models.load_test import LoadTest, LoadTestResult, LoadTestStatus
 from src.repositories.host_repository import HostRepository
@@ -16,9 +17,11 @@ from src.repositories.load_test_result_repository import LoadTestResultRepositor
 
 
 def _metrics_from_result(result: LoadTestResult) -> OrgDashboardResultMetrics | None:
-    if not result.metrics:
-        return None
     m = result.metrics
+    if isinstance(result.summary, dict):
+        m = extract_metrics(result.summary)
+    elif not m:
+        return None
     return OrgDashboardResultMetrics(
         total_requests=m.get("total_requests", 0),
         error_rate_percent=m.get("error_rate_percent", 0.0),

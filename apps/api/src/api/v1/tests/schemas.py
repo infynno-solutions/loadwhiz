@@ -400,6 +400,11 @@ class DashboardResponseCounts(BaseModel):
     network_errors: int = 0
 
 
+class DashboardStatusCodeCount(BaseModel):
+    status: str
+    count: int = 0
+
+
 class DashboardBandwidth(BaseModel):
     bytes_sent: int = 0
     bytes_received: int = 0
@@ -413,6 +418,7 @@ class DashboardRedirects(BaseModel):
 class DashboardAggregates(BaseModel):
     response_times: DashboardResponseTimes
     response_counts: DashboardResponseCounts
+    by_status_code: list[DashboardStatusCodeCount] = Field(default_factory=list)
     bandwidth: DashboardBandwidth
     redirects: DashboardRedirects
 
