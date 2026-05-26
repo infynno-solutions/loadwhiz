@@ -64,28 +64,45 @@ export function urlRowToHttpRequest(row: UrlRow): HttpRequestConfig {
   return request;
 }
 
+function mergeImportedAuthIntoHeaders(
+  config: HttpRequestConfig,
+): Record<string, string> {
+  const headers = { ...(config.headers ?? {}) };
+  const hasAuthorizationHeader = Object.keys(headers).some(
+    (key) => key.toLowerCase() === "authorization" && headers[key]?.trim(),
+  );
+
+  if (config.bearer?.token?.trim() && !hasAuthorizationHeader) {
+    const headerName = config.bearer.header_name?.trim() || "Authorization";
+    const prefix = config.bearer.prefix?.trim() || "Bearer";
+    headers[headerName] = `${prefix} ${config.bearer.token}`.trim();
+  }
+
+  if (
+    config.credentials?.login?.trim() &&
+    config.credentials.password &&
+    !Object.keys(headers).some(
+      (key) => key.toLowerCase() === "authorization" && headers[key]?.trim(),
+    )
+  ) {
+    const encoded = btoa(
+      `${config.credentials.login}:${config.credentials.password}`,
+    );
+    headers.Authorization = `Basic ${encoded}`;
+  }
+
+  return headers;
+}
+
 export function httpRequestToUrlRow(config: HttpRequestConfig): UrlRow {
   return {
     url: config.url,
     request_type: config.request_type ?? "GET",
-    headers: config.headers ?? {},
+    headers: mergeImportedAuthIntoHeaders(config),
     request_params: config.request_params ?? {},
     cookies: config.cookies ?? {},
     raw_post_body: config.raw_post_body ?? "",
     payload_file_url: config.payload_file_url ?? "",
-    credentials: config.credentials
-      ? {
-          login: config.credentials.login,
-          password: config.credentials.password,
-        }
-      : undefined,
-    bearer: config.bearer
-      ? {
-          token: config.bearer.token,
-          prefix: config.bearer.prefix ?? "",
-          header_name: config.bearer.header_name ?? "",
-        }
-      : undefined,
     variables:
       config.variables?.map((v) => ({
         name: v.name,

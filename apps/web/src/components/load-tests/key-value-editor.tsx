@@ -3,6 +3,7 @@
 import { Button } from "@loadwhiz/ui/components/button";
 import { Input } from "@loadwhiz/ui/components/input";
 import { PlusIcon, Trash2Icon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 type KeyValueEditorProps = {
   label: string;
@@ -14,19 +15,28 @@ type KeyValueEditorProps = {
   valuePlaceholder?: string;
 };
 
-function recordToRows(record: Record<string, string>) {
+type Row = { key: string; value: string };
+
+function recordToRows(record: Record<string, string>): Row[] {
   const entries = Object.entries(record);
   if (entries.length === 0) return [{ key: "", value: "" }];
   return entries.map(([key, value]) => ({ key, value }));
 }
 
-function rowsToRecord(rows: { key: string; value: string }[]) {
+function rowsToRecord(rows: Row[]): Record<string, string> {
   const record: Record<string, string> = {};
   for (const row of rows) {
     if (!row.key.trim()) continue;
     record[row.key.trim()] = row.value;
   }
   return record;
+}
+
+function recordsEqual(a: Record<string, string>, b: Record<string, string>) {
+  const keysA = Object.keys(a).sort();
+  const keysB = Object.keys(b).sort();
+  if (keysA.length !== keysB.length) return false;
+  return keysA.every((key) => a[key] === b[key]);
 }
 
 export function KeyValueEditor({
@@ -38,9 +48,19 @@ export function KeyValueEditor({
   keyPlaceholder = "Name",
   valuePlaceholder = "Value",
 }: KeyValueEditorProps) {
-  const rows = recordToRows(value);
+  const [rows, setRows] = useState(() => recordToRows(value));
 
-  const updateRows = (nextRows: { key: string; value: string }[]) => {
+  useEffect(() => {
+    setRows((current) => {
+      if (recordsEqual(rowsToRecord(current), value)) {
+        return current;
+      }
+      return recordToRows(value);
+    });
+  }, [value]);
+
+  const updateRows = (nextRows: Row[]) => {
+    setRows(nextRows);
     onChange(rowsToRecord(nextRows));
   };
 
@@ -54,7 +74,7 @@ export function KeyValueEditor({
       </div>
       <div className="flex flex-col gap-2">
         {rows.map((row, index) => (
-          <div key={index} className="flex gap-2">
+          <div key={`${label}-row-${index}`} className="flex gap-2">
             <Input
               value={row.key}
               onChange={(e) => {
@@ -64,7 +84,7 @@ export function KeyValueEditor({
               }}
               placeholder={keyPlaceholder}
               disabled={disabled}
-              className="flex-1"
+              className="min-w-0 flex-1"
             />
             <Input
               value={row.value}
@@ -75,7 +95,7 @@ export function KeyValueEditor({
               }}
               placeholder={valuePlaceholder}
               disabled={disabled}
-              className="flex-[2]"
+              className="min-w-0 flex-2"
             />
             <Button
               type="button"

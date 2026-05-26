@@ -1765,6 +1765,44 @@
         }
       }
     },
+    "/api/v1/organizations/{org_id}/tests/{test_id}/duplicate": {
+      "post": {
+        "tags": ["load-tests"],
+        "summary": "Duplicate load test",
+        "description": "Create a copy of an existing load test in `draft` status with the same configuration. Run history is not copied.",
+        "operationId": "load_tests.duplicate",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Organization identifier."
+          },
+          {
+            "name": "test_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Load test identifier."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoadTestResponse" }
+              }
+            }
+          },
+          "401": { "description": "Authentication required." },
+          "404": { "description": "Load test or host not found." },
+          "422": { "description": "Target host is not verified." }
+        }
+      }
+    },
     "/api/v1/organizations/{org_id}/tests/{test_id}/results": {
       "get": {
         "tags": ["load-tests"],

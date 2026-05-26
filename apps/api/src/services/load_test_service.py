@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import uuid
 from datetime import UTC, datetime
 from typing import Any
@@ -268,6 +269,59 @@ class LoadTestService:
 
         load_test.updated_at = datetime.now(UTC)
         load_test = await self.load_test_repository.update(load_test)
+        return await self._to_dict(load_test)
+
+    async def duplicate_test(
+        self,
+        organization_id: uuid.UUID,
+        test_id: uuid.UUID,
+        created_by_user_id: uuid.UUID,
+    ) -> dict:
+        source = await self._get_or_404(organization_id, test_id)
+        host = await self.host_repository.get_by_id(source.host_id)
+        if not host or host.organization_id != organization_id:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Host not found",
+            )
+        try:
+            validate_host_verified(host)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=str(exc),
+            ) from exc
+
+        base_name = (source.name or "").strip() or "Load test"
+        copy_name = f"{base_name} (copy)"
+
+        now = datetime.now(UTC)
+        load_test = LoadTest(
+            organization_id=organization_id,
+            host_id=source.host_id,
+            created_by_user_id=created_by_user_id,
+            url_source=source.url_source,
+            test_type=source.test_type,
+            duration_seconds=source.duration_seconds,
+            initial_clients=source.initial_clients,
+            total_clients=source.total_clients,
+            timeout_ms=source.timeout_ms,
+            error_threshold_percent=source.error_threshold_percent,
+            name=copy_name,
+            notes=source.notes,
+            callback_url=source.callback_url,
+            callback_email=source.callback_email,
+            scheduled_at=None,
+            status=LoadTestStatus.draft,
+            urls=copy.deepcopy(source.urls or []),
+            openapi_spec_snapshot=copy.deepcopy(source.openapi_spec_snapshot),
+            openapi_spec_filename=source.openapi_spec_filename,
+            import_summary=copy.deepcopy(source.import_summary),
+            active_result_id=None,
+            created_at=now,
+            updated_at=now,
+        )
+        load_test = await self.load_test_repository.create(load_test)
         return await self._to_dict(load_test)
 
     async def delete_test(

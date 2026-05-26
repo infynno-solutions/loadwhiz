@@ -59,6 +59,8 @@ class OpenApiParseResult:
 
 
 def parse_spec_bytes(content: bytes, filename: str | None = None) -> dict[str, Any]:
+    from src.core.postman_import import normalize_import_document
+
     text = content.decode("utf-8-sig")
     if filename and filename.lower().endswith((".yaml", ".yml")):
         data = yaml.safe_load(text)
@@ -69,7 +71,7 @@ def parse_spec_bytes(content: bytes, filename: str | None = None) -> dict[str, A
             data = yaml.safe_load(text)
     if not isinstance(data, dict):
         raise OpenApiImportError("OpenAPI document must be a JSON or YAML object")
-    return data
+    return normalize_import_document(data)
 
 
 def validate_openapi_document(document: dict[str, Any]) -> None:
@@ -82,10 +84,13 @@ def validate_openapi_document(document: dict[str, Any]) -> None:
         return
     if document.get("swagger") == "2.0":
         raise OpenApiImportError(
-            "Swagger 2.0 is not supported; use OpenAPI 3.0 or 3.1"
+            "Swagger 2.0 is not supported. In Postman use "
+            "Collection → … → Generate specification (OpenAPI 3.0 or 3.1), "
+            "not Export collection."
         )
     raise OpenApiImportError(
-        "Unsupported document format; expected OpenAPI 3.0 or 3.1"
+        "Unsupported document format. Upload OpenAPI 3.0/3.1 (JSON or YAML), "
+        "or a Postman Collection v2 export (Collection → Export)."
     )
 
 
@@ -114,43 +119,91 @@ def _resolve_refs(node: Any, root: dict[str, Any], seen: set[str] | None = None)
     return node
 
 
-def _resolve_server_urls(document: dict[str, Any]) -> list[str]:
+def _apply_server_variables(url: str, variables: dict[str, Any]) -> str:
+    for var_name, var_def in variables.items():
+        if isinstance(var_def, dict):
+            default = var_def.get("default", "")
+        else:
+            default = ""
+        url = url.replace(f"{{{var_name}}}", str(default))
+    return url
+
+
+def _host_server_bases(hostname: str, relative_paths: list[str]) -> list[str]:
+    """Build absolute base URLs from a verified host and optional relative server paths."""
+    paths = relative_paths or [""]
+    bases: list[str] = []
+    for scheme in ("https", "http"):
+        for rel in paths:
+            root = f"{scheme}://{hostname}"
+            rel = rel.strip()
+            if not rel or rel == "/":
+                bases.append(root)
+                continue
+            full = urljoin(root + "/", rel.lstrip("/"))
+            bases.append(full.rstrip("/") or root)
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for base in bases:
+        if base not in seen:
+            seen.add(base)
+            ordered.append(base)
+    return ordered
+
+
+def _resolve_server_urls(
+    document: dict[str, Any],
+    *,
+    target_hostname: str | None = None,
+) -> list[str]:
     servers = document.get("servers") or []
-    urls: list[str] = []
+    absolute: list[str] = []
+    relative: list[str] = []
+
     for server in servers:
         if not isinstance(server, dict):
             continue
         url = server.get("url")
         if not url or not isinstance(url, str):
             continue
-        variables = server.get("variables") or {}
-        for var_name, var_def in variables.items():
-            if isinstance(var_def, dict):
-                default = var_def.get("default", "")
-            else:
-                default = ""
-            url = url.replace(f"{{{var_name}}}", str(default))
+        url = _apply_server_variables(url, server.get("variables") or {})
         if url.startswith("http://") or url.startswith("https://"):
-            urls.append(url.rstrip("/"))
-    return urls
+            absolute.append(url.rstrip("/"))
+        else:
+            relative.append(url)
+
+    if absolute:
+        return absolute
+
+    if target_hostname:
+        return _host_server_bases(target_hostname, relative)
+
+    return []
 
 
 def _has_unresolved_path_params(path: str, operation: dict[str, Any]) -> bool:
     if "{" not in path:
         return False
+    param_names = set(re.findall(r"\{([^}]+)\}", path))
+    if not param_names:
+        return False
     params = operation.get("parameters") or []
-    for param in params:
-        if not isinstance(param, dict):
-            continue
-        if param.get("in") != "path":
-            continue
-        if param.get("required") and not (
+    path_params = {
+        p.get("name"): p
+        for p in params
+        if isinstance(p, dict) and p.get("in") == "path" and p.get("name")
+    }
+    for name in param_names:
+        param = path_params.get(name)
+        if param is None:
+            return True
+        if not (
             param.get("example") is not None
             or param.get("schema", {}).get("example") is not None
             or param.get("schema", {}).get("default") is not None
         ):
             return True
-    return "{" in path
+    return False
 
 
 def _extract_param_values(operation: dict[str, Any]) -> tuple[dict[str, str], dict[str, str]]:
@@ -323,10 +376,12 @@ def parse_openapi_for_host(
 ) -> OpenApiParseResult:
     validate_openapi_document(document)
     resolved = _resolve_refs(document, document)
-    server_urls = _resolve_server_urls(resolved)
+    server_urls = _resolve_server_urls(resolved, target_hostname=target_hostname)
     if not server_urls:
         raise OpenApiImportError(
-            "OpenAPI document must define at least one absolute server URL"
+            "Could not resolve server URLs for this specification and host. "
+            "Add an absolute server URL in the OpenAPI document, or verify the "
+            "host matches a server entry."
         )
 
     include_set = set(include_operations or [])

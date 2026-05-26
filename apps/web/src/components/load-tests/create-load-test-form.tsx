@@ -83,7 +83,7 @@ const SOURCE_OPTIONS = [
     id: "openapi-file" as const,
     title: "OpenAPI file",
     description:
-      "Upload a JSON or YAML spec. We resolve operations against your verified host and preview before creating.",
+      "Upload OpenAPI 3.x or an exported Postman Collection. We resolve requests against your verified host and preview before creating.",
   },
   {
     id: "openapi-json" as const,
@@ -280,10 +280,7 @@ export function CreateLoadTestForm({
     try {
       const data = await previewImport.mutateAsync({
         path: { org_id: orgId },
-        body: {
-          ...buildOpenApiPreviewBody(hostId, specFile),
-          spec_file: specFile as unknown as string,
-        },
+        body: buildOpenApiPreviewBody(hostId, specFile),
       });
       setPreview(data);
     } catch (error) {
@@ -444,7 +441,8 @@ export function CreateLoadTestForm({
                     <Field>
                       <FieldLabel>Specification file</FieldLabel>
                       <FieldDescription>
-                        OpenAPI 3.0 or 3.1 in JSON or YAML format.
+                        OpenAPI 3.0/3.1 (JSON or YAML) or a Postman Collection
+                        export (v2).
                       </FieldDescription>
                       <Input
                         type="file"

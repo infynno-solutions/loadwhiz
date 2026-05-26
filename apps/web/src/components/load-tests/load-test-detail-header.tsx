@@ -3,11 +3,18 @@
 import { Button } from "@loadwhiz/ui/components/button";
 import { Spinner } from "@loadwhiz/ui/components/spinner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { EyeIcon, PlayIcon, SquareIcon, Trash2Icon } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import {
+  CopyIcon,
+  EyeIcon,
+  PlayIcon,
+  SquareIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
+  loadTestsDuplicateMutation,
   loadTestsRunMutation,
   loadTestsStopMutation,
 } from "@/api/generated/@tanstack/react-query.gen";
@@ -40,8 +47,10 @@ export function LoadTestDetailHeader({
   onDelete,
 }: LoadTestDetailHeaderProps) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const runTest = useMutation(loadTestsRunMutation());
   const stopTest = useMutation(loadTestsStopMutation());
+  const duplicateTest = useMutation(loadTestsDuplicateMutation());
 
   const handleRun = async () => {
     try {
@@ -68,7 +77,24 @@ export function LoadTestDetailHeader({
     }
   };
 
-  const busy = runTest.isPending || stopTest.isPending;
+  const handleDuplicate = async () => {
+    try {
+      const copy = await duplicateTest.mutateAsync({
+        path: { org_id: orgId, test_id: test.test_id },
+      });
+      await invalidateLoadTestQueries(queryClient, orgId, copy.test_id);
+      toast.success("Load test duplicated.");
+      void navigate({
+        to: "/app/tests/$testId",
+        params: { testId: copy.test_id },
+      });
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Could not duplicate load test."));
+    }
+  };
+
+  const busy =
+    runTest.isPending || stopTest.isPending || duplicateTest.isPending;
   const latestResult = test.latest_result;
   const showLiveRunLink =
     latestResult != null && isActiveResultStatus(latestResult.status);
@@ -125,8 +151,17 @@ export function LoadTestDetailHeader({
         </Button>
         <Button
           size="sm"
+          variant="outline"
+          disabled={busy}
+          onClick={() => void handleDuplicate()}
+        >
+          {duplicateTest.isPending ? <Spinner /> : <CopyIcon />}
+          Duplicate
+        </Button>
+        <Button
+          size="sm"
           variant="destructive"
-          disabled={!canDeleteLoadTest(test)}
+          disabled={!canDeleteLoadTest(test) || busy}
           onClick={onDelete}
         >
           <Trash2Icon />

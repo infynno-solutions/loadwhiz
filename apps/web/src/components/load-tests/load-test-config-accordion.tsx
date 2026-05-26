@@ -38,8 +38,8 @@ export function LoadTestConfigAccordion({
             </span>
           </div>
         </AccordionTrigger>
-        <AccordionContent>
-          <div className="flex flex-col gap-2 pt-2 pb-1">
+        <AccordionContent className="overflow-x-hidden">
+          <div className="flex min-w-0 flex-col gap-2 pt-2 pb-1">
             <LoadTestFormSection
               title="General"
               description="Identity, target host, and how URLs were defined."
@@ -98,7 +98,7 @@ export function LoadTestConfigAccordion({
                 {test.urls.map((u, index) => (
                   <li
                     key={`${index}-${u.request_type}-${u.url}`}
-                    className="rounded-md border bg-muted/30 px-3 py-2"
+                    className="min-w-0 overflow-hidden rounded-md border bg-muted/30 px-3 py-2"
                   >
                     <HttpRequestSummary request={u} />
                   </li>

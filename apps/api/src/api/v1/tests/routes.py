@@ -287,6 +287,33 @@ async def update_test_from_openapi(
     )
 
 
+@router.post(
+    "/{test_id}/duplicate",
+    operation_id="load_tests.duplicate",
+    status_code=status.HTTP_201_CREATED,
+    response_model=LoadTestResponse,
+    summary="Duplicate load test",
+    description=(
+        "Create a copy of an existing load test in `draft` status with the same "
+        "configuration. Run history is not copied."
+    ),
+    responses={
+        404: {"description": "Load test or host not found."},
+        422: {"description": "Target host is not verified."},
+    },
+)
+async def duplicate_test(
+    org_id: uuid.UUID,
+    test_id: uuid.UUID,
+    service: LoadTestService = Depends(get_load_test_service),
+    current_user: User = Depends(get_current_user),
+    _membership: OrganizationMember = Depends(
+        require_org_roles(MemberRole.owner, MemberRole.admin)
+    ),
+) -> LoadTestResponse:
+    return await service.duplicate_test(org_id, test_id, current_user.id)
+
+
 @router.delete(
     "/{test_id}",
     operation_id="load_tests.delete",

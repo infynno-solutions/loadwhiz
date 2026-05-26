@@ -11,6 +11,34 @@ function isHttpValidationError(error: unknown): error is HttpValidationError {
   );
 }
 
+/** FastAPI returns `detail` as a string or a Pydantic validation error list. */
+export function extractFastApiDetail(error: unknown): string | undefined {
+  if (typeof error === "string") {
+    return error;
+  }
+  if (typeof error !== "object" || error === null || !("detail" in error)) {
+    return undefined;
+  }
+  const { detail } = error as { detail: unknown };
+  if (typeof detail === "string") {
+    return detail;
+  }
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map((item) => {
+        if (typeof item === "object" && item !== null && "msg" in item) {
+          return String((item as { msg: unknown }).msg);
+        }
+        return null;
+      })
+      .filter((msg): msg is string => Boolean(msg));
+    if (messages.length > 0) {
+      return messages.join(" ");
+    }
+  }
+  return undefined;
+}
+
 function messageForStatus(status: number, url?: string): string | undefined {
   if (status === 409) {
     if (url?.includes("/auth/register")) {
@@ -35,7 +63,16 @@ export function getApiErrorMessage(
   fallback = "Something went wrong. Please try again.",
 ): string {
   if (isApiRequestError(error)) {
+    const fromBody = extractFastApiDetail(error.body);
+    if (fromBody) {
+      return fromBody;
+    }
     return error.message;
+  }
+
+  const fastApiDetail = extractFastApiDetail(error);
+  if (fastApiDetail) {
+    return fastApiDetail;
   }
 
   if (isHttpValidationError(error)) {
@@ -63,8 +100,10 @@ export function toApiRequestError(
   response: Response,
   requestUrl: string,
 ): ApiRequestError {
+  const detail = extractFastApiDetail(error);
   const statusMessage = messageForStatus(response.status, requestUrl);
   const message =
+    detail ??
     statusMessage ??
     (typeof error === "string" && error
       ? error

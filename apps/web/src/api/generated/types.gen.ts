@@ -3795,6 +3795,46 @@ export type LoadTestsStopResponses = {
 
 export type LoadTestsStopResponse = LoadTestsStopResponses[keyof LoadTestsStopResponses];
 
+export type LoadTestsDuplicateData = {
+    body?: never;
+    path: {
+        /**
+         * Organization identifier.
+         */
+        org_id: string;
+        /**
+         * Load test identifier.
+         */
+        test_id: string;
+    };
+    query?: never;
+    url: '/api/v1/organizations/{org_id}/tests/{test_id}/duplicate';
+};
+
+export type LoadTestsDuplicateErrors = {
+    /**
+     * Authentication required.
+     */
+    401: unknown;
+    /**
+     * Load test or host not found.
+     */
+    404: unknown;
+    /**
+     * Target host is not verified.
+     */
+    422: unknown;
+};
+
+export type LoadTestsDuplicateResponses = {
+    /**
+     * Successful Response
+     */
+    201: LoadTestResponse;
+};
+
+export type LoadTestsDuplicateResponse = LoadTestsDuplicateResponses[keyof LoadTestsDuplicateResponses];
+
 export type LoadTestsResultsListData = {
     body?: never;
     path: {

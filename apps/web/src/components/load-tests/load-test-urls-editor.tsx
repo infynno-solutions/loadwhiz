@@ -34,14 +34,6 @@ const methodItems = HTTP_METHODS.map((m) => ({ value: m, label: m }));
 
 const BODY_METHODS = new Set<UrlRow["request_type"]>(["POST", "PUT", "PATCH"]);
 
-type AuthMode = "none" | "basic" | "bearer";
-
-function getAuthMode(row: UrlRow): AuthMode {
-  if (row.credentials?.login?.trim()) return "basic";
-  if (row.bearer?.token?.trim()) return "bearer";
-  return "none";
-}
-
 export function LoadTestUrlsEditor({
   urls,
   onChange,
@@ -77,7 +69,6 @@ export function LoadTestUrlsEditor({
       </div>
       <div className="flex flex-col gap-3">
         {urls.map((row, index) => {
-          const authMode = getAuthMode(row);
           const showBody = BODY_METHODS.has(row.request_type ?? "GET");
 
           return (
@@ -127,14 +118,15 @@ export function LoadTestUrlsEditor({
 
               {row.auth_hint ? (
                 <p className="mt-2 rounded-md border border-amber-600/30 bg-amber-500/10 px-2 py-1.5 text-amber-950 text-xs dark:text-amber-100">
-                  {row.auth_hint} Configure authentication below before running.
+                  {row.auth_hint} Add an Authorization header (or cookies) in
+                  the section below before running.
                 </p>
               ) : null}
 
               <Collapsible defaultOpen={index === 0} className="mt-3">
                 <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded-md px-1 py-1 text-muted-foreground text-sm hover:bg-muted/50">
                   <ChevronDownIcon className="size-4 shrink-0 transition-transform group-aria-expanded/collapsible-trigger:rotate-180" />
-                  Headers, auth, body, and more
+                  Headers, body, and more
                 </CollapsibleTrigger>
                 <CollapsibleContent className="mt-3 flex flex-col gap-4">
                   <KeyValueEditor
@@ -164,153 +156,6 @@ export function LoadTestUrlsEditor({
                     onChange={(cookies) => updateRow(index, { cookies })}
                     disabled={disabled}
                   />
-
-                  <Field>
-                    <FieldLabel>Authentication</FieldLabel>
-                    <Select
-                      value={authMode}
-                      onValueChange={(value) => {
-                        const mode = value as AuthMode;
-                        if (mode === "none") {
-                          updateRow(index, {
-                            credentials: undefined,
-                            bearer: undefined,
-                          });
-                        } else if (mode === "basic") {
-                          updateRow(index, {
-                            credentials: {
-                              login: row.credentials?.login ?? "",
-                              password: row.credentials?.password ?? "",
-                            },
-                            bearer: undefined,
-                          });
-                        } else {
-                          updateRow(index, {
-                            bearer: {
-                              token: row.bearer?.token ?? "",
-                              prefix: row.bearer?.prefix ?? "Bearer",
-                              header_name:
-                                row.bearer?.header_name ?? "Authorization",
-                            },
-                            credentials: undefined,
-                          });
-                        }
-                      }}
-                      disabled={disabled}
-                      items={[
-                        { value: "none", label: "None" },
-                        { value: "basic", label: "Basic" },
-                        { value: "bearer", label: "Bearer" },
-                      ]}
-                    >
-                      <SelectTrigger className="w-full max-w-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="none">None</SelectItem>
-                          <SelectItem value="basic">Basic</SelectItem>
-                          <SelectItem value="bearer">Bearer</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </Field>
-
-                  {authMode === "basic" ? (
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <Field>
-                        <FieldLabel>Username</FieldLabel>
-                        <Input
-                          value={row.credentials?.login ?? ""}
-                          onChange={(e) =>
-                            updateRow(index, {
-                              credentials: {
-                                login: e.target.value,
-                                password: row.credentials?.password ?? "",
-                              },
-                            })
-                          }
-                          disabled={disabled}
-                          autoComplete="off"
-                        />
-                      </Field>
-                      <Field>
-                        <FieldLabel>Password</FieldLabel>
-                        <Input
-                          type="password"
-                          value={row.credentials?.password ?? ""}
-                          onChange={(e) =>
-                            updateRow(index, {
-                              credentials: {
-                                login: row.credentials?.login ?? "",
-                                password: e.target.value,
-                              },
-                            })
-                          }
-                          disabled={disabled}
-                          autoComplete="new-password"
-                        />
-                      </Field>
-                    </div>
-                  ) : null}
-
-                  {authMode === "bearer" ? (
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <Field className="sm:col-span-2">
-                        <FieldLabel>Token</FieldLabel>
-                        <Input
-                          value={row.bearer?.token ?? ""}
-                          onChange={(e) =>
-                            updateRow(index, {
-                              bearer: {
-                                token: e.target.value,
-                                prefix: row.bearer?.prefix ?? "Bearer",
-                                header_name:
-                                  row.bearer?.header_name ?? "Authorization",
-                              },
-                            })
-                          }
-                          disabled={disabled}
-                          autoComplete="off"
-                        />
-                      </Field>
-                      <Field>
-                        <FieldLabel>Scheme prefix</FieldLabel>
-                        <Input
-                          value={row.bearer?.prefix ?? "Bearer"}
-                          onChange={(e) =>
-                            updateRow(index, {
-                              bearer: {
-                                token: row.bearer?.token ?? "",
-                                prefix: e.target.value,
-                                header_name:
-                                  row.bearer?.header_name ?? "Authorization",
-                              },
-                            })
-                          }
-                          disabled={disabled}
-                          placeholder="Bearer"
-                        />
-                      </Field>
-                      <Field>
-                        <FieldLabel>Header name</FieldLabel>
-                        <Input
-                          value={row.bearer?.header_name ?? "Authorization"}
-                          onChange={(e) =>
-                            updateRow(index, {
-                              bearer: {
-                                token: row.bearer?.token ?? "",
-                                prefix: row.bearer?.prefix ?? "Bearer",
-                                header_name: e.target.value,
-                              },
-                            })
-                          }
-                          disabled={disabled}
-                          placeholder="Authorization"
-                        />
-                      </Field>
-                    </div>
-                  ) : null}
 
                   {showBody ? (
                     <Field>
@@ -376,7 +221,7 @@ export function LoadTestUrlsEditor({
                           }}
                           placeholder="Response header"
                           disabled={disabled}
-                          className="flex-[2]"
+                          className="flex-2"
                         />
                         <Button
                           type="button"
