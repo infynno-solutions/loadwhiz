@@ -35,6 +35,18 @@ class UserService:
             "organizations": organizations,
         }
 
+    async def update_me(self, user: User, name: str) -> dict:
+        trimmed = name.strip()
+        if not trimmed:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Name is required",
+            )
+
+        user.name = trimmed
+        user = await self.user_repository.update(user)
+        return await self.get_me(user)
+
     async def set_active_organization(
         self,
         user: User,

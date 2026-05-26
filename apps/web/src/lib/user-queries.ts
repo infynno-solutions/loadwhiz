@@ -88,3 +88,33 @@ export function getInitials(name: string): string {
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("");
 }
+
+export type OrganizationRole = "owner" | "admin" | "member";
+
+export function getActiveOrganizationRole(
+  user: UserMeResponse | undefined,
+): OrganizationRole | undefined {
+  if (!user?.active_organization_id) return undefined;
+  const org = user.organizations.find(
+    (item) => item.id === user.active_organization_id,
+  );
+  if (!org) return undefined;
+  return org.role as OrganizationRole;
+}
+
+export function isOrganizationOwner(user: UserMeResponse | undefined): boolean {
+  return getActiveOrganizationRole(user) === "owner";
+}
+
+export function canManageOrganization(
+  user: UserMeResponse | undefined,
+): boolean {
+  const role = getActiveOrganizationRole(user);
+  return role === "owner" || role === "admin";
+}
+
+export function canChangeMemberRoles(
+  user: UserMeResponse | undefined,
+): boolean {
+  return isOrganizationOwner(user);
+}

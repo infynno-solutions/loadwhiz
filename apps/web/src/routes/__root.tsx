@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
+import { ThemeProvider } from "@/components/theme-provider";
 import appCss from "../index.css?url";
 
 export type RouterAppContext = {
@@ -44,16 +45,18 @@ function RootDocument() {
   const { queryClient } = Route.useRouteContext();
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
-        <QueryClientProvider client={queryClient}>
-          <Outlet />
-          <Toaster richColors />
-          <TanStackRouterDevtools position="bottom-left" />
-        </QueryClientProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <QueryClientProvider client={queryClient}>
+            <Outlet />
+            <Toaster richColors />
+            <TanStackRouterDevtools position="bottom-left" />
+          </QueryClientProvider>
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>

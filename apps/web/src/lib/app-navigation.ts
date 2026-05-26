@@ -14,6 +14,11 @@ export const APP_NAV_ITEMS = [
     to: "/app/tests",
     breadcrumb: "Load tests",
   },
+  {
+    title: "Settings",
+    to: "/app/settings",
+    breadcrumb: "Settings",
+  },
 ] as const;
 
 export type AppNavItem = (typeof APP_NAV_ITEMS)[number];

@@ -16,8 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@loadwhiz/ui/components/dropdown-menu";
 import { Spinner } from "@loadwhiz/ui/components/spinner";
-import { useNavigate } from "@tanstack/react-router";
-import { LogOutIcon } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { LogOutIcon, MonitorIcon, UserIcon } from "lucide-react";
 
 import { signOut } from "@/lib/auth-api";
 import { getInitials, useCurrentUser } from "@/lib/user-queries";
@@ -79,6 +79,15 @@ export function NavUser() {
             </div>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem render={<Link to="/app/settings/account" />}>
+          <UserIcon />
+          Account settings
+        </DropdownMenuItem>
+        <DropdownMenuItem render={<Link to="/app/settings/appearance" />}>
+          <MonitorIcon />
+          Appearance
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {

@@ -51,8 +51,10 @@ import {
   organizationsMembersRemove,
   organizationsMembersUpdateRole,
   organizationsUpdate,
+  usersChangePassword,
   usersMe,
   usersSetActiveOrganization,
+  usersUpdateMe,
 } from "../sdk.gen";
 import type {
   AuthForgotPasswordData,
@@ -150,10 +152,16 @@ import type {
   OrganizationsUpdateData,
   OrganizationsUpdateError,
   OrganizationsUpdateResponse,
+  UsersChangePasswordData,
+  UsersChangePasswordError,
+  UsersChangePasswordResponse,
   UsersMeData,
   UsersSetActiveOrganizationData,
   UsersSetActiveOrganizationError,
   UsersSetActiveOrganizationResponse,
+  UsersUpdateMeData,
+  UsersUpdateMeError,
+  UsersUpdateMeResponse,
 } from "../types.gen";
 
 export type QueryKey<TOptions extends Options> = [
@@ -240,6 +248,64 @@ export const usersMeOptions = (options?: Options<UsersMeData>) => {
     },
     queryKey: usersMeQueryKey(options),
   });
+};
+
+/**
+ * Update current user profile
+ *
+ * Update the authenticated user's profile fields.
+ */
+export const usersUpdateMeMutation = (
+  options?: Partial<Options<UsersUpdateMeData>>,
+): UseMutationOptions<
+  UsersUpdateMeResponse,
+  UsersUpdateMeError,
+  Options<UsersUpdateMeData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UsersUpdateMeResponse,
+    UsersUpdateMeError,
+    Options<UsersUpdateMeData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await usersUpdateMe({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Change password
+ *
+ * Change the authenticated user's password. Revokes all active sessions.
+ */
+export const usersChangePasswordMutation = (
+  options?: Partial<Options<UsersChangePasswordData>>,
+): UseMutationOptions<
+  UsersChangePasswordResponse,
+  UsersChangePasswordError,
+  Options<UsersChangePasswordData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    UsersChangePasswordResponse,
+    UsersChangePasswordError,
+    Options<UsersChangePasswordData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await usersChangePassword({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
 };
 
 /**

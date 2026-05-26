@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "LoadWhiz API",
-    "description": "# LoadWhiz API\n\nREST API for managing organizations, verified load-test targets, and load test configurations.\n\n## Authentication\n\nMost endpoints require a JWT access token:\n\n```\nAuthorization: Bearer <access_token>\n```\n\nObtain tokens via `POST /api/v1/auth/login` or `POST /api/v1/auth/register`.\n\n## Organization scope\n\nResources under `/api/v1/organizations/{org_id}/…` require membership in that organization.\nWrite operations typically require the **owner** or **admin** role unless noted otherwise.\n\n## Rate limits\n\nRate limits may apply in production. Contact support for quota details.",
+    "description": "# LoadWhiz API\n\nREST API for managing organizations, verified load-test targets, and load test configurations.\n\n## Authentication\n\nMost endpoints require a JWT access token:\n\n```\nAuthorization: Bearer <access_token>\n```\n\nObtain tokens via `POST /api/v1/auth/login` or `POST /api/v1/auth/register`.\n\n## Organization scope\n\nResources under `/api/v1/organizations/{org_id}/\u2026` require membership in that organization.\nWrite operations typically require the **owner** or **admin** role unless noted otherwise.\n\n## Rate limits\n\nRate limits may apply in production. Contact support for quota details.",
     "version": "1.0.0"
   },
   "paths": {
@@ -47,6 +47,106 @@
           },
           "401": {
             "description": "Authentication required."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": ["users"],
+        "summary": "Update current user profile",
+        "description": "Update the authenticated user's profile fields.",
+        "operationId": "users.update_me",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserMeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/me/change-password": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Change password",
+        "description": "Change the authenticated user's password. Revokes all active sessions.",
+        "operationId": "users.change_password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "400": {
+            "description": "Current password is incorrect."
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2503,6 +2603,24 @@
         "required": ["onboarding_completed"],
         "title": "AcceptInviteUserResponse"
       },
+      "ChangePasswordRequest": {
+        "properties": {
+          "current_password": {
+            "type": "string",
+            "title": "Current Password",
+            "description": "Current account password."
+          },
+          "new_password": {
+            "type": "string",
+            "minLength": 8,
+            "title": "New Password",
+            "description": "New account password."
+          }
+        },
+        "type": "object",
+        "required": ["current_password", "new_password"],
+        "title": "ChangePasswordRequest"
+      },
       "CompleteOnboardingRequest": {
         "properties": {
           "name": {
@@ -2576,36 +2694,36 @@
           },
           "duration": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Duration",
             "description": "Test duration, in seconds."
           },
           "total": {
             "type": "integer",
-            "minimum": 15,
+            "minimum": 15.0,
             "title": "Total",
             "description": "Total number of virtual clients. Minimum is 15."
           },
           "initial": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Initial",
             "description": "Clients active at start. Applies only when `test_type` is `maintain-load`.",
             "default": 0
           },
           "timeout": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Timeout",
             "description": "Per-request timeout, in milliseconds.",
             "default": 10000
           },
           "error_threshold": {
             "type": "integer",
-            "maximum": 100,
-            "minimum": 0,
+            "maximum": 100.0,
+            "minimum": 0.0,
             "title": "Error Threshold",
-            "description": "Maximum acceptable error rate, as a percentage (0–100).",
+            "description": "Maximum acceptable error rate, as a percentage (0\u2013100).",
             "default": 50
           },
           "name": {
@@ -2886,7 +3004,7 @@
           "error_rate_percent": {
             "type": "number",
             "title": "Error Rate Percent",
-            "default": 0
+            "default": 0.0
           }
         },
         "type": "object",
@@ -3021,7 +3139,7 @@
           "error_rate_percent": {
             "type": "number",
             "title": "Error Rate Percent",
-            "default": 0
+            "default": 0.0
           },
           "total_requests": {
             "type": "integer",
@@ -3031,7 +3149,7 @@
           "rps": {
             "type": "number",
             "title": "Rps",
-            "default": 0
+            "default": 0.0
           }
         },
         "type": "object",
@@ -3935,12 +4053,12 @@
           "error_rate_percent": {
             "type": "number",
             "title": "Error Rate Percent",
-            "default": 0
+            "default": 0.0
           },
           "rps": {
             "type": "number",
             "title": "Rps",
-            "default": 0
+            "default": 0.0
           },
           "p95_ms": {
             "anyOf": [
@@ -4671,7 +4789,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "exclusiveMinimum": 0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "null"
@@ -4683,7 +4801,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 15
+                "minimum": 15.0
               },
               {
                 "type": "null"
@@ -4695,7 +4813,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -4707,7 +4825,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "exclusiveMinimum": 0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "null"
@@ -4719,8 +4837,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100,
-                "minimum": 0
+                "maximum": 100.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
@@ -4822,6 +4940,20 @@
         "type": "object",
         "title": "Update Load Test",
         "description": "Request body for updating a load test in `draft` status."
+      },
+      "UpdateMeRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "description": "Full name."
+          }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "UpdateMeRequest"
       },
       "UpdateMemberRoleRequest": {
         "properties": {
@@ -5115,13 +5247,13 @@
           },
           "duration": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Duration",
             "description": "Test duration, in seconds."
           },
           "total": {
             "type": "integer",
-            "minimum": 15,
+            "minimum": 15.0,
             "title": "Total",
             "description": "Total virtual clients (minimum 15)."
           },
@@ -5138,22 +5270,22 @@
           },
           "initial": {
             "type": "integer",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Initial",
             "description": "Initial clients (`maintain-load` only).",
             "default": 0
           },
           "timeout": {
             "type": "integer",
-            "exclusiveMinimum": 0,
+            "exclusiveMinimum": 0.0,
             "title": "Timeout",
             "description": "Per-request timeout, in milliseconds.",
             "default": 10000
           },
           "error_threshold": {
             "type": "integer",
-            "maximum": 100,
-            "minimum": 0,
+            "maximum": 100.0,
+            "minimum": 0.0,
             "title": "Error Threshold",
             "description": "Maximum error rate, as a percentage.",
             "default": 50

@@ -67,6 +67,24 @@ export type AcceptInviteUserResponse = {
 };
 
 /**
+ * ChangePasswordRequest
+ */
+export type ChangePasswordRequest = {
+  /**
+   * Current Password
+   *
+   * Current account password.
+   */
+  current_password: string;
+  /**
+   * New Password
+   *
+   * New account password.
+   */
+  new_password: string;
+};
+
+/**
  * Complete Onboarding
  */
 export type CompleteOnboardingRequest = {
@@ -1618,6 +1636,18 @@ export type UpdateLoadTestRequest = {
 };
 
 /**
+ * UpdateMeRequest
+ */
+export type UpdateMeRequest = {
+  /**
+   * Name
+   *
+   * Full name.
+   */
+  name: string;
+};
+
+/**
  * Update Member Role
  */
 export type UpdateMemberRoleRequest = {
@@ -2005,6 +2035,75 @@ export type UsersMeResponses = {
 };
 
 export type UsersMeResponse = UsersMeResponses[keyof UsersMeResponses];
+
+export type UsersUpdateMeData = {
+  body: UpdateMeRequest;
+  path?: never;
+  query?: never;
+  url: "/api/v1/users/me";
+};
+
+export type UsersUpdateMeErrors = {
+  /**
+   * Invalid request.
+   */
+  400: unknown;
+  /**
+   * Authentication required.
+   */
+  401: unknown;
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type UsersUpdateMeError = UsersUpdateMeErrors[keyof UsersUpdateMeErrors];
+
+export type UsersUpdateMeResponses = {
+  /**
+   * Successful Response
+   */
+  200: UserMeResponse;
+};
+
+export type UsersUpdateMeResponse =
+  UsersUpdateMeResponses[keyof UsersUpdateMeResponses];
+
+export type UsersChangePasswordData = {
+  body: ChangePasswordRequest;
+  path?: never;
+  query?: never;
+  url: "/api/v1/users/me/change-password";
+};
+
+export type UsersChangePasswordErrors = {
+  /**
+   * Current password is incorrect.
+   */
+  400: unknown;
+  /**
+   * Authentication required.
+   */
+  401: unknown;
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type UsersChangePasswordError =
+  UsersChangePasswordErrors[keyof UsersChangePasswordErrors];
+
+export type UsersChangePasswordResponses = {
+  /**
+   * Successful Response
+   */
+  200: MessageResponse;
+};
+
+export type UsersChangePasswordResponse =
+  UsersChangePasswordResponses[keyof UsersChangePasswordResponses];
 
 export type UsersSetActiveOrganizationData = {
   body: SetActiveOrganizationRequest;

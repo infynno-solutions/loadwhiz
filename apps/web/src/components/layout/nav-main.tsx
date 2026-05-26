@@ -6,7 +6,12 @@ import {
   SidebarMenuItem,
 } from "@loadwhiz/ui/components/sidebar";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { FlaskConicalIcon, GaugeIcon, ServerIcon } from "lucide-react";
+import {
+  FlaskConicalIcon,
+  GaugeIcon,
+  ServerIcon,
+  SettingsIcon,
+} from "lucide-react";
 
 import { APP_NAV_ITEMS } from "@/lib/app-navigation";
 
@@ -14,6 +19,7 @@ const navItems = [
   { ...APP_NAV_ITEMS[0], icon: GaugeIcon },
   { ...APP_NAV_ITEMS[1], icon: ServerIcon },
   { ...APP_NAV_ITEMS[2], icon: FlaskConicalIcon },
+  { ...APP_NAV_ITEMS[3], icon: SettingsIcon },
 ] as const;
 
 export function NavMain() {

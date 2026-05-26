@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "LoadWhiz API",
-    "description": "# LoadWhiz API\n\nREST API for managing organizations, verified load-test targets, and load test configurations.\n\n## Authentication\n\nMost endpoints require a JWT access token:\n\n```\nAuthorization: Bearer <access_token>\n```\n\nObtain tokens via `POST /api/v1/auth/login` or `POST /api/v1/auth/register`.\n\n## Organization scope\n\nResources under `/api/v1/organizations/{org_id}/…` require membership in that organization.\nWrite operations typically require the **owner** or **admin** role unless noted otherwise.\n\n## Rate limits\n\nRate limits may apply in production. Contact support for quota details.",
+    "description": "# LoadWhiz API\n\nREST API for managing organizations, verified load-test targets, and load test configurations.\n\n## Authentication\n\nMost endpoints require a JWT access token:\n\n```\nAuthorization: Bearer <access_token>\n```\n\nObtain tokens via `POST /api/v1/auth/login` or `POST /api/v1/auth/register`.\n\n## Organization scope\n\nResources under `/api/v1/organizations/{org_id}/\u2026` require membership in that organization.\nWrite operations typically require the **owner** or **admin** role unless noted otherwise.\n\n## Rate limits\n\nRate limits may apply in production. Contact support for quota details.",
     "version": "1.0.0"
   },
   "paths": {
@@ -39,13 +39,121 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/UserMeResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/UserMeResponse"
+                }
               }
             }
           },
-          "401": { "description": "Authentication required." }
+          "401": {
+            "description": "Authentication required."
+          }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": ["users"],
+        "summary": "Update current user profile",
+        "description": "Update the authenticated user's profile fields.",
+        "operationId": "users.update_me",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserMeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/me/change-password": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Change password",
+        "description": "Change the authenticated user's password. Revokes all active sessions.",
+        "operationId": "users.change_password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "400": {
+            "description": "Current password is incorrect."
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/users/me/active-organization": {
@@ -75,18 +183,28 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Not a member of the organization." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Not a member of the organization."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/auth/register": {
@@ -98,7 +216,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/RegisterRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
             }
           },
           "required": true
@@ -108,16 +228,22 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TokenResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
               }
             }
           },
-          "409": { "description": "Email address is already registered." },
+          "409": {
+            "description": "Email address is already registered."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -133,7 +259,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
             }
           },
           "required": true
@@ -143,17 +271,25 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TokenResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
               }
             }
           },
-          "401": { "description": "Invalid email or password." },
-          "403": { "description": "Account is disabled." },
+          "401": {
+            "description": "Invalid email or password."
+          },
+          "403": {
+            "description": "Account is disabled."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -169,7 +305,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/RefreshRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
             }
           },
           "required": true
@@ -179,16 +317,22 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TokenResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
               }
             }
           },
-          "401": { "description": "Refresh token is invalid or expired." },
+          "401": {
+            "description": "Refresh token is invalid or expired."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -204,7 +348,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/RefreshRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
             }
           },
           "required": true
@@ -214,22 +360,34 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "400": { "description": "Refresh token is invalid." },
-          "401": { "description": "Authentication required." },
+          "400": {
+            "description": "Refresh token is invalid."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/auth/verify-email": {
@@ -241,7 +399,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/VerifyEmailRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailRequest"
+              }
             }
           },
           "required": true
@@ -251,16 +411,22 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "400": { "description": "Verification token is invalid or expired." },
+          "400": {
+            "description": "Verification token is invalid or expired."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -278,14 +444,24 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "400": { "description": "Email is already verified." },
-          "401": { "description": "Authentication required." }
+          "400": {
+            "description": "Email is already verified."
+          },
+          "401": {
+            "description": "Authentication required."
+          }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/auth/forgot-password": {
@@ -297,7 +473,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ForgotPasswordRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequest"
+              }
             }
           },
           "required": true
@@ -307,7 +485,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
@@ -315,7 +495,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -331,7 +513,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ResetPasswordRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
             }
           },
           "required": true
@@ -341,16 +525,22 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "400": { "description": "Reset token is invalid or expired." },
+          "400": {
+            "description": "Reset token is invalid or expired."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -384,18 +574,28 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "409": { "description": "Onboarding is already completed." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "409": {
+            "description": "Onboarding is already completed."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/organizations": {
@@ -419,9 +619,15 @@
               }
             }
           },
-          "401": { "description": "Authentication required." }
+          "401": {
+            "description": "Authentication required."
+          }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       },
       "post": {
         "tags": ["organizations"],
@@ -449,18 +655,28 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "409": { "description": "Organization slug conflict." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "409": {
+            "description": "Organization slug conflict."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/organizations/{org_id}": {
@@ -469,13 +685,20 @@
         "summary": "Get organization",
         "description": "Retrieve organization details. Requires membership in the organization.",
         "operationId": "organizations.get",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -490,14 +713,22 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Not a member of this organization." },
-          "404": { "description": "Organization not found." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Not a member of this organization."
+          },
+          "404": {
+            "description": "Organization not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -508,13 +739,20 @@
         "summary": "Update organization",
         "description": "Update organization settings. Requires the owner or admin role.",
         "operationId": "organizations.update",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -539,14 +777,22 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Insufficient permissions." },
-          "404": { "description": "Organization not found." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Insufficient permissions."
+          },
+          "404": {
+            "description": "Organization not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -557,13 +803,20 @@
         "summary": "Delete organization",
         "description": "Permanently delete an organization. Requires the owner role.",
         "operationId": "organizations.delete",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -572,18 +825,28 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Insufficient permissions." },
-          "404": { "description": "Organization not found." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Insufficient permissions."
+          },
+          "404": {
+            "description": "Organization not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -596,13 +859,20 @@
         "summary": "List organization members",
         "description": "Returns all members of the organization.",
         "operationId": "organizations.members.list",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -613,19 +883,27 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/MemberResponse" },
+                  "items": {
+                    "$ref": "#/components/schemas/MemberResponse"
+                  },
                   "title": "Response Organizations.Members.List"
                 }
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Not a member of this organization." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Not a member of this organization."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -638,20 +916,30 @@
         "summary": "Update member role",
         "description": "Change a member's role. Requires the owner role. The owner role cannot be assigned via this endpoint.",
         "operationId": "organizations.members.update_role",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "user_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Member user identifier."
           }
         ],
@@ -676,15 +964,25 @@
               }
             }
           },
-          "400": { "description": "Invalid role change." },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Insufficient permissions." },
-          "404": { "description": "Member not found." },
+          "400": {
+            "description": "Invalid role change."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Insufficient permissions."
+          },
+          "404": {
+            "description": "Member not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -695,20 +993,30 @@
         "summary": "Remove member",
         "description": "Remove a member from the organization. Requires the owner or admin role.",
         "operationId": "organizations.members.remove",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "user_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Member user identifier."
           }
         ],
@@ -717,19 +1025,31 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "400": { "description": "Cannot remove the last owner." },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Insufficient permissions." },
-          "404": { "description": "Member not found." },
+          "400": {
+            "description": "Cannot remove the last owner."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Insufficient permissions."
+          },
+          "404": {
+            "description": "Member not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -742,13 +1062,20 @@
         "summary": "Create organization invite",
         "description": "Invite a user to join the organization by email. Requires the owner or admin role.",
         "operationId": "organizations.invites.create",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -756,7 +1083,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateInviteRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/CreateInviteRequest"
+              }
             }
           }
         },
@@ -765,18 +1094,28 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/InviteResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/InviteResponse"
+                }
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Insufficient permissions." },
-          "409": { "description": "User is already a member." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Insufficient permissions."
+          },
+          "409": {
+            "description": "User is already a member."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -787,13 +1126,20 @@
         "summary": "List pending invites",
         "description": "Returns pending invitations for the organization. Requires the owner or admin role.",
         "operationId": "organizations.invites.list",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -804,19 +1150,27 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/InviteResponse" },
+                  "items": {
+                    "$ref": "#/components/schemas/InviteResponse"
+                  },
                   "title": "Response Organizations.Invites.List"
                 }
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Insufficient permissions." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Insufficient permissions."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -829,20 +1183,30 @@
         "summary": "Revoke invite",
         "description": "Revoke a pending invitation. Requires the owner or admin role.",
         "operationId": "organizations.invites.revoke",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "invite_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Invitation identifier."
           }
         ],
@@ -851,18 +1215,28 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Insufficient permissions." },
-          "404": { "description": "Invite not found." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Insufficient permissions."
+          },
+          "404": {
+            "description": "Invite not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -878,7 +1252,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/InviteTokenRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/InviteTokenRequest"
+              }
             }
           },
           "required": true
@@ -894,22 +1270,34 @@
               }
             }
           },
-          "400": { "description": "Invite token is invalid or expired." },
-          "401": { "description": "Authentication required." },
+          "400": {
+            "description": "Invite token is invalid or expired."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
           "403": {
             "description": "Invite email does not match the authenticated user."
           },
-          "409": { "description": "User is already a member." },
+          "409": {
+            "description": "User is already a member."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/invites/decline": {
@@ -921,7 +1309,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/InviteTokenRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/InviteTokenRequest"
+              }
             }
           },
           "required": true
@@ -931,12 +1321,18 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "400": { "description": "Invite token is invalid or expired." },
-          "401": { "description": "Authentication required." },
+          "400": {
+            "description": "Invite token is invalid or expired."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
           "403": {
             "description": "Invite email does not match the authenticated user."
           },
@@ -944,12 +1340,18 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
         },
-        "security": [{ "BearerAuth": [] }]
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/organizations/{org_id}/hosts": {
@@ -958,13 +1360,20 @@
         "summary": "List hosts",
         "description": "List target hosts registered for the organization.",
         "operationId": "hosts.list",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -975,7 +1384,9 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/HostResponse" },
+                  "items": {
+                    "$ref": "#/components/schemas/HostResponse"
+                  },
                   "title": "Response Hosts.List"
                 }
               }
@@ -985,7 +1396,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -996,13 +1409,20 @@
         "summary": "Register host",
         "description": "Register a domain for ownership verification before it can be used in load tests.",
         "operationId": "hosts.create",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -1010,7 +1430,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateHostRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/CreateHostRequest"
+              }
             }
           }
         },
@@ -1019,14 +1441,18 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HostResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/HostResponse"
+                }
               }
             }
           },
           "409": {
             "description": "Hostname is already registered for this organization."
           },
-          "422": { "description": "Hostname is invalid or not allowed." }
+          "422": {
+            "description": "Hostname is invalid or not allowed."
+          }
         }
       }
     },
@@ -1036,20 +1462,30 @@
         "summary": "Get host",
         "description": "Retrieve host details, status, and verification instructions.",
         "operationId": "hosts.get",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "host_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Target host identifier."
           }
         ],
@@ -1058,16 +1494,22 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HostResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/HostResponse"
+                }
               }
             }
           },
-          "404": { "description": "Host not found." },
+          "404": {
+            "description": "Host not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1078,20 +1520,30 @@
         "summary": "Delete host",
         "description": "Remove a host and its associated load test configurations.",
         "operationId": "hosts.delete",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "host_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Target host identifier."
           }
         ],
@@ -1100,16 +1552,22 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "404": { "description": "Host not found." },
+          "404": {
+            "description": "Host not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1122,20 +1580,30 @@
         "summary": "Verify host",
         "description": "Run an immediate verification check for a host in `pending` status.",
         "operationId": "hosts.verify",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "host_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Target host identifier."
           }
         ],
@@ -1144,17 +1612,25 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HostResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/HostResponse"
+                }
               }
             }
           },
-          "400": { "description": "Host is not in `pending` status." },
-          "404": { "description": "Host not found." },
+          "400": {
+            "description": "Host is not in `pending` status."
+          },
+          "404": {
+            "description": "Host not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1167,20 +1643,30 @@
         "summary": "Retry host verification",
         "description": "Reset verification for a `failed` host and start a new verification window.",
         "operationId": "hosts.retry",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "host_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Target host identifier."
           }
         ],
@@ -1189,17 +1675,25 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HostResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/HostResponse"
+                }
               }
             }
           },
-          "400": { "description": "Host is not in `failed` status." },
-          "404": { "description": "Host not found." },
+          "400": {
+            "description": "Host is not in `failed` status."
+          },
+          "404": {
+            "description": "Host not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1212,13 +1706,20 @@
         "summary": "Preview OpenAPI import",
         "description": "Parse an OpenAPI 3.0 or 3.1 specification and return HTTP operations that match the target host. No load test is created.",
         "operationId": "load_tests.import.preview",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -1226,7 +1727,9 @@
           "required": true,
           "content": {
             "multipart/form-data": {
-              "schema": { "$ref": "#/components/schemas/preview" }
+              "schema": {
+                "$ref": "#/components/schemas/preview"
+              }
             }
           }
         },
@@ -1245,7 +1748,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1258,13 +1763,20 @@
         "summary": "Create load test",
         "description": "Create a load test configuration in `draft` status.\n\n- Set `url_source` to `manual` and provide `urls` to define requests directly.\n- Set `url_source` to `openapi` and provide `openapi_document` to import from an inline specification.\n- To upload a specification file, use `POST /from-openapi` instead.",
         "operationId": "load_tests.create",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -1272,7 +1784,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateLoadTestRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/CreateLoadTestRequest"
+              }
             }
           }
         },
@@ -1281,12 +1795,18 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LoadTestResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/LoadTestResponse"
+                }
               }
             }
           },
-          "404": { "description": "Organization or host not found." },
-          "422": { "description": "Request validation failed." }
+          "404": {
+            "description": "Organization or host not found."
+          },
+          "422": {
+            "description": "Request validation failed."
+          }
         }
       },
       "get": {
@@ -1294,13 +1814,20 @@
         "summary": "List load tests",
         "description": "Returns load tests for the organization. Optionally filter by target host.",
         "operationId": "load_tests.list",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
@@ -1309,8 +1836,13 @@
             "required": false,
             "schema": {
               "anyOf": [
-                { "type": "string", "format": "uuid" },
-                { "type": "null" }
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
               ],
               "title": "Host Id"
             },
@@ -1324,7 +1856,9 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/LoadTestResponse" },
+                  "items": {
+                    "$ref": "#/components/schemas/LoadTestResponse"
+                  },
                   "title": "Response Load Tests.List"
                 }
               }
@@ -1334,7 +1868,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1347,13 +1883,20 @@
         "summary": "Create load test from specification file",
         "description": "Create a load test by uploading an OpenAPI 3.0 or 3.1 specification file. Request URLs are generated from operations whose host matches the verified target host.",
         "operationId": "load_tests.create.from_openapi",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           }
         ],
@@ -1372,12 +1915,18 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LoadTestResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/LoadTestResponse"
+                }
               }
             }
           },
-          "404": { "description": "Organization or host not found." },
-          "422": { "description": "Request validation failed." }
+          "404": {
+            "description": "Organization or host not found."
+          },
+          "422": {
+            "description": "Request validation failed."
+          }
         }
       }
     },
@@ -1387,20 +1936,30 @@
         "summary": "Get load test",
         "description": "Retrieve a load test configuration by identifier.",
         "operationId": "load_tests.get",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           }
         ],
@@ -1409,18 +1968,28 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LoadTestResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/LoadTestResponse"
+                }
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "403": { "description": "Not a member of this organization." },
-          "404": { "description": "Load test not found." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "Not a member of this organization."
+          },
+          "404": {
+            "description": "Load test not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1431,20 +2000,30 @@
         "summary": "Update load test",
         "description": "Update a load test while it is in `draft` status.",
         "operationId": "load_tests.update",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           }
         ],
@@ -1452,7 +2031,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UpdateLoadTestRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLoadTestRequest"
+              }
             }
           }
         },
@@ -1461,13 +2042,21 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LoadTestResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/LoadTestResponse"
+                }
               }
             }
           },
-          "404": { "description": "Load test not found." },
-          "409": { "description": "Load test is not in draft status." },
-          "422": { "description": "Request validation failed." }
+          "404": {
+            "description": "Load test not found."
+          },
+          "409": {
+            "description": "Load test is not in draft status."
+          },
+          "422": {
+            "description": "Request validation failed."
+          }
         }
       },
       "delete": {
@@ -1475,20 +2064,30 @@
         "summary": "Delete load test",
         "description": "Delete a load test. Not allowed while a test is `pending` or `running`.",
         "operationId": "load_tests.delete",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           }
         ],
@@ -1497,11 +2096,15 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
               }
             }
           },
-          "404": { "description": "Load test not found." },
+          "404": {
+            "description": "Load test not found."
+          },
           "409": {
             "description": "Load test cannot be deleted in its current status."
           },
@@ -1509,7 +2112,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1522,20 +2127,30 @@
         "summary": "Update load test from specification file",
         "description": "Replace request URLs by re-importing an OpenAPI specification file. Available only while the load test is in `draft` status.",
         "operationId": "load_tests.update.from_openapi",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           }
         ],
@@ -1554,13 +2169,21 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LoadTestResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/LoadTestResponse"
+                }
               }
             }
           },
-          "404": { "description": "Load test not found." },
-          "409": { "description": "Load test is not in draft status." },
-          "422": { "description": "Request validation failed." }
+          "404": {
+            "description": "Load test not found."
+          },
+          "409": {
+            "description": "Load test is not in draft status."
+          },
+          "422": {
+            "description": "Request validation failed."
+          }
         }
       }
     },
@@ -1570,20 +2193,30 @@
         "summary": "Run load test",
         "description": "Start a load test run using Grafana k6 in Docker. The test must be in `draft` or `complete` status. If `scheduled_at` is in the future, execution is deferred until that time.",
         "operationId": "load_tests.run",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           }
         ],
@@ -1592,15 +2225,27 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/RunLoadTestResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/RunLoadTestResponse"
+                }
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "404": { "description": "Load test or host not found." },
-          "409": { "description": "Test cannot be run in its current status." },
-          "422": { "description": "Validation failed (host, URLs, or auth)." },
-          "429": { "description": "Organization concurrent run limit reached." }
+          "401": {
+            "description": "Authentication required."
+          },
+          "404": {
+            "description": "Load test or host not found."
+          },
+          "409": {
+            "description": "Test cannot be run in its current status."
+          },
+          "422": {
+            "description": "Validation failed (host, URLs, or auth)."
+          },
+          "429": {
+            "description": "Organization concurrent run limit reached."
+          }
         }
       }
     },
@@ -1610,20 +2255,30 @@
         "summary": "Stop load test",
         "description": "Stop a pending or running load test by terminating the k6 container.",
         "operationId": "load_tests.stop",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           }
         ],
@@ -1638,14 +2293,22 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "404": { "description": "Load test not found." },
-          "409": { "description": "Test is not pending or running." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "404": {
+            "description": "Load test not found."
+          },
+          "409": {
+            "description": "Test is not pending or running."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1658,20 +2321,30 @@
         "summary": "List load test results",
         "description": "Returns execution history for a load test, newest first.",
         "operationId": "load_tests.results.list",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           }
         ],
@@ -1690,13 +2363,19 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "404": { "description": "Load test not found." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "404": {
+            "description": "Load test not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1709,27 +2388,40 @@
         "summary": "Get load test result",
         "description": "Retrieve a single run result by identifier.",
         "operationId": "load_tests.results.get",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           },
           {
             "name": "result_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -1743,13 +2435,19 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
-          "404": { "description": "Load test or result not found." },
+          "401": {
+            "description": "Authentication required."
+          },
+          "404": {
+            "description": "Load test or result not found."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1762,27 +2460,40 @@
         "summary": "Get load test result dashboard",
         "description": "Returns chart-ready metrics for the results dashboard: overview, aggregates, time series, per-URL breakdown, and latency distribution. Raw k6 summary is not included.",
         "operationId": "load_tests.results.dashboard",
-        "security": [{ "BearerAuth": [] }],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "org_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Organization identifier."
           },
           {
             "name": "test_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" },
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "description": "Load test identifier."
           },
           {
             "name": "result_id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -1796,7 +2507,9 @@
               }
             }
           },
-          "401": { "description": "Authentication required." },
+          "401": {
+            "description": "Authentication required."
+          },
           "404": {
             "description": "Load test, result, or dashboard data not found."
           },
@@ -1807,7 +2520,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1855,7 +2570,9 @@
             "title": "Role",
             "description": "Role granted in the organization."
           },
-          "user": { "$ref": "#/components/schemas/AcceptInviteUserResponse" }
+          "user": {
+            "$ref": "#/components/schemas/AcceptInviteUserResponse"
+          }
         },
         "type": "object",
         "required": ["message", "organization", "role", "user"],
@@ -1870,8 +2587,13 @@
           },
           "active_organization_id": {
             "anyOf": [
-              { "type": "string", "format": "uuid" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Active Organization Id",
             "description": "Currently selected organization."
@@ -1880,6 +2602,24 @@
         "type": "object",
         "required": ["onboarding_completed"],
         "title": "AcceptInviteUserResponse"
+      },
+      "ChangePasswordRequest": {
+        "properties": {
+          "current_password": {
+            "type": "string",
+            "title": "Current Password",
+            "description": "Current account password."
+          },
+          "new_password": {
+            "type": "string",
+            "minLength": 8,
+            "title": "New Password",
+            "description": "New account password."
+          }
+        },
+        "type": "object",
+        "required": ["current_password", "new_password"],
+        "title": "ChangePasswordRequest"
       },
       "CompleteOnboardingRequest": {
         "properties": {
@@ -1900,7 +2640,9 @@
           "organization": {
             "$ref": "#/components/schemas/OnboardingOrganizationResponse"
           },
-          "user": { "$ref": "#/components/schemas/OnboardingUserResponse" }
+          "user": {
+            "$ref": "#/components/schemas/OnboardingUserResponse"
+          }
         },
         "type": "object",
         "required": ["organization", "user"],
@@ -1981,16 +2723,30 @@
             "maximum": 100.0,
             "minimum": 0.0,
             "title": "Error Threshold",
-            "description": "Maximum acceptable error rate, as a percentage (0–100).",
+            "description": "Maximum acceptable error rate, as a percentage (0\u2013100).",
             "default": 50
           },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name",
             "description": "Display name for the load test."
           },
           "notes": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Notes",
             "description": "Optional notes."
           },
@@ -2002,25 +2758,41 @@
                 "minLength": 1,
                 "format": "uri"
               },
-              { "type": "string" },
-              { "type": "null" }
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Callback",
             "description": "Webhook invoked when a test run completes."
           },
           "callback_email": {
             "anyOf": [
-              { "type": "string", "format": "email" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Callback Email",
             "description": "Email address notified when a test run completes."
           },
           "scheduled_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "string" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Scheduled At",
             "description": "Scheduled start time (ISO-8601 or `YYYY-MM-DD HH:MM` in UTC)."
@@ -2038,34 +2810,57 @@
           "urls": {
             "anyOf": [
               {
-                "items": { "$ref": "#/components/schemas/HttpRequestConfig" },
+                "items": {
+                  "$ref": "#/components/schemas/HttpRequestConfig"
+                },
                 "type": "array"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Urls",
             "description": "Ordered HTTP requests. Required when `url_source` is `manual`."
           },
           "openapi_document": {
             "anyOf": [
-              { "additionalProperties": true, "type": "object" },
-              { "type": "null" }
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Openapi Document",
             "description": "OpenAPI 3.0 or 3.1 document. Required when `url_source` is `openapi`."
           },
           "include_operations": {
             "anyOf": [
-              { "items": { "type": "string" }, "type": "array" },
-              { "type": "null" }
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Include Operations",
             "description": "Operation filter allowlist, for example `[\"GET /v1/health\"]`."
           },
           "exclude_operations": {
             "anyOf": [
-              { "items": { "type": "string" }, "type": "array" },
-              { "type": "null" }
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Exclude Operations",
             "description": "Operation filter denylist."
@@ -2085,7 +2880,9 @@
             "url_source": "manual",
             "urls": [
               {
-                "bearer": { "token": "<access-token>" },
+                "bearer": {
+                  "token": "<access-token>"
+                },
                 "request_type": "GET",
                 "url": "https://api.example.com/health"
               }
@@ -2115,8 +2912,12 @@
           "response_counts": {
             "$ref": "#/components/schemas/DashboardResponseCounts"
           },
-          "bandwidth": { "$ref": "#/components/schemas/DashboardBandwidth" },
-          "redirects": { "$ref": "#/components/schemas/DashboardRedirects" }
+          "bandwidth": {
+            "$ref": "#/components/schemas/DashboardBandwidth"
+          },
+          "redirects": {
+            "$ref": "#/components/schemas/DashboardRedirects"
+          }
         },
         "type": "object",
         "required": [
@@ -2145,21 +2946,59 @@
       },
       "DashboardByUrl": {
         "properties": {
-          "url": { "type": "string", "title": "Url" },
-          "method": { "type": "string", "title": "Method" },
-          "label": { "type": "string", "title": "Label" },
-          "requests": { "type": "integer", "title": "Requests", "default": 0 },
-          "success": { "type": "integer", "title": "Success", "default": 0 },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "requests": {
+            "type": "integer",
+            "title": "Requests",
+            "default": 0
+          },
+          "success": {
+            "type": "integer",
+            "title": "Success",
+            "default": 0
+          },
           "avg_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Avg Ms"
           },
           "min_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Min Ms"
           },
           "max_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Max Ms"
           },
           "error_rate_percent": {
@@ -2174,9 +3013,18 @@
       },
       "DashboardDistributionBucket": {
         "properties": {
-          "bucket_start_ms": { "type": "integer", "title": "Bucket Start Ms" },
-          "bucket_end_ms": { "type": "integer", "title": "Bucket End Ms" },
-          "count": { "type": "integer", "title": "Count" }
+          "bucket_start_ms": {
+            "type": "integer",
+            "title": "Bucket Start Ms"
+          },
+          "bucket_end_ms": {
+            "type": "integer",
+            "title": "Bucket End Ms"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
         },
         "type": "object",
         "required": ["bucket_start_ms", "bucket_end_ms", "count"],
@@ -2184,39 +3032,73 @@
       },
       "DashboardMeta": {
         "properties": {
-          "test_name": { "type": "string", "title": "Test Name" },
-          "test_id": { "type": "string", "format": "uuid", "title": "Test Id" },
+          "test_name": {
+            "type": "string",
+            "title": "Test Name"
+          },
+          "test_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Test Id"
+          },
           "result_id": {
             "type": "string",
             "format": "uuid",
             "title": "Result Id"
           },
-          "status": { "$ref": "#/components/schemas/LoadTestResultStatusEnum" },
+          "status": {
+            "$ref": "#/components/schemas/LoadTestResultStatusEnum"
+          },
           "passed": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Passed"
           },
           "started_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Started At"
           },
           "finished_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Finished At"
           },
-          "load_description": { "type": "string", "title": "Load Description" },
-          "test_type": { "$ref": "#/components/schemas/LoadTestTypeEnum" },
+          "load_description": {
+            "type": "string",
+            "title": "Load Description"
+          },
+          "test_type": {
+            "$ref": "#/components/schemas/LoadTestTypeEnum"
+          },
           "duration_seconds": {
             "type": "integer",
             "title": "Duration Seconds"
           },
-          "total_clients": { "type": "integer", "title": "Total Clients" },
+          "total_clients": {
+            "type": "integer",
+            "title": "Total Clients"
+          },
           "error_threshold_percent": {
             "type": "integer",
             "title": "Error Threshold Percent"
@@ -2244,7 +3126,14 @@
       "DashboardOverview": {
         "properties": {
           "avg_response_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Avg Response Ms"
           },
           "error_rate_percent": {
@@ -2257,24 +3146,48 @@
             "title": "Total Requests",
             "default": 0
           },
-          "rps": { "type": "number", "title": "Rps", "default": 0.0 }
+          "rps": {
+            "type": "number",
+            "title": "Rps",
+            "default": 0.0
+          }
         },
         "type": "object",
         "title": "DashboardOverview"
       },
       "DashboardRedirects": {
         "properties": {
-          "valid": { "type": "integer", "title": "Valid", "default": 0 },
-          "invalid": { "type": "integer", "title": "Invalid", "default": 0 }
+          "valid": {
+            "type": "integer",
+            "title": "Valid",
+            "default": 0
+          },
+          "invalid": {
+            "type": "integer",
+            "title": "Invalid",
+            "default": 0
+          }
         },
         "type": "object",
         "title": "DashboardRedirects"
       },
       "DashboardResponseCounts": {
         "properties": {
-          "total": { "type": "integer", "title": "Total", "default": 0 },
-          "success": { "type": "integer", "title": "Success", "default": 0 },
-          "timeout": { "type": "integer", "title": "Timeout", "default": 0 },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "success": {
+            "type": "integer",
+            "title": "Success",
+            "default": 0
+          },
+          "timeout": {
+            "type": "integer",
+            "title": "Timeout",
+            "default": 0
+          },
           "error_4xx": {
             "type": "integer",
             "title": "Error 4Xx",
@@ -2297,27 +3210,69 @@
       "DashboardResponseTimes": {
         "properties": {
           "avg_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Avg Ms"
           },
           "min_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Min Ms"
           },
           "max_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Max Ms"
           },
           "med_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Med Ms"
           },
           "p90_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "P90 Ms"
           },
           "p95_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "P95 Ms"
           }
         },
@@ -2326,17 +3281,31 @@
       },
       "DashboardTimeseriesPoint": {
         "properties": {
-          "offset_sec": { "type": "integer", "title": "Offset Sec" },
+          "offset_sec": {
+            "type": "integer",
+            "title": "Offset Sec"
+          },
           "active_clients": {
             "type": "integer",
             "title": "Active Clients",
             "default": 0
           },
           "avg_response_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Avg Response Ms"
           },
-          "requests": { "type": "integer", "title": "Requests", "default": 0 },
+          "requests": {
+            "type": "integer",
+            "title": "Requests",
+            "default": 0
+          },
           "bytes_sent": {
             "type": "integer",
             "title": "Bytes Sent",
@@ -2373,7 +3342,9 @@
       "HTTPValidationError": {
         "properties": {
           "detail": {
-            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
             "type": "array",
             "title": "Detail"
           }
@@ -2423,14 +3394,26 @@
           },
           "last_checked_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Last Checked At",
             "description": "Timestamp of the most recent verification check."
           },
           "last_check_error": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Last Check Error",
             "description": "Most recent verification error, if any."
           },
@@ -2441,16 +3424,26 @@
           },
           "verified_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Verified At",
             "description": "When the host was verified (UTC)."
           },
           "failed_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Failed At",
             "description": "When verification failed (UTC)."
@@ -2548,59 +3541,98 @@
           },
           "credentials": {
             "anyOf": [
-              { "$ref": "#/components/schemas/HttpBasicAuth" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/HttpBasicAuth"
+              },
+              {
+                "type": "null"
+              }
             ],
             "description": "HTTP Basic Authentication credentials."
           },
           "bearer": {
             "anyOf": [
-              { "$ref": "#/components/schemas/HttpBearerAuth" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/HttpBearerAuth"
+              },
+              {
+                "type": "null"
+              }
             ],
             "description": "HTTP Bearer Authentication credentials."
           },
           "cookies": {
             "anyOf": [
               {
-                "additionalProperties": { "type": "string" },
+                "additionalProperties": {
+                  "type": "string"
+                },
                 "type": "object"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Cookies",
             "description": "Cookies to send with the request, as name-value pairs."
           },
           "headers": {
-            "additionalProperties": { "type": "string" },
+            "additionalProperties": {
+              "type": "string"
+            },
             "type": "object",
             "title": "Headers",
             "description": "Additional HTTP request headers."
           },
           "request_params": {
-            "additionalProperties": { "type": "string" },
+            "additionalProperties": {
+              "type": "string"
+            },
             "type": "object",
             "title": "Request Params",
             "description": "Query string parameters."
           },
           "raw_post_body": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Raw Post Body",
             "description": "Request body content for methods that send a body."
           },
           "payload_file_url": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Payload File Url",
             "description": "URL of an external payload file for per-client request data."
           },
           "variables": {
-            "items": { "$ref": "#/components/schemas/RequestVariable" },
+            "items": {
+              "$ref": "#/components/schemas/RequestVariable"
+            },
             "type": "array",
             "title": "Variables",
             "description": "Variables extracted from prior responses in the sequence."
           },
           "auth_hint": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Auth Hint",
             "description": "Authentication required for this endpoint when importing from OpenAPI and credentials were not present in the specification. Configure `credentials`, `bearer`, or `cookies` before execution."
           }
@@ -2639,52 +3671,91 @@
             "title": "Operation Id",
             "description": "Operation identifier (`METHOD path`)."
           },
-          "method": { "type": "string", "title": "Method" },
-          "path": { "type": "string", "title": "Path" },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
           "url": {
             "type": "string",
             "title": "Url",
             "description": "Resolved absolute URL."
           },
-          "request_type": { "type": "string", "title": "Request Type" },
+          "request_type": {
+            "type": "string",
+            "title": "Request Type"
+          },
           "headers": {
-            "additionalProperties": { "type": "string" },
+            "additionalProperties": {
+              "type": "string"
+            },
             "type": "object",
             "title": "Headers"
           },
           "request_params": {
-            "additionalProperties": { "type": "string" },
+            "additionalProperties": {
+              "type": "string"
+            },
             "type": "object",
             "title": "Request Params"
           },
           "raw_post_body": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Raw Post Body"
           },
           "credentials": {
             "anyOf": [
-              { "$ref": "#/components/schemas/HttpBasicAuth" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/HttpBasicAuth"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "bearer": {
             "anyOf": [
-              { "$ref": "#/components/schemas/HttpBearerAuth" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/HttpBearerAuth"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "cookies": {
             "anyOf": [
               {
-                "additionalProperties": { "type": "string" },
+                "additionalProperties": {
+                  "type": "string"
+                },
                 "type": "object"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Cookies"
           },
           "auth_hint": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Auth Hint"
           }
         },
@@ -2706,8 +3777,15 @@
             "format": "uuid",
             "title": "Organization Id"
           },
-          "email": { "type": "string", "format": "email", "title": "Email" },
-          "role": { "type": "string", "title": "Role" },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
           "status": {
             "type": "string",
             "title": "Status",
@@ -2771,49 +3849,113 @@
             "title": "Host Id",
             "description": "Target host identifier."
           },
-          "test_type": { "$ref": "#/components/schemas/LoadTestTypeEnum" },
-          "duration": { "type": "integer", "title": "Duration" },
-          "total": { "type": "integer", "title": "Total" },
-          "initial": { "type": "integer", "title": "Initial" },
-          "timeout": { "type": "integer", "title": "Timeout" },
-          "error_threshold": { "type": "integer", "title": "Error Threshold" },
+          "test_type": {
+            "$ref": "#/components/schemas/LoadTestTypeEnum"
+          },
+          "duration": {
+            "type": "integer",
+            "title": "Duration"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "initial": {
+            "type": "integer",
+            "title": "Initial"
+          },
+          "timeout": {
+            "type": "integer",
+            "title": "Timeout"
+          },
+          "error_threshold": {
+            "type": "integer",
+            "title": "Error Threshold"
+          },
           "urls": {
-            "items": { "$ref": "#/components/schemas/HttpRequestConfig" },
+            "items": {
+              "$ref": "#/components/schemas/HttpRequestConfig"
+            },
             "type": "array",
             "title": "Urls"
           },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name"
           },
           "notes": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Notes"
           },
           "callback": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Callback"
           },
           "callback_email": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Callback Email"
           },
           "scheduled_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Scheduled At"
           },
           "openapi_spec_filename": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Openapi Spec Filename",
             "description": "Source specification filename, when imported from a file upload."
           },
           "import_summary": {
             "anyOf": [
-              { "additionalProperties": true, "type": "object" },
-              { "type": "null" }
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Import Summary",
             "description": "Statistics from the most recent OpenAPI import, if applicable."
@@ -2830,8 +3972,12 @@
           },
           "latest_result": {
             "anyOf": [
-              { "$ref": "#/components/schemas/LoadTestResultSummary" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/LoadTestResultSummary"
+              },
+              {
+                "type": "null"
+              }
             ],
             "description": "Most recent run summary, when available."
           }
@@ -2857,10 +4003,20 @@
       },
       "LoadTestResultDashboardResponse": {
         "properties": {
-          "version": { "type": "integer", "title": "Version", "default": 1 },
-          "meta": { "$ref": "#/components/schemas/DashboardMeta" },
-          "overview": { "$ref": "#/components/schemas/DashboardOverview" },
-          "aggregates": { "$ref": "#/components/schemas/DashboardAggregates" },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "default": 1
+          },
+          "meta": {
+            "$ref": "#/components/schemas/DashboardMeta"
+          },
+          "overview": {
+            "$ref": "#/components/schemas/DashboardOverview"
+          },
+          "aggregates": {
+            "$ref": "#/components/schemas/DashboardAggregates"
+          },
           "timeseries": {
             "items": {
               "$ref": "#/components/schemas/DashboardTimeseriesPoint"
@@ -2869,7 +4025,9 @@
             "title": "Timeseries"
           },
           "by_url": {
-            "items": { "$ref": "#/components/schemas/DashboardByUrl" },
+            "items": {
+              "$ref": "#/components/schemas/DashboardByUrl"
+            },
             "type": "array",
             "title": "By Url"
           },
@@ -2897,17 +4055,42 @@
             "title": "Error Rate Percent",
             "default": 0.0
           },
-          "rps": { "type": "number", "title": "Rps", "default": 0.0 },
+          "rps": {
+            "type": "number",
+            "title": "Rps",
+            "default": 0.0
+          },
           "p95_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "P95 Ms"
           },
           "avg_ms": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Avg Ms"
           },
           "duration_seconds": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Duration Seconds"
           }
         },
@@ -2927,38 +4110,79 @@
             "format": "uuid",
             "title": "Result Id"
           },
-          "test_id": { "type": "string", "format": "uuid", "title": "Test Id" },
-          "status": { "$ref": "#/components/schemas/LoadTestResultStatusEnum" },
+          "test_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Test Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LoadTestResultStatusEnum"
+          },
           "started_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Started At"
           },
           "finished_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Finished At"
           },
           "passed": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Passed"
           },
           "metrics": {
             "anyOf": [
-              { "$ref": "#/components/schemas/LoadTestResultMetrics" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/LoadTestResultMetrics"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "exit_code": {
-            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Exit Code"
           },
           "error_message": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Error Message"
           },
           "created_at": {
@@ -2991,7 +4215,11 @@
       },
       "LoginRequest": {
         "properties": {
-          "email": { "type": "string", "format": "email", "title": "Email" },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
           "password": {
             "type": "string",
             "title": "Password",
@@ -3011,8 +4239,15 @@
             "title": "User Id",
             "description": "Member user identifier."
           },
-          "name": { "type": "string", "title": "Name" },
-          "email": { "type": "string", "format": "email", "title": "Email" },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
           "role": {
             "type": "string",
             "title": "Role",
@@ -3094,8 +4329,13 @@
           },
           "active_organization_id": {
             "anyOf": [
-              { "type": "string", "format": "uuid" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Active Organization Id",
             "description": "Currently selected organization."
@@ -3107,20 +4347,35 @@
       },
       "OpenApiImportPreview": {
         "properties": {
-          "host_id": { "type": "string", "format": "uuid", "title": "Host Id" },
-          "hostname": { "type": "string", "title": "Hostname" },
-          "spec_info": { "$ref": "#/components/schemas/SpecInfo" },
+          "host_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Host Id"
+          },
+          "hostname": {
+            "type": "string",
+            "title": "Hostname"
+          },
+          "spec_info": {
+            "$ref": "#/components/schemas/SpecInfo"
+          },
           "operations": {
-            "items": { "$ref": "#/components/schemas/ImportedOperation" },
+            "items": {
+              "$ref": "#/components/schemas/ImportedOperation"
+            },
             "type": "array",
             "title": "Operations"
           },
           "skipped": {
-            "items": { "$ref": "#/components/schemas/SkippedOperation" },
+            "items": {
+              "$ref": "#/components/schemas/SkippedOperation"
+            },
             "type": "array",
             "title": "Skipped"
           },
-          "summary": { "$ref": "#/components/schemas/ImportSummary" }
+          "summary": {
+            "$ref": "#/components/schemas/ImportSummary"
+          }
         },
         "type": "object",
         "required": [
@@ -3308,38 +4563,79 @@
             "format": "uuid",
             "title": "Result Id"
           },
-          "test_id": { "type": "string", "format": "uuid", "title": "Test Id" },
-          "status": { "$ref": "#/components/schemas/LoadTestResultStatusEnum" },
+          "test_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Test Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LoadTestResultStatusEnum"
+          },
           "started_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Started At"
           },
           "finished_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Finished At"
           },
           "passed": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Passed"
           },
           "metrics": {
             "anyOf": [
-              { "$ref": "#/components/schemas/LoadTestResultMetrics" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/LoadTestResultMetrics"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "exit_code": {
-            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Exit Code"
           },
           "error_message": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Error Message"
           },
           "created_at": {
@@ -3367,9 +4663,18 @@
       },
       "SkippedOperation": {
         "properties": {
-          "operation_id": { "type": "string", "title": "Operation Id" },
-          "method": { "type": "string", "title": "Method" },
-          "path": { "type": "string", "title": "Path" },
+          "operation_id": {
+            "type": "string",
+            "title": "Operation Id"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
           "reason": {
             "type": "string",
             "title": "Reason",
@@ -3384,17 +4689,33 @@
       "SpecInfo": {
         "properties": {
           "title": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Title",
             "description": "API title from the specification."
           },
           "version": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Version",
             "description": "API version from the specification."
           },
           "servers": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Servers",
             "description": "Base URLs declared in the specification."
@@ -3406,8 +4727,15 @@
       },
       "StopLoadTestResponse": {
         "properties": {
-          "message": { "type": "string", "title": "Message" },
-          "test_id": { "type": "string", "format": "uuid", "title": "Test Id" },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "test_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Test Id"
+          },
           "result_id": {
             "type": "string",
             "format": "uuid",
@@ -3436,7 +4764,9 @@
             "description": "Token type.",
             "default": "Bearer"
           },
-          "user": { "$ref": "#/components/schemas/UserBootstrap" }
+          "user": {
+            "$ref": "#/components/schemas/UserBootstrap"
+          }
         },
         "type": "object",
         "required": ["access_token", "refresh_token", "user"],
@@ -3447,51 +4777,95 @@
         "properties": {
           "test_type": {
             "anyOf": [
-              { "$ref": "#/components/schemas/LoadTestTypeEnum" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/LoadTestTypeEnum"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "duration": {
             "anyOf": [
-              { "type": "integer", "exclusiveMinimum": 0.0 },
-              { "type": "null" }
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Duration"
           },
           "total": {
             "anyOf": [
-              { "type": "integer", "minimum": 15.0 },
-              { "type": "null" }
+              {
+                "type": "integer",
+                "minimum": 15.0
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Total"
           },
           "initial": {
             "anyOf": [
-              { "type": "integer", "minimum": 0.0 },
-              { "type": "null" }
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Initial"
           },
           "timeout": {
             "anyOf": [
-              { "type": "integer", "exclusiveMinimum": 0.0 },
-              { "type": "null" }
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Timeout"
           },
           "error_threshold": {
             "anyOf": [
-              { "type": "integer", "maximum": 100.0, "minimum": 0.0 },
-              { "type": "null" }
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Error Threshold"
           },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name"
           },
           "notes": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Notes"
           },
           "callback": {
@@ -3502,39 +4876,63 @@
                 "minLength": 1,
                 "format": "uri"
               },
-              { "type": "string" },
-              { "type": "null" }
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Callback"
           },
           "callback_email": {
             "anyOf": [
-              { "type": "string", "format": "email" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Callback Email"
           },
           "scheduled_at": {
             "anyOf": [
-              { "type": "string", "format": "date-time" },
-              { "type": "string" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Scheduled At"
           },
           "url_source": {
             "anyOf": [
-              { "$ref": "#/components/schemas/LoadTestUrlSourceEnum" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/LoadTestUrlSourceEnum"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "urls": {
             "anyOf": [
               {
-                "items": { "$ref": "#/components/schemas/HttpRequestConfig" },
+                "items": {
+                  "$ref": "#/components/schemas/HttpRequestConfig"
+                },
                 "type": "array"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Urls"
           }
@@ -3542,6 +4940,20 @@
         "type": "object",
         "title": "Update Load Test",
         "description": "Request body for updating a load test in `draft` status."
+      },
+      "UpdateMeRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "description": "Full name."
+          }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "UpdateMeRequest"
       },
       "UpdateMemberRoleRequest": {
         "properties": {
@@ -3594,8 +5006,15 @@
             "title": "Id",
             "description": "User identifier."
           },
-          "name": { "type": "string", "title": "Name" },
-          "email": { "type": "string", "format": "email", "title": "Email" },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
           "is_email_verified": {
             "type": "boolean",
             "title": "Is Email Verified",
@@ -3608,8 +5027,13 @@
           },
           "active_organization_id": {
             "anyOf": [
-              { "type": "string", "format": "uuid" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Active Organization Id",
             "description": "Currently selected organization."
@@ -3627,9 +5051,20 @@
       },
       "UserBootstrapResponse": {
         "properties": {
-          "id": { "type": "string", "format": "uuid", "title": "Id" },
-          "name": { "type": "string", "title": "Name" },
-          "email": { "type": "string", "format": "email", "title": "Email" },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
           "is_email_verified": {
             "type": "boolean",
             "title": "Is Email Verified"
@@ -3640,8 +5075,13 @@
           },
           "active_organization_id": {
             "anyOf": [
-              { "type": "string", "format": "uuid" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Active Organization Id"
           }
@@ -3658,9 +5098,20 @@
       },
       "UserMeResponse": {
         "properties": {
-          "id": { "type": "string", "format": "uuid", "title": "Id" },
-          "name": { "type": "string", "title": "Name" },
-          "email": { "type": "string", "format": "email", "title": "Email" },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
           "is_email_verified": {
             "type": "boolean",
             "title": "Is Email Verified"
@@ -3671,14 +5122,21 @@
           },
           "active_organization_id": {
             "anyOf": [
-              { "type": "string", "format": "uuid" },
-              { "type": "null" }
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Active Organization Id",
             "description": "Currently selected organization."
           },
           "organizations": {
-            "items": { "$ref": "#/components/schemas/UserOrganizationSummary" },
+            "items": {
+              "$ref": "#/components/schemas/UserOrganizationSummary"
+            },
             "type": "array",
             "title": "Organizations",
             "description": "Organizations you belong to."
@@ -3697,9 +5155,19 @@
       },
       "UserOrganizationSummary": {
         "properties": {
-          "id": { "type": "string", "format": "uuid", "title": "Id" },
-          "name": { "type": "string", "title": "Name" },
-          "slug": { "type": "string", "title": "Slug" },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
           "role": {
             "type": "string",
             "title": "Role",
@@ -3718,14 +5186,34 @@
       "ValidationError": {
         "properties": {
           "loc": {
-            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
             "type": "array",
             "title": "Location"
           },
-          "msg": { "type": "string", "title": "Message" },
-          "type": { "type": "string", "title": "Error Type" },
-          "input": { "title": "Input" },
-          "ctx": { "type": "object", "title": "Context" }
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
         },
         "type": "object",
         "required": ["loc", "msg", "type"],
@@ -3803,37 +5291,86 @@
             "default": 50
           },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name",
             "description": "Display name."
           },
           "notes": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Notes",
             "description": "Optional notes."
           },
           "callback": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Callback",
             "description": "Completion webhook URL."
           },
           "callback_email": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Callback Email",
             "description": "Completion notification email."
           },
           "scheduled_at": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Scheduled At",
             "description": "Scheduled start time (ISO-8601 or `YYYY-MM-DD HH:MM` UTC)."
           },
           "include_operations": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Include Operations",
             "description": "JSON array allowlist, for example `[\"GET /v1/health\"]`."
           },
           "exclude_operations": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Exclude Operations",
             "description": "JSON array denylist of operations."
           }
@@ -3913,6 +5450,9 @@
       "name": "load-tests",
       "description": "Create and manage load test configurations for verified hosts."
     },
-    { "name": "health", "description": "Service health and availability." }
+    {
+      "name": "health",
+      "description": "Service health and availability."
+    }
   ]
 }

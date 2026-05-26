@@ -193,6 +193,17 @@ export function OrgSwitcher() {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   className="gap-2 p-2"
+                  render={<Link to="/app/settings/organization" />}
+                >
+                  <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
+                    <Building2Icon className="size-4" />
+                  </div>
+                  <div className="font-medium text-muted-foreground">
+                    Manage organization
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="gap-2 p-2"
                   onClick={() => setCreateOpen(true)}
                 >
                   <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">

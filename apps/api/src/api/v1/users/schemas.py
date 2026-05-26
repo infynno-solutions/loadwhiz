@@ -29,6 +29,15 @@ class UserMeResponse(BaseModel):
     )
 
 
+class UpdateMeRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=255, description="Full name.")
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(description="Current account password.")
+    new_password: str = Field(..., min_length=8, description="New account password.")
+
+
 class SetActiveOrganizationRequest(BaseModel):
     organization_id: uuid.UUID = Field(description="Organization to set as active.")
 

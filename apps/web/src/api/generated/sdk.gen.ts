@@ -133,12 +133,18 @@ import type {
   OrganizationsUpdateData,
   OrganizationsUpdateErrors,
   OrganizationsUpdateResponses,
+  UsersChangePasswordData,
+  UsersChangePasswordErrors,
+  UsersChangePasswordResponses,
   UsersMeData,
   UsersMeErrors,
   UsersMeResponses,
   UsersSetActiveOrganizationData,
   UsersSetActiveOrganizationErrors,
   UsersSetActiveOrganizationResponses,
+  UsersUpdateMeData,
+  UsersUpdateMeErrors,
+  UsersUpdateMeResponses,
 } from "./types.gen";
 
 export type Options<
@@ -197,6 +203,62 @@ export const usersMe = <ThrowOnError extends boolean = false>(
     ],
     url: "/api/v1/users/me",
     ...options,
+  });
+};
+
+/**
+ * Update current user profile
+ *
+ * Update the authenticated user's profile fields.
+ */
+export const usersUpdateMe = <ThrowOnError extends boolean = false>(
+  options: Options<UsersUpdateMeData, ThrowOnError>,
+) => {
+  return (options.client ?? client).patch<
+    UsersUpdateMeResponses,
+    UsersUpdateMeErrors,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: "bearer",
+        type: "http",
+      },
+    ],
+    url: "/api/v1/users/me",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Change password
+ *
+ * Change the authenticated user's password. Revokes all active sessions.
+ */
+export const usersChangePassword = <ThrowOnError extends boolean = false>(
+  options: Options<UsersChangePasswordData, ThrowOnError>,
+) => {
+  return (options.client ?? client).post<
+    UsersChangePasswordResponses,
+    UsersChangePasswordErrors,
+    ThrowOnError
+  >({
+    security: [
+      {
+        scheme: "bearer",
+        type: "http",
+      },
+    ],
+    url: "/api/v1/users/me/change-password",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
   });
 };
 

@@ -22,10 +22,18 @@ import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppOnboardingRouteImport } from './routes/app/onboarding'
 import { Route as AppHostsRouteImport } from './routes/app/hosts'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
+import { Route as AppSettingsRouteRouteImport } from './routes/app/settings/route'
 import { Route as AppTestsIndexRouteImport } from './routes/app/tests/index'
+import { Route as AppSettingsIndexRouteImport } from './routes/app/settings/index'
 import { Route as AppTestsNewRouteImport } from './routes/app/tests/new'
 import { Route as AppTestsTestIdRouteImport } from './routes/app/tests/$testId'
+import { Route as AppSettingsSecurityRouteImport } from './routes/app/settings/security'
+import { Route as AppSettingsAppearanceRouteImport } from './routes/app/settings/appearance'
+import { Route as AppSettingsAccountRouteImport } from './routes/app/settings/account'
 import { Route as AppTestsTestIdIndexRouteImport } from './routes/app/tests/$testId/index'
+import { Route as AppSettingsOrganizationIndexRouteImport } from './routes/app/settings/organization/index'
+import { Route as AppSettingsOrganizationMembersRouteImport } from './routes/app/settings/organization/members'
+import { Route as AppSettingsOrganizationInvitationsRouteImport } from './routes/app/settings/organization/invitations'
 import { Route as AppTestsTestIdResultsResultIdRouteImport } from './routes/app/tests/$testId/results/$resultId'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -93,10 +101,20 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
   id: '/tests/',
   path: '/tests/',
   getParentRoute: () => AppRouteRoute,
+} as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSettingsRouteRoute,
 } as any)
 const AppTestsNewRoute = AppTestsNewRouteImport.update({
   id: '/tests/new',
@@ -108,11 +126,44 @@ const AppTestsTestIdRoute = AppTestsTestIdRouteImport.update({
   path: '/tests/$testId',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsAppearanceRoute = AppSettingsAppearanceRouteImport.update({
+  id: '/appearance',
+  path: '/appearance',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsAccountRoute = AppSettingsAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
 const AppTestsTestIdIndexRoute = AppTestsTestIdIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppTestsTestIdRoute,
 } as any)
+const AppSettingsOrganizationIndexRoute =
+  AppSettingsOrganizationIndexRouteImport.update({
+    id: '/organization/',
+    path: '/organization/',
+    getParentRoute: () => AppSettingsRouteRoute,
+  } as any)
+const AppSettingsOrganizationMembersRoute =
+  AppSettingsOrganizationMembersRouteImport.update({
+    id: '/organization/members',
+    path: '/organization/members',
+    getParentRoute: () => AppSettingsRouteRoute,
+  } as any)
+const AppSettingsOrganizationInvitationsRoute =
+  AppSettingsOrganizationInvitationsRouteImport.update({
+    id: '/organization/invitations',
+    path: '/organization/invitations',
+    getParentRoute: () => AppSettingsRouteRoute,
+  } as any)
 const AppTestsTestIdResultsResultIdRoute =
   AppTestsTestIdResultsResultIdRouteImport.update({
     id: '/results/$resultId',
@@ -130,13 +181,21 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/app/settings': typeof AppSettingsRouteRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
   '/app/hosts': typeof AppHostsRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app/': typeof AppIndexRoute
+  '/app/settings/account': typeof AppSettingsAccountRoute
+  '/app/settings/appearance': typeof AppSettingsAppearanceRoute
+  '/app/settings/security': typeof AppSettingsSecurityRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
+  '/app/settings/': typeof AppSettingsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
+  '/app/settings/organization/invitations': typeof AppSettingsOrganizationInvitationsRoute
+  '/app/settings/organization/members': typeof AppSettingsOrganizationMembersRoute
+  '/app/settings/organization/': typeof AppSettingsOrganizationIndexRoute
   '/app/tests/$testId/': typeof AppTestsTestIdIndexRoute
   '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
 }
@@ -153,8 +212,15 @@ export interface FileRoutesByTo {
   '/app/hosts': typeof AppHostsRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app': typeof AppIndexRoute
+  '/app/settings/account': typeof AppSettingsAccountRoute
+  '/app/settings/appearance': typeof AppSettingsAppearanceRoute
+  '/app/settings/security': typeof AppSettingsSecurityRoute
   '/app/tests/new': typeof AppTestsNewRoute
+  '/app/settings': typeof AppSettingsIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
+  '/app/settings/organization/invitations': typeof AppSettingsOrganizationInvitationsRoute
+  '/app/settings/organization/members': typeof AppSettingsOrganizationMembersRoute
+  '/app/settings/organization': typeof AppSettingsOrganizationIndexRoute
   '/app/tests/$testId': typeof AppTestsTestIdIndexRoute
   '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
 }
@@ -169,13 +235,21 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/app/settings': typeof AppSettingsRouteRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
   '/app/hosts': typeof AppHostsRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app/': typeof AppIndexRoute
+  '/app/settings/account': typeof AppSettingsAccountRoute
+  '/app/settings/appearance': typeof AppSettingsAppearanceRoute
+  '/app/settings/security': typeof AppSettingsSecurityRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
+  '/app/settings/': typeof AppSettingsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
+  '/app/settings/organization/invitations': typeof AppSettingsOrganizationInvitationsRoute
+  '/app/settings/organization/members': typeof AppSettingsOrganizationMembersRoute
+  '/app/settings/organization/': typeof AppSettingsOrganizationIndexRoute
   '/app/tests/$testId/': typeof AppTestsTestIdIndexRoute
   '/app/tests/$testId/results/$resultId': typeof AppTestsTestIdResultsResultIdRoute
 }
@@ -191,13 +265,21 @@ export interface FileRouteTypes {
     | '/signup'
     | '/terms'
     | '/verify-email'
+    | '/app/settings'
     | '/app/dashboard'
     | '/app/hosts'
     | '/app/onboarding'
     | '/app/'
+    | '/app/settings/account'
+    | '/app/settings/appearance'
+    | '/app/settings/security'
     | '/app/tests/$testId'
     | '/app/tests/new'
+    | '/app/settings/'
     | '/app/tests/'
+    | '/app/settings/organization/invitations'
+    | '/app/settings/organization/members'
+    | '/app/settings/organization/'
     | '/app/tests/$testId/'
     | '/app/tests/$testId/results/$resultId'
   fileRoutesByTo: FileRoutesByTo
@@ -214,8 +296,15 @@ export interface FileRouteTypes {
     | '/app/hosts'
     | '/app/onboarding'
     | '/app'
+    | '/app/settings/account'
+    | '/app/settings/appearance'
+    | '/app/settings/security'
     | '/app/tests/new'
+    | '/app/settings'
     | '/app/tests'
+    | '/app/settings/organization/invitations'
+    | '/app/settings/organization/members'
+    | '/app/settings/organization'
     | '/app/tests/$testId'
     | '/app/tests/$testId/results/$resultId'
   id:
@@ -229,13 +318,21 @@ export interface FileRouteTypes {
     | '/signup'
     | '/terms'
     | '/verify-email'
+    | '/app/settings'
     | '/app/dashboard'
     | '/app/hosts'
     | '/app/onboarding'
     | '/app/'
+    | '/app/settings/account'
+    | '/app/settings/appearance'
+    | '/app/settings/security'
     | '/app/tests/$testId'
     | '/app/tests/new'
+    | '/app/settings/'
     | '/app/tests/'
+    | '/app/settings/organization/invitations'
+    | '/app/settings/organization/members'
+    | '/app/settings/organization/'
     | '/app/tests/$testId/'
     | '/app/tests/$testId/results/$resultId'
   fileRoutesById: FileRoutesById
@@ -345,12 +442,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/tests/': {
       id: '/app/tests/'
       path: '/tests'
       fullPath: '/app/tests/'
       preLoaderRoute: typeof AppTestsIndexRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/app/settings/': {
+      id: '/app/settings/'
+      path: '/'
+      fullPath: '/app/settings/'
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
     }
     '/app/tests/new': {
       id: '/app/tests/new'
@@ -366,12 +477,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTestsTestIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/settings/security': {
+      id: '/app/settings/security'
+      path: '/security'
+      fullPath: '/app/settings/security'
+      preLoaderRoute: typeof AppSettingsSecurityRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/app/settings/appearance': {
+      id: '/app/settings/appearance'
+      path: '/appearance'
+      fullPath: '/app/settings/appearance'
+      preLoaderRoute: typeof AppSettingsAppearanceRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/app/settings/account': {
+      id: '/app/settings/account'
+      path: '/account'
+      fullPath: '/app/settings/account'
+      preLoaderRoute: typeof AppSettingsAccountRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
     '/app/tests/$testId/': {
       id: '/app/tests/$testId/'
       path: '/'
       fullPath: '/app/tests/$testId/'
       preLoaderRoute: typeof AppTestsTestIdIndexRouteImport
       parentRoute: typeof AppTestsTestIdRoute
+    }
+    '/app/settings/organization/': {
+      id: '/app/settings/organization/'
+      path: '/organization'
+      fullPath: '/app/settings/organization/'
+      preLoaderRoute: typeof AppSettingsOrganizationIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/app/settings/organization/members': {
+      id: '/app/settings/organization/members'
+      path: '/organization/members'
+      fullPath: '/app/settings/organization/members'
+      preLoaderRoute: typeof AppSettingsOrganizationMembersRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/app/settings/organization/invitations': {
+      id: '/app/settings/organization/invitations'
+      path: '/organization/invitations'
+      fullPath: '/app/settings/organization/invitations'
+      preLoaderRoute: typeof AppSettingsOrganizationInvitationsRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
     }
     '/app/tests/$testId/results/$resultId': {
       id: '/app/tests/$testId/results/$resultId'
@@ -382,6 +535,30 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AppSettingsRouteRouteChildren {
+  AppSettingsAccountRoute: typeof AppSettingsAccountRoute
+  AppSettingsAppearanceRoute: typeof AppSettingsAppearanceRoute
+  AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+  AppSettingsOrganizationInvitationsRoute: typeof AppSettingsOrganizationInvitationsRoute
+  AppSettingsOrganizationMembersRoute: typeof AppSettingsOrganizationMembersRoute
+  AppSettingsOrganizationIndexRoute: typeof AppSettingsOrganizationIndexRoute
+}
+
+const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
+  AppSettingsAccountRoute: AppSettingsAccountRoute,
+  AppSettingsAppearanceRoute: AppSettingsAppearanceRoute,
+  AppSettingsSecurityRoute: AppSettingsSecurityRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
+  AppSettingsOrganizationInvitationsRoute:
+    AppSettingsOrganizationInvitationsRoute,
+  AppSettingsOrganizationMembersRoute: AppSettingsOrganizationMembersRoute,
+  AppSettingsOrganizationIndexRoute: AppSettingsOrganizationIndexRoute,
+}
+
+const AppSettingsRouteRouteWithChildren =
+  AppSettingsRouteRoute._addFileChildren(AppSettingsRouteRouteChildren)
 
 interface AppTestsTestIdRouteChildren {
   AppTestsTestIdIndexRoute: typeof AppTestsTestIdIndexRoute
@@ -398,6 +575,7 @@ const AppTestsTestIdRouteWithChildren = AppTestsTestIdRoute._addFileChildren(
 )
 
 interface AppRouteRouteChildren {
+  AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppHostsRoute: typeof AppHostsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -408,6 +586,7 @@ interface AppRouteRouteChildren {
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppHostsRoute: AppHostsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
