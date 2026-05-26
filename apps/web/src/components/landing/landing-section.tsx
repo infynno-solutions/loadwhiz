@@ -43,7 +43,7 @@ export function LandingSection({
   return (
     <section
       id={id}
-      className={cn("relative scroll-mt-20 py-20 md:py-28", className)}
+      className={cn("relative scroll-mt-24 py-20 md:py-28", className)}
       aria-labelledby={title ? `${id}-title` : undefined}
     >
       <div

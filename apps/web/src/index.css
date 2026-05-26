@@ -1,1 +1,7 @@
 @import "@loadwhiz/ui/globals.css";
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

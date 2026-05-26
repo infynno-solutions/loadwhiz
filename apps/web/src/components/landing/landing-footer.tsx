@@ -1,34 +1,49 @@
-import { Separator } from "@loadwhiz/ui/components/separator";
 import { Link } from "@tanstack/react-router";
+import { HiOutlineBolt } from "react-icons/hi2";
 
 import {
   LANDING_GITHUB_URL,
   LANDING_NAV,
 } from "@/components/landing/landing-constants";
+
 export function LandingFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t bg-muted/30">
-      <div
-        className="mx-auto w-full max-w-6xl px-4 sm:px-6 flex flex-col gap-8 py-12"
-      >
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-          <div className="flex flex-col gap-3">
-            <p className="font-semibold">LoadWhiz</p>
-            <p className="text-muted-foreground text-sm">
+    <footer className="mt-8">
+      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-20">
+        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
+          <div className="flex flex-col gap-4">
+            <a
+              href="#top"
+              className="group flex w-fit items-center gap-2.5 rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <span className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-violet-600 to-primary shadow-primary/20 shadow-sm">
+                <HiOutlineBolt
+                  className="size-5 text-primary-foreground"
+                  aria-hidden
+                />
+              </span>
+              <span className="font-bold text-base tracking-tight">
+                Load<span className="text-primary">Whiz</span>
+              </span>
+            </a>
+            <p className="max-w-sm text-muted-foreground text-sm leading-relaxed">
               Performance testing for engineering teams who ship often and
               can't afford surprises.
             </p>
           </div>
-          <div className="flex flex-col gap-3">
-            <p className="font-medium text-sm">Product</p>
-            <ul className="flex flex-col gap-2 text-sm">
+
+          <div className="flex flex-col gap-4">
+            <p className="font-semibold text-foreground text-xs uppercase tracking-wider">
+              Product
+            </p>
+            <ul className="flex flex-col gap-3">
               {LANDING_NAV.map((item) => (
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-muted-foreground text-sm transition-colors hover:text-foreground"
                   >
                     {item.label}
                   </a>
@@ -36,13 +51,16 @@ export function LandingFooter() {
               ))}
             </ul>
           </div>
-          <div className="flex flex-col gap-3">
-            <p className="font-medium text-sm">Legal & source</p>
-            <ul className="flex flex-col gap-2 text-sm">
+
+          <div className="flex flex-col gap-4">
+            <p className="font-semibold text-foreground text-xs uppercase tracking-wider">
+              Legal & source
+            </p>
+            <ul className="flex flex-col gap-3">
               <li>
                 <Link
                   to="/privacy"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
                 >
                   Privacy
                 </Link>
@@ -50,7 +68,7 @@ export function LandingFooter() {
               <li>
                 <Link
                   to="/terms"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
                 >
                   Terms
                 </Link>
@@ -60,7 +78,7 @@ export function LandingFooter() {
                   href={LANDING_GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
                 >
                   GitHub
                 </a>
@@ -68,18 +86,23 @@ export function LandingFooter() {
             </ul>
           </div>
         </div>
-        <Separator />
-        <p className="text-center text-muted-foreground text-sm">
-          © {year} LoadWhiz · Built by{" "}
-          <a
-            href="https://infynno.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-4 hover:text-foreground"
-          >
-            Infynno Solutions
-          </a>
-        </p>
+
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row">
+          <p className="text-center text-muted-foreground text-sm sm:text-left">
+            © {year} LoadWhiz
+          </p>
+          <p className="text-center text-muted-foreground text-sm sm:text-right">
+            Built by{" "}
+            <a
+              href="https://infynno.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-foreground/80 transition-colors hover:text-foreground"
+            >
+              Infynno Solutions
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );
