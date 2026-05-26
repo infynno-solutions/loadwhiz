@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@loadwhiz/ui/components/badge";
-import { Button } from "@loadwhiz/ui/components/button";
+import { Button, buttonVariants } from "@loadwhiz/ui/components/button";
 import { cn } from "@loadwhiz/ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "framer-motion";
@@ -88,23 +88,18 @@ export function LandingHero() {
                 Start testing free
                 <HiArrowRight className="size-4" aria-hidden />
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-11 gap-2"
-                nativeButton={false}
-                render={
-                  <a
-                    href={LANDING_GITHUB_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="View on GitHub"
-                  />
-                }
+              <a
+                href={LANDING_GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "h-11 gap-2",
+                )}
               >
                 <SiGithub className="size-4" aria-hidden />
                 View on GitHub
-              </Button>
+              </a>
             </div>
             <p className="text-muted-foreground text-sm">
               Free to start · Deploy on your infrastructure · No vendor lock-in
