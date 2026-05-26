@@ -15,8 +15,9 @@ import {
   TabsList,
   TabsTrigger,
 } from "@loadwhiz/ui/components/tabs";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DeleteLoadTestDialog } from "@/components/load-tests/delete-load-test-dialog";
 import { LoadTestConfigForm } from "@/components/load-tests/load-test-config-form";
 import { LoadTestDetailHeader } from "@/components/load-tests/load-test-detail-header";
@@ -26,6 +27,7 @@ import { canEditLoadTest } from "@/lib/load-test-actions";
 import {
   buildHostNameMap,
   mergeResultsWithLatest,
+  reconcileLoadTestStatusFromResults,
   useLoadTest,
   useLoadTestResults,
   useVerifiedHosts,
@@ -39,6 +41,7 @@ export const Route = createFileRoute("/app/tests/$testId/")({
 function TestDetailPage() {
   const { testId } = Route.useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: user } = useCurrentUser();
   const orgId = user?.active_organization_id;
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -62,6 +65,17 @@ function TestDetailPage() {
     () => mergeResultsWithLatest(results, test?.latest_result),
     [results, test?.latest_result],
   );
+
+  useEffect(() => {
+    if (!orgId || !test) return;
+    reconcileLoadTestStatusFromResults(
+      queryClient,
+      orgId,
+      testId,
+      test,
+      displayResults,
+    );
+  }, [orgId, testId, test, displayResults, queryClient]);
 
   if (!orgId) {
     return (
@@ -119,9 +133,11 @@ function TestDetailPage() {
         </TabsList>
 
         <TabsContent value="history" className="flex flex-col gap-4">
-          <p className="text-muted-foreground text-sm">
-            Past runs and links to detailed results for passed runs.
-          </p>
+          {displayResults.length > 0 || resultsPending ? (
+            <p className="text-muted-foreground text-sm">
+              Past runs and links to detailed results for passed runs.
+            </p>
+          ) : null}
           <LoadTestResultsTable
             testId={testId}
             results={displayResults}

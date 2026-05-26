@@ -20,8 +20,10 @@ import type {
   LoadTestStatusEnum,
   RunLoadTestResponse,
 } from "@/api/generated/types.gen";
-
-const ACTIVE_TEST_STATUSES = new Set(["pending", "running"]);
+import {
+  isLoadTestRunInProgress,
+  TERMINAL_RESULT_STATUSES,
+} from "@/lib/load-test-actions";
 
 export function loadTestsListQueryKeyForOrg(
   orgId: string,
@@ -56,7 +58,7 @@ export function loadTestsResultsDashboardQueryKeyFor(
 }
 
 function listRefetchInterval(tests: LoadTestResponse[] | undefined) {
-  if (!tests?.some((t) => ACTIVE_TEST_STATUSES.has(t.status))) {
+  if (!tests?.some((t) => isLoadTestRunInProgress(t))) {
     return false;
   }
   return 5_000;
@@ -91,8 +93,8 @@ export function useLoadTest(orgId: string | undefined, testId: string) {
     }),
     enabled: Boolean(orgId && testId),
     refetchInterval: (query) => {
-      const status = query.state.data?.status;
-      if (!status || !ACTIVE_TEST_STATUSES.has(status)) return false;
+      const test = query.state.data;
+      if (!test || !isLoadTestRunInProgress(test)) return false;
       return 5_000;
     },
   });
@@ -110,12 +112,16 @@ export function useLoadTestResults(
     }),
     enabled: Boolean(orgId && testId && enabled),
     refetchInterval: (query) => {
-      if (testStatus && ACTIVE_TEST_STATUSES.has(testStatus)) {
+      const results = query.state.data;
+      if (
+        results?.some((r) => r.status === "running" || r.status === "not_ready")
+      ) {
         return 5_000;
       }
-      const results = query.state.data;
-      if (!results?.some((r) => r.status === "running")) return false;
-      return 5_000;
+      if (testStatus === "pending" || testStatus === "running") {
+        return 5_000;
+      }
+      return false;
     },
   });
 }
@@ -184,6 +190,40 @@ export function mergeResultsWithLatest(
   return [latest, ...results];
 }
 
+/** Sync test.status to complete when the latest run has finished. */
+export function reconcileLoadTestStatusFromResults(
+  queryClient: QueryClient,
+  orgId: string,
+  testId: string,
+  test: LoadTestResponse,
+  results: LoadTestResultSummary[],
+) {
+  if (test.status !== "pending" && test.status !== "running") return;
+
+  const latest =
+    results.find((r) => r.result_id === test.latest_result?.result_id) ??
+    results[0] ??
+    test.latest_result;
+  if (!latest || !TERMINAL_RESULT_STATUSES.has(latest.status)) return;
+
+  const patch = (old: LoadTestResponse): LoadTestResponse => ({
+    ...old,
+    status: "complete",
+    latest_result: latest,
+  });
+
+  queryClient.setQueryData(
+    loadTestsGetQueryKeyFor(orgId, testId),
+    (old: LoadTestResponse | undefined) => (old ? patch(old) : old),
+  );
+
+  queryClient.setQueriesData(
+    { queryKey: loadTestsListQueryKeyForOrg(orgId) },
+    (old: LoadTestResponse[] | undefined) =>
+      old?.map((t) => (t.test_id === testId ? patch(t) : t)),
+  );
+}
+
 export async function invalidateLoadTestQueries(
   queryClient: QueryClient,
   orgId: string,
@@ -217,7 +257,8 @@ export function useResultDashboard(
     }),
     enabled: Boolean(orgId && testId && resultId),
     refetchInterval: (query) => {
-      if (query.state.data?.meta.status !== "running") return false;
+      const status = query.state.data?.meta.status;
+      if (status !== "running" && status !== "not_ready") return false;
       return 5_000;
     },
   });

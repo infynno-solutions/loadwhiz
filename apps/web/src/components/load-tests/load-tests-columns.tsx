@@ -156,14 +156,14 @@ export const loadTestsColumns: ColumnDef<LoadTestResponse>[] = [
             <DropdownMenuContent align="end" className="min-w-40">
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  disabled={!canRunLoadTest(test.status) || isBusy}
+                  disabled={!canRunLoadTest(test) || isBusy}
                   onClick={() => meta?.onRun(test)}
                 >
                   <PlayIcon />
                   Run
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  disabled={!canStopLoadTest(test.status) || isBusy}
+                  disabled={!canStopLoadTest(test) || isBusy}
                   onClick={() => meta?.onStop(test)}
                 >
                   <SquareIcon />
@@ -173,7 +173,7 @@ export const loadTestsColumns: ColumnDef<LoadTestResponse>[] = [
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant="destructive"
-                disabled={!canDeleteLoadTest(test.status) || isBusy}
+                disabled={!canDeleteLoadTest(test) || isBusy}
                 onClick={() => meta?.onDelete(test)}
               >
                 <Trash2Icon />

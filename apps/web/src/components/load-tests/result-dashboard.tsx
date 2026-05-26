@@ -23,7 +23,7 @@ import { LoadTestResultStatusBadge } from "@/components/load-tests/load-test-res
 import { ResultOverviewCards } from "@/components/load-tests/result-overview-cards";
 import { TimeseriesChart } from "@/components/load-tests/timeseries-chart";
 import { getApiErrorMessage } from "@/lib/api-errors";
-import { formatLoadTestDate } from "@/lib/load-test-actions";
+import { canAbortResultRun, formatLoadTestDate } from "@/lib/load-test-actions";
 import {
   loadTestsGetQueryKeyFor,
   loadTestsListQueryKeyForOrg,
@@ -137,7 +137,7 @@ export function ResultDashboard({
             {formatLoadTestDate(meta.finished_at)}
           </p>
         </div>
-        {meta.can_abort ? (
+        {canAbortResultRun(meta.status, meta.can_abort) ? (
           <Button
             variant="outline"
             size="sm"

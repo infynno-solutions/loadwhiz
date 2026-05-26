@@ -85,7 +85,7 @@ export function LoadTestDetailHeader({
       <div className="flex flex-wrap gap-2">
         <Button
           size="sm"
-          disabled={!canRunLoadTest(test.status) || busy}
+          disabled={!canRunLoadTest(test) || busy}
           onClick={() => void handleRun()}
         >
           {runTest.isPending ? <Spinner /> : <PlayIcon />}
@@ -94,7 +94,7 @@ export function LoadTestDetailHeader({
         <Button
           size="sm"
           variant="outline"
-          disabled={!canStopLoadTest(test.status) || busy}
+          disabled={!canStopLoadTest(test) || busy}
           onClick={() => void handleStop()}
         >
           {stopTest.isPending ? <Spinner /> : <SquareIcon />}
@@ -103,7 +103,7 @@ export function LoadTestDetailHeader({
         <Button
           size="sm"
           variant="destructive"
-          disabled={!canDeleteLoadTest(test.status)}
+          disabled={!canDeleteLoadTest(test)}
           onClick={onDelete}
         >
           <Trash2Icon />

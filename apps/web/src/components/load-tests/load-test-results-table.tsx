@@ -2,6 +2,13 @@
 
 import { Badge } from "@loadwhiz/ui/components/badge";
 import { Button } from "@loadwhiz/ui/components/button";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@loadwhiz/ui/components/empty";
 import { Skeleton } from "@loadwhiz/ui/components/skeleton";
 import {
   Table,
@@ -12,7 +19,7 @@ import {
   TableRow,
 } from "@loadwhiz/ui/components/table";
 import { Link } from "@tanstack/react-router";
-import { EyeIcon } from "lucide-react";
+import { EyeIcon, PlayIcon } from "lucide-react";
 import type { LoadTestResultSummary } from "@/api/generated/types.gen";
 import { LoadTestResultStatusBadge } from "@/components/load-tests/load-test-result-status-badge";
 import {
@@ -42,9 +49,18 @@ export function LoadTestResultsTable({
 
   if (results.length === 0) {
     return (
-      <p className="text-muted-foreground text-sm">
-        No runs yet. Start a run from the header when the test is ready.
-      </p>
+      <Empty className="border">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <PlayIcon />
+          </EmptyMedia>
+          <EmptyTitle>No runs yet</EmptyTitle>
+          <EmptyDescription>
+            Start a run from the header when this test is ready. Passed runs
+            will appear here with a link to the results dashboard.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
