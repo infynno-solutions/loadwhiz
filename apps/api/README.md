@@ -2,6 +2,8 @@
 
 FastAPI backend with PostgreSQL, Redis, and Celery for host verification and k6 load test execution.
 
+Part of the [LoadWhiz](https://github.com/infynno-solutions/loadwhiz) monorepo. See the root [README](../../README.md) and [CONTRIBUTING](../../CONTRIBUTING.md) for the full development guide.
+
 ## Prerequisites
 
 - Python 3.13+

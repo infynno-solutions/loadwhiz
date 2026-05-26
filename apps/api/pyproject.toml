@@ -1,7 +1,7 @@
 [project]
 name = "loadwhiz-api"
 version = "0.1.0"
-description = ""
+description = "LoadWhiz API — load testing configuration, host verification, and k6 orchestration"
 authors = [
     {name = "Krunal Shah",email = "krunal@infynno.com"}
 ]

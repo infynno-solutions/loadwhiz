@@ -1,6 +1,18 @@
 {
   "name": "loadwhiz",
+  "description": "Open source load testing platform with verified hosts, organizations, and k6 execution",
+  "version": "0.1.0",
+  "license": "MIT",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infynno-solutions/loadwhiz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/infynno-solutions/loadwhiz/issues"
+  },
+  "homepage": "https://github.com/infynno-solutions/loadwhiz#readme",
+  "author": "Krunal Shah <krunal@infynno.com>",
   "workspaces": {
     "packages": [
       "apps/*",
