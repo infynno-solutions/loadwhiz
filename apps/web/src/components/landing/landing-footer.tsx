@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { HiOutlineBolt } from "react-icons/hi2";
 
+import { AppLogo } from "@/components/app-logo";
 import {
   LANDING_GITHUB_URL,
   LANDING_NAV,
@@ -16,17 +16,9 @@ export function LandingFooter() {
           <div className="flex flex-col gap-4">
             <a
               href="#top"
-              className="group flex w-fit items-center gap-2.5 rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+              className="w-fit rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-violet-600 to-primary shadow-primary/20 shadow-sm">
-                <HiOutlineBolt
-                  className="size-5 text-primary-foreground"
-                  aria-hidden
-                />
-              </span>
-              <span className="font-bold text-base tracking-tight">
-                Load<span className="text-primary">Whiz</span>
-              </span>
+              <AppLogo size="sm" />
             </a>
             <p className="max-w-sm text-muted-foreground text-sm leading-relaxed">
               Performance testing for engineering teams who ship often and can't

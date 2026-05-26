@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { AuthPageBrand } from "@/components/auth/auth-page-brand";
 import { LoginForm } from "@/components/auth/login-form";
 import { redirectIfAuthenticated } from "@/lib/auth";
 
@@ -28,6 +29,7 @@ function LoginPage() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm">
+        <AuthPageBrand />
         <LoginForm redirectTo={safeRedirect(redirect)} />
       </div>
     </div>

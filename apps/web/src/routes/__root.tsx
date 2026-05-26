@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
+import { APPLE_TOUCH_ICON_SRC, FAVICON_SRC } from "@/components/app-logo";
 import { ThemeProvider } from "@/components/theme-provider";
 import appCss from "../index.css?url";
 
@@ -27,13 +28,22 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Loadwhiz",
+        title: "LoadWhiz",
       },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        href: FAVICON_SRC,
+      },
+      {
+        rel: "apple-touch-icon",
+        href: APPLE_TOUCH_ICON_SRC,
       },
     ],
   }),

@@ -13,7 +13,9 @@ import { cn } from "@loadwhiz/ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { HiBars3, HiMoon, HiOutlineBolt, HiSun } from "react-icons/hi2";
+import { HiBars3, HiMoon, HiSun } from "react-icons/hi2";
+
+import { AppLogo } from "@/components/app-logo";
 import { SiGithub } from "react-icons/si";
 
 import {
@@ -146,16 +148,11 @@ function Logo({ className }: { className?: string }) {
     <a
       href="#top"
       className={cn(
-        "group flex items-center gap-3 rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         className,
       )}
     >
-      <span className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-600 to-primary shadow-primary/25 shadow-sm">
-        <HiOutlineBolt className="size-5 text-primary-foreground" aria-hidden />
-      </span>
-      <span className="font-bold text-lg tracking-tight">
-        Load<span className="text-primary">Whiz</span>
-      </span>
+      <AppLogo />
     </a>
   );
 }

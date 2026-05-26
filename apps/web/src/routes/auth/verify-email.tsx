@@ -11,6 +11,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { AuthPageBrand } from "@/components/auth/auth-page-brand";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import { verifyEmail } from "@/lib/auth-api";
 
@@ -60,6 +61,7 @@ function VerifyEmailPage() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm">
+        <AuthPageBrand />
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-xl">Verify email</CardTitle>
