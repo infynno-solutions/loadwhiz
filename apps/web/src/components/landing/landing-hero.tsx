@@ -98,6 +98,7 @@ export function LandingHero() {
                     href={LANDING_GITHUB_URL}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="View on GitHub"
                   />
                 }
               >
